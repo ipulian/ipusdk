@@ -1,0 +1,53 @@
+plugins { id 'com.android.library' }
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.team.github@51lianlian.com'
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    /**
+     * RxJava + RxAndroid
+     */
+    api "io.reactivex.rxjava3:rxjava:3.0.12"
+    api 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    /**
+     * ARouter
+     * https://github.com/alibaba/ARouter/tree/master
+     */
+    api 'com.alibaba:arouter-api:1.5.1'
+    /**
+     * MMKV
+     */
+    api 'com.tencent:mmkv-static:1.2.8'
+
+}
