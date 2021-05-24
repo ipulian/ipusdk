@@ -50,4 +50,10 @@ dependencies {
      */
     api 'com.tencent:mmkv-static:1.2.8'
 
+    /**
+     *  Gson
+     *  https://github.com/google/gson
+     */
+    api 'com.google.code.gson:gson:2.8.6'
+
 }
