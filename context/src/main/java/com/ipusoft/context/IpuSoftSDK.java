@@ -1,9 +1,12 @@
 package com.ipusoft.context;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.ipusoft.context.bean.IAuthInfo;
+import com.ipusoft.context.listener.IPhoneStateListener;
+import com.ipusoft.context.listener.OnPhoneStateChangedListener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,6 +21,7 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
     private static final String TAG = "IpuSoftSDK";
     private static Application mApp;
     private static IAuthInfo iAuthInfo;
+    private static OnPhoneStateChangedListener listener;
 
     public static Application getAppContext() {
         return mApp;
@@ -53,6 +57,19 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
     }
 
     /**
+     * 注册通话状态的listener
+     *
+     * @param listener
+     */
+    public static void setOnPhoneStatusChangedListener(OnPhoneStateChangedListener listener) {
+        if (mApp != null) {
+            IPhoneStateListener.getInstance().registerPhoneListener(mApp, listener);
+        } else {
+            Log.d(TAG, "setOnPhoneStatusChangedListener: 注册通话状态listener失败,未初始化SDk");
+        }
+    }
+
+    /**
      * 更新认证信息
      *
      * @param iAuthInfo
@@ -61,11 +78,13 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
         if (iAuthInfo != null) {
             IpuSoftSDK.iAuthInfo = iAuthInfo;
             initXModule();
+        } else {
+            Log.d(TAG, "updateAuthInfo: 更新认证信息失败,IAuthInfo = null");
         }
     }
 
     private static void initARouter() {
-        if (com.ipusoft.context.BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             ARouter.openLog();
             ARouter.openDebug();
         }
@@ -96,10 +115,8 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
             try {
                 Class<?> clazz = Class.forName(ModuleRegister.X_LIBRARY);
                 Method initMethod = clazz.getDeclaredMethod("initXModule", IAuthInfo.class);
-                if (initMethod != null) {
-                    initMethod.setAccessible(true);
-                    initMethod.invoke(null, iAuthInfo);
-                }
+                initMethod.setAccessible(true);
+                initMethod.invoke(null, iAuthInfo);
             } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException
                     | InvocationTargetException e) {
                 e.printStackTrace();
