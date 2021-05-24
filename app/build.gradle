@@ -39,5 +39,5 @@ dependencies {
 
     //implementation project(":context")
 
-    implementation 'com.github.ipulian:base:1.0'
+    //implementation 'com.github.ipulian:base:1.0'
 }
