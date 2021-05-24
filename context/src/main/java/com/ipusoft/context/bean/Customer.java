@@ -1,6 +1,7 @@
 package com.ipusoft.context.bean;
 
 import com.google.gson.annotations.SerializedName;
+import com.ipusoft.context.bean.base.BaseHttpResponse;
 
 /**
  * author : GWFan

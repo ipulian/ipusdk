@@ -1,4 +1,4 @@
-package com.ipusoft.context.bean;
+package com.ipusoft.context.bean.base;
 
 import com.ipusoft.context.constant.HttpStatus;
 
