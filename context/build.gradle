@@ -1,4 +1,7 @@
 plugins { id 'com.android.library' }
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.team.github@51lianlian.com'
 android {

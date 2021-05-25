@@ -151,7 +151,7 @@ public final class FileIOUtils {
     }
 
     public static byte[] readFile2BytesByStream(final File file,
-                                                final com.ipusoft.sim.utils.FileIOUtils.OnProgressUpdateListener listener) {
+                                                final FileIOUtils.OnProgressUpdateListener listener) {
         if (!FileUtilsKt.isFileExists(file)) return null;
         try {
             ByteArrayOutputStream os = null;
