@@ -1,6 +1,7 @@
 package com.ipusoft.context.utils;
 
 import android.content.res.Resources;
+import android.util.Base64;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -205,6 +206,11 @@ public class StringUtils {
             ret[j++] = hexDigits[bytes[i] & 0x0f];
         }
         return new String(ret);
+    }
+
+    public static String base64Encode2String(final byte[] input) {
+        if (input == null || input.length == 0) return "";
+        return Base64.encodeToString(input, Base64.NO_WRAP);
     }
 }
 
