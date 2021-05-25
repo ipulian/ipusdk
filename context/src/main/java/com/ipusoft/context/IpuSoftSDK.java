@@ -21,7 +21,6 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
     private static final String TAG = "IpuSoftSDK";
     private static Application mApp;
     private static IAuthInfo iAuthInfo;
-    private static OnPhoneStateChangedListener listener;
 
     public static Application getAppContext() {
         return mApp;

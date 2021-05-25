@@ -4,9 +4,13 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.Reader;
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -15,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * desc   :
  */
 
-public class GsonUtils {
+public final class GsonUtils {
 
     private static final String KEY_DEFAULT = "defaultGson";
     private static final String KEY_DELEGATE = "delegateGson";
@@ -81,6 +85,150 @@ public class GsonUtils {
      */
     public static String toJson(@NonNull final Gson gson, final Object src, @NonNull final Type typeOfSrc) {
         return gson.toJson(src, typeOfSrc);
+    }
+
+    /**
+     * Converts {@link String} to given type.
+     *
+     * @param json The json to convert.
+     * @param type Type json will be converted to.
+     * @return instance of type
+     */
+    public static <T> T fromJson(final String json, @NonNull final Class<T> type) {
+        return fromJson(getGson(), json, type);
+    }
+
+    /**
+     * Converts {@link String} to given type.
+     *
+     * @param json the json to convert.
+     * @param type type type json will be converted to.
+     * @return instance of type
+     */
+    public static <T> T fromJson(final String json, @NonNull final Type type) {
+        return fromJson(getGson(), json, type);
+    }
+
+    /**
+     * Converts {@link Reader} to given type.
+     *
+     * @param reader the reader to convert.
+     * @param type   type type json will be converted to.
+     * @return instance of type
+     */
+    public static <T> T fromJson(@NonNull final Reader reader, @NonNull final Class<T> type) {
+        return fromJson(getGson(), reader, type);
+    }
+
+    /**
+     * Converts {@link Reader} to given type.
+     *
+     * @param reader the reader to convert.
+     * @param type   type type json will be converted to.
+     * @return instance of type
+     */
+    public static <T> T fromJson(@NonNull final Reader reader, @NonNull final Type type) {
+        return fromJson(getGson(), reader, type);
+    }
+
+    /**
+     * Converts {@link String} to given type.
+     *
+     * @param gson The gson.
+     * @param json The json to convert.
+     * @param type Type json will be converted to.
+     * @return instance of type
+     */
+    public static <T> T fromJson(@NonNull final Gson gson, final String json, @NonNull final Class<T> type) {
+        return gson.fromJson(json, type);
+    }
+
+    /**
+     * Converts {@link String} to given type.
+     *
+     * @param gson The gson.
+     * @param json the json to convert.
+     * @param type type type json will be converted to.
+     * @return instance of type
+     */
+    public static <T> T fromJson(@NonNull final Gson gson, final String json, @NonNull final Type type) {
+        return gson.fromJson(json, type);
+    }
+
+    /**
+     * Converts {@link Reader} to given type.
+     *
+     * @param gson   The gson.
+     * @param reader the reader to convert.
+     * @param type   type type json will be converted to.
+     * @return instance of type
+     */
+    public static <T> T fromJson(@NonNull final Gson gson, final Reader reader, @NonNull final Class<T> type) {
+        return gson.fromJson(reader, type);
+    }
+
+    /**
+     * Converts {@link Reader} to given type.
+     *
+     * @param gson   The gson.
+     * @param reader the reader to convert.
+     * @param type   type type json will be converted to.
+     * @return instance of type
+     */
+    public static <T> T fromJson(@NonNull final Gson gson, final Reader reader, @NonNull final Type type) {
+        return gson.fromJson(reader, type);
+    }
+
+    /**
+     * Return the type of {@link List} with the {@code type}.
+     *
+     * @param type The type.
+     * @return the type of {@link List} with the {@code type}
+     */
+    public static Type getListType(@NonNull final Type type) {
+        return TypeToken.getParameterized(List.class, type).getType();
+    }
+
+    /**
+     * Return the type of {@link Set} with the {@code type}.
+     *
+     * @param type The type.
+     * @return the type of {@link Set} with the {@code type}
+     */
+    public static Type getSetType(@NonNull final Type type) {
+        return TypeToken.getParameterized(Set.class, type).getType();
+    }
+
+    /**
+     * Return the type of map with the {@code keyType} and {@code valueType}.
+     *
+     * @param keyType   The type of key.
+     * @param valueType The type of value.
+     * @return the type of map with the {@code keyType} and {@code valueType}
+     */
+    public static Type getMapType(@NonNull final Type keyType, @NonNull final Type valueType) {
+        return TypeToken.getParameterized(Map.class, keyType, valueType).getType();
+    }
+
+    /**
+     * Return the type of array with the {@code type}.
+     *
+     * @param type The type.
+     * @return the type of map with the {@code type}
+     */
+    public static Type getArrayType(@NonNull final Type type) {
+        return TypeToken.getArray(type).getType();
+    }
+
+    /**
+     * Return the type of {@code rawType} with the {@code typeArguments}.
+     *
+     * @param rawType       The raw type.
+     * @param typeArguments The type of arguments.
+     * @return the type of map with the {@code type}
+     */
+    public static Type getType(@NonNull final Type rawType, @NonNull final Type... typeArguments) {
+        return TypeToken.getParameterized(rawType, typeArguments).getType();
     }
 
     private static Gson createGson() {
