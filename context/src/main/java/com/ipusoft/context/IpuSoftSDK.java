@@ -5,11 +5,10 @@ import android.util.Log;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.ipusoft.context.bean.IAuthInfo;
+import com.ipusoft.context.init.SDKInit;
 import com.ipusoft.context.listener.IPhoneStateListener;
 import com.ipusoft.context.listener.OnPhoneStateChangedListener;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import com.tencent.mmkv.MMKV;
 
 /**
  * author : GWFan
@@ -20,7 +19,14 @@ import java.lang.reflect.Method;
 public abstract class IpuSoftSDK extends Application implements IBaseApplication {
     private static final String TAG = "IpuSoftSDK";
     private static Application mApp;
+    /**
+     * 调用者的身份信息
+     */
     private static IAuthInfo iAuthInfo;
+    /**
+     * 根据身份信息生成的Token
+     */
+    public static String token;
 
     public static Application getAppContext() {
         return mApp;
@@ -28,6 +34,11 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
 
     public static void init(Application mApp) {
         IpuSoftSDK.mApp = mApp;
+
+        /*
+         * 初始化MMKV
+         */
+        MMKV.initialize(mApp);
         /*
          * 初始化ARouter
          */
@@ -42,16 +53,16 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
         initILibrary();
     }
 
+    public static String getAuthCode() {
+        return SDKInit.getAuthCode();
+    }
+
     public static void init(Application mApp, IAuthInfo iAuthInfo) throws RuntimeException {
         if (iAuthInfo != null) {
-            try {
-                Class.forName(ModuleRegister.X_LIBRARY);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                throw new RuntimeException("初始化失败，未找到xModule");
-            }
             IpuSoftSDK.iAuthInfo = iAuthInfo;
+            SDKInit.initSDKToken(iAuthInfo);
         }
+
         init(mApp);
     }
 
@@ -76,10 +87,14 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
     public static void updateAuthInfo(IAuthInfo iAuthInfo) {
         if (iAuthInfo != null) {
             IpuSoftSDK.iAuthInfo = iAuthInfo;
-            initXModule();
+            SDKInit.initSDKToken(iAuthInfo);
         } else {
             Log.d(TAG, "updateAuthInfo: 更新认证信息失败,IAuthInfo = null");
         }
+    }
+
+    public static void reLogin(OnSDKLoginListener loginListener) {
+        SDKInit.initSDKToken(iAuthInfo, loginListener);
     }
 
     private static void initARouter() {
@@ -96,28 +111,10 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
     private static void initILibrary() {
         for (String module : ModuleRegister.modules) {
             try {
-                if (ModuleRegister.X_LIBRARY.equals(module)) {
-                    initXModule();
-                } else {
-                    Class<?> clazz = Class.forName(module);
-                    IBaseApplication baseApplication = (IBaseApplication) clazz.newInstance();
-                    baseApplication.initModule();
-                }
+                Class<?> clazz = Class.forName(module);
+                IBaseApplication baseApplication = (IBaseApplication) clazz.newInstance();
+                baseApplication.initModule();
             } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private static void initXModule() {
-        if (iAuthInfo != null) {
-            try {
-                Class<?> clazz = Class.forName(ModuleRegister.X_LIBRARY);
-                Method initMethod = clazz.getDeclaredMethod("initXModule", IAuthInfo.class);
-                initMethod.setAccessible(true);
-                initMethod.invoke(null, iAuthInfo);
-            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException
-                    | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }

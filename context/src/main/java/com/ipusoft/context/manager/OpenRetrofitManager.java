@@ -1,4 +1,4 @@
-package com.ipusoft.context.http;
+package com.ipusoft.context.manager;
 
 import android.util.Log;
 
@@ -67,7 +67,7 @@ public class OpenRetrofitManager extends IpuSoftSDK {
                 message -> Log.d("RetrofitLog", "retrofitBack = " + message));
 //        loggingInterceptor.setLevel(printResponseBody ? HttpLoggingInterceptor.Level.BODY :
 //                HttpLoggingInterceptor.Level.NONE);
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         return loggingInterceptor;
     }
 
@@ -107,18 +107,6 @@ public class OpenRetrofitManager extends IpuSoftSDK {
             List<String> headerValues = request.headers("host_name");
             if (headerValues.size() > 0) {
                 builder.removeHeader("host_name");
-                //   String headerValue = headerValues.get(0);
-                // HttpUrl newBaseUrl;
-//                if (HttpConfig.GATE_WAY_URL.equals(headerValue)) {
-//                    List<String> pathSegments = request.url().pathSegments();
-//                    String requestPath = "";
-//                    if (pathSegments.size() > 0) {
-//                        requestPath = StringUtils.join(pathSegments);
-//                    }
-//                    newBaseUrl = HttpUrl.parse(HttpConfig.GATE_WAY_URL + "/" + requestPath);
-//                } else {
-                //   newBaseUrl = oldHttpUrl;
-                //  }
                 if (httpUrl != null) {
                     HttpUrl newFullUrl = httpUrl
                             .newBuilder()

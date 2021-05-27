@@ -7,10 +7,6 @@ package com.ipusoft.context;
  */
 
 public interface ModuleRegister {
-    /**
-     * open_service_x
-     */
-    String X_LIBRARY = "com.ipusoft.xlibrary.XModuleApp";
 
     /**
      * base_datastore
@@ -27,7 +23,6 @@ public interface ModuleRegister {
     String DATA_BASE = "com.ipusoft.database.DataBaseApplication";
 
     String[] modules = {
-            X_LIBRARY,
             DATA_STORE_LIBRARY,
             BASE_NETWORK,
             DATA_BASE
