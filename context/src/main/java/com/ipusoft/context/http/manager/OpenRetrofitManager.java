@@ -1,18 +1,21 @@
 package com.ipusoft.context.http.manager;
 
+/**
+ * author : GWFan
+ * time   : 2020/4/19 11:48
+ * desc   :
+ */
+
 import android.util.Log;
 
 import com.ipusoft.context.IpuSoftSDK;
 import com.ipusoft.context.http.HttpConstant;
-import com.ipusoft.context.http.impl.BaseUrlInterceptImpl;
+import com.ipusoft.context.http.interceptors.BaseUrlInterceptor;
 import com.ipusoft.context.utils.GsonUtils;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,6 +36,8 @@ public class OpenRetrofitManager extends IpuSoftSDK {
     private static volatile OpenRetrofitManager mInstance;
     private Retrofit mRetrofit;
 
+    private boolean printResponseBody = true;
+
     public static OpenRetrofitManager getInstance() {
         if (mInstance == null) {
             synchronized (OpenRetrofitManager.class) {
@@ -49,13 +54,11 @@ public class OpenRetrofitManager extends IpuSoftSDK {
      */
     public void initRetrofit() {
         if (mRetrofit == null) {
-            OkHttpClient httpClient = getHttpClient();
             mRetrofit = new Retrofit.Builder()
-                    .baseUrl(HttpConstant.INNER_BASE_URL)
-                    .callFactory(new BaseUrlInterceptImpl(httpClient))
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                    .client(httpClient)
+                    .client(getHttpClient())
+                    .baseUrl(HttpConstant.INNER_BASE_URL)
                     .build();
         }
     }
@@ -70,7 +73,7 @@ public class OpenRetrofitManager extends IpuSoftSDK {
                 message -> Log.d("RetrofitLog", "retrofitBack = " + message));
 //        loggingInterceptor.setLevel(printResponseBody ? HttpLoggingInterceptor.Level.BODY :
 //                HttpLoggingInterceptor.Level.NONE);
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         return loggingInterceptor;
     }
 
@@ -92,36 +95,9 @@ public class OpenRetrofitManager extends IpuSoftSDK {
                     return chain.proceed(request);
                 });
 
-        builder.addInterceptor(getInterceptor());
+        builder.addInterceptor(new BaseUrlInterceptor());
 
         return builder.build();
-    }
-
-    /**
-     * 获取OkHttp拦截器
-     *
-     * @return
-     */
-    protected Interceptor getInterceptor() {
-        return chain -> {
-            Request request = chain.request();
-            HttpUrl httpUrl = request.url();
-            Request.Builder builder = request.newBuilder();
-            List<String> headerValues = request.headers("host_name");
-            if (headerValues.size() > 0) {
-                builder.removeHeader("host_name");
-                if (httpUrl != null) {
-                    HttpUrl newFullUrl = httpUrl
-                            .newBuilder()
-                            .scheme(httpUrl.scheme())
-                            .host(httpUrl.host())
-                            .port(httpUrl.port())
-                            .build();
-                    return chain.proceed(builder.url(newFullUrl).build());
-                }
-            }
-            return chain.proceed(request);
-        };
     }
 
     /**
@@ -144,6 +120,7 @@ public class OpenRetrofitManager extends IpuSoftSDK {
      * @return
      */
     public Retrofit getRetrofit(boolean printResponseBody) {
+        this.printResponseBody = printResponseBody;
         return getRetrofit();
     }
 
