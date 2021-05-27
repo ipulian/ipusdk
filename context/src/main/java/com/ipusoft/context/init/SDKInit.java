@@ -20,6 +20,8 @@ public class SDKInit {
 
     private static String authCode;
 
+    private static String sign;
+
     public static void initSDKToken(IAuthInfo iAuthInfo) {
         initSDKToken(iAuthInfo, status -> {
 
@@ -32,7 +34,7 @@ public class SDKInit {
                     secret = iAuthInfo.getSecret(),
                     username = iAuthInfo.getUsername();
             if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(secret) && StringUtils.isNotEmpty(username)) {
-                String sign = getSign(key, secret, username);
+                sign = getSign(key, secret, username);
                 authCode = getAuth(key, username, sign);
                 AuthHttp.checkIdentity(authCode, loginListener);
             }
@@ -41,6 +43,10 @@ public class SDKInit {
 
     public static String getAuthCode() {
         return authCode;
+    }
+
+    public static String getSign() {
+        return sign;
     }
 
     private static String getSign(String key, String secret, String username) {
