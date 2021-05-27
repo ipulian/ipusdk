@@ -1,7 +1,7 @@
 package com.ipusoft.context.module
 
 import com.ipusoft.context.api.SDKAPIService
-import com.ipusoft.context.manager.OpenRetrofitManager
+import com.ipusoft.context.http.manager.OpenRetrofitManager
 import com.ipusoft.context.bean.IAuthCode
 import com.ipusoft.context.bean.IToken
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers

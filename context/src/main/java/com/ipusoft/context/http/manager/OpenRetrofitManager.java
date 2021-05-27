@@ -1,8 +1,10 @@
-package com.ipusoft.context.manager;
+package com.ipusoft.context.http.manager;
 
 import android.util.Log;
 
 import com.ipusoft.context.IpuSoftSDK;
+import com.ipusoft.context.http.HttpConstant;
+import com.ipusoft.context.http.impl.BaseUrlInterceptImpl;
 import com.ipusoft.context.utils.GsonUtils;
 
 import java.util.List;
@@ -30,7 +32,6 @@ public class OpenRetrofitManager extends IpuSoftSDK {
 
     private static volatile OpenRetrofitManager mInstance;
     private Retrofit mRetrofit;
-    private static final String BASE_URL = "https://presaas.51lianlian.cn";
 
     public static OpenRetrofitManager getInstance() {
         if (mInstance == null) {
@@ -48,11 +49,13 @@ public class OpenRetrofitManager extends IpuSoftSDK {
      */
     public void initRetrofit() {
         if (mRetrofit == null) {
+            OkHttpClient httpClient = getHttpClient();
             mRetrofit = new Retrofit.Builder()
+                    .baseUrl(HttpConstant.INNER_BASE_URL)
+                    .callFactory(new BaseUrlInterceptImpl(httpClient))
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                    .client(getHttpClient())
-                    .baseUrl(BASE_URL)
+                    .client(httpClient)
                     .build();
         }
     }

@@ -57,6 +57,10 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
         return SDKInit.getAuthCode();
     }
 
+    public static IAuthInfo getAuthInfo() {
+        return iAuthInfo;
+    }
+
     public static void init(Application mApp, IAuthInfo iAuthInfo) throws RuntimeException {
         if (iAuthInfo != null) {
             IpuSoftSDK.iAuthInfo = iAuthInfo;
