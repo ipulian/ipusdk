@@ -1,5 +1,7 @@
 package com.ipusoft.context.init;
 
+import android.util.Log;
+
 import com.ipusoft.context.OnSDKLoginListener;
 import com.ipusoft.context.bean.IAuthInfo;
 import com.ipusoft.context.http.AuthHttp;
@@ -52,14 +54,18 @@ public class SDKInit {
 
     private static String getSign(String key, String secret, String username) {
         System.currentTimeMillis();
-        return MD5Utils.getMD5("dev=SDK&key=" + key + "&ts=" + getSecondTimestamp(new Date())
+        String md5 = MD5Utils.getMD5("dev=SDK&key=" + key + "&ts=" + getSecondTimestamp(new Date())
                 + "&username=" + username + secret);
+        Log.d(TAG, "getSign: md5---->" + md5);
+        return md5;
     }
 
     private static String getAuth(String key, String username, String sign) {
         String str = ("dev=SDK&key=" + key + "&ts=" + getSecondTimestamp(new Date())
                 + "&username=" + username + "&sign=" + sign);
-        return StringUtils.base64Encode2String(str.getBytes());
+        String string = StringUtils.base64Encode2String(str.getBytes());
+        Log.d(TAG, "getAuth:base64-----> " + string);
+        return string;
     }
 
     private static int getSecondTimestamp(Date date) {
