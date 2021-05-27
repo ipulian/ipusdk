@@ -22,6 +22,8 @@ public class SDKInit {
 
     private static String sign;
 
+    private static IAuthInfo iAuthInfo;
+
     public static void initSDKToken(IAuthInfo iAuthInfo) {
         initSDKToken(iAuthInfo, status -> {
 
@@ -29,19 +31,22 @@ public class SDKInit {
     }
 
     public static void initSDKToken(IAuthInfo iAuthInfo, OnSDKLoginListener loginListener) {
+        SDKInit.iAuthInfo = iAuthInfo;
+        generateAuthCode();
+        AuthHttp.checkIdentity(authCode, loginListener);
+    }
+
+    public static String generateAuthCode() {
         if (iAuthInfo != null) {
             String key = iAuthInfo.getKey(),
                     secret = iAuthInfo.getSecret(),
                     username = iAuthInfo.getUsername();
-            if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(secret) && StringUtils.isNotEmpty(username)) {
+            if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(secret)
+                    && StringUtils.isNotEmpty(username)) {
                 sign = getSign(key, secret, username);
                 authCode = getAuth(key, username, sign);
-                AuthHttp.checkIdentity(authCode, loginListener);
             }
         }
-    }
-
-    public static String getAuthCode() {
         return authCode;
     }
 

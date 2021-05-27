@@ -54,7 +54,7 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
     }
 
     public static String getAuthCode() {
-        return SDKInit.getAuthCode();
+        return SDKInit.generateAuthCode();
     }
 
     public static IAuthInfo getAuthInfo() {
