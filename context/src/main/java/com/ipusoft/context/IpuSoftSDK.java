@@ -23,8 +23,6 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
      * 调用者的身份信息
      */
     private static IAuthInfo iAuthInfo;
-
-    private static String sign;
     /**
      * 根据身份信息生成的Token
      */
@@ -61,10 +59,6 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
 
     public static IAuthInfo getAuthInfo() {
         return iAuthInfo;
-    }
-
-    public static String getSign() {
-        return SDKInit.getAuthCode();
     }
 
     public static void init(Application mApp, IAuthInfo iAuthInfo) throws RuntimeException {

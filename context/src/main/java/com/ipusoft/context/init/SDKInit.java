@@ -45,10 +45,6 @@ public class SDKInit {
         return authCode;
     }
 
-    public static String getSign() {
-        return sign;
-    }
-
     private static String getSign(String key, String secret, String username) {
         System.currentTimeMillis();
         return MD5Utils.getMD5("dev=SDK&key=" + key + "&ts=" + getSecondTimestamp(new Date())
@@ -68,6 +64,4 @@ public class SDKInit {
         String timestamp = String.valueOf(date.getTime() / 1000);
         return Integer.parseInt(timestamp);
     }
-
-
 }
