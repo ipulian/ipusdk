@@ -23,6 +23,7 @@ public class HttpConstant {
      * 对外接口
      */
     public static final String OPEN_URL = "https://api.51lianlian.cn";
+    public static final String WITH_OPEN_URL = "host_name:https://api.51lianlian.cn";
     /*
      * 内部接口
      */
