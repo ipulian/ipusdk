@@ -11,10 +11,18 @@ public class HttpConstant {
      * ContentType
      */
     public static final String CONTENT_TYPE = "Content-type:application/json;charset=UTF-8";
+
+    public static final String LOG_CONFIG = "log_config";
+
+    public static final String LOG_BODY = LOG_CONFIG + ":" + "BODY";
+
+    public static final String LOG_NONE = LOG_CONFIG + ":" + "NONE";
+
+    public static final String HOST_NAME = "host_name";
     /**
      * 对外接口
      */
-    public static final String OPEN_URL = "host_name:https://api.51lianlian.cn";
+    public static final String OPEN_URL = HOST_NAME + ":" + "https://api.51lianlian.cn";
     /*
      * 内部接口
      */

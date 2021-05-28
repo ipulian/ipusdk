@@ -1,5 +1,6 @@
 package com.ipusoft.context.http.interceptors;
 
+import com.ipusoft.context.http.HttpConstant;
 import com.ipusoft.context.utils.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -27,9 +28,9 @@ public class BaseUrlInterceptor implements Interceptor {
         Request request = chain.request();
         HttpUrl oldHttpUrl = request.url();
         Request.Builder builder = request.newBuilder();
-        List<String> headerValues = request.headers("host_name");
+        List<String> headerValues = request.headers(HttpConstant.HOST_NAME);
         if (headerValues.size() > 0) {
-            builder.removeHeader("host_name");
+            builder.removeHeader(HttpConstant.HOST_NAME);
             String headerValue = headerValues.get(0);
             HttpUrl newBaseUrl;
             if (StringUtils.isNotEmpty(headerValue)) {
