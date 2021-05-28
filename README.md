@@ -74,7 +74,8 @@ public class OnPhoneStatusChangedListenerImpl implements OnPhoneStateChangedList
   //把弹屏的自定义View 添加到Winddow中
   mWindowManager.addView(view, mLayoutParams);
 ```
-##ProGuard rules
+## ProGuard rules
 ```pro
-
+-keep class com.ipusoft.context.bean.** { *;}
+-keep class com.ipusoft.context.constant.** { *;}
 ```
