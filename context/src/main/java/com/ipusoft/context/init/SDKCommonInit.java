@@ -16,13 +16,11 @@ import java.util.Date;
  * desc   :
  */
 
-public class SDKInit {
+public class SDKCommonInit {
 
     private static final String TAG = "XLibraryApplication";
 
     private static String authCode;
-
-    private static String sign;
 
     private static IAuthInfo iAuthInfo;
 
@@ -33,11 +31,16 @@ public class SDKInit {
     }
 
     public static void initSDKToken(IAuthInfo iAuthInfo, OnSDKLoginListener loginListener) {
-        SDKInit.iAuthInfo = iAuthInfo;
+        SDKCommonInit.iAuthInfo = iAuthInfo;
         generateAuthCode();
         AuthHttp.checkIdentity(authCode, loginListener);
     }
 
+    /**
+     * 计算AuthCode
+     *
+     * @return
+     */
     public static String generateAuthCode() {
         if (iAuthInfo != null) {
             String key = iAuthInfo.getKey(),
@@ -45,7 +48,7 @@ public class SDKInit {
                     username = iAuthInfo.getUsername();
             if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(secret)
                     && StringUtils.isNotEmpty(username)) {
-                sign = getSign(key, secret, username);
+                String sign = getSign(key, secret, username);
                 authCode = getAuth(key, username, sign);
             }
         }
@@ -63,9 +66,9 @@ public class SDKInit {
     private static String getAuth(String key, String username, String sign) {
         String str = ("dev=SDK&key=" + key + "&ts=" + getSecondTimestamp(new Date())
                 + "&username=" + username + "&sign=" + sign);
-        String string = StringUtils.base64Encode2String(str.getBytes());
-        Log.d(TAG, "getAuth:base64-----> " + string);
-        return string;
+        String auth = StringUtils.base64Encode2String(str.getBytes());
+        Log.d(TAG, "getAuth:base64-----> " + auth);
+        return auth;
     }
 
     private static int getSecondTimestamp(Date date) {

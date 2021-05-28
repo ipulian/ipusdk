@@ -5,7 +5,8 @@ import android.util.Log;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.ipusoft.context.bean.IAuthInfo;
-import com.ipusoft.context.init.SDKInit;
+import com.ipusoft.context.db.DBManager;
+import com.ipusoft.context.init.SDKCommonInit;
 import com.ipusoft.context.listener.IPhoneStateListener;
 import com.ipusoft.context.listener.OnPhoneStateChangedListener;
 import com.tencent.mmkv.MMKV;
@@ -47,6 +48,11 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
          * 注册Activity声明周期
          */
         mApp.registerActivityLifecycleCallbacks(new IActivityLifecycle());
+
+        /**
+         * 初始化SDK数据库
+         */
+        DBManager.initDataBase();
         /*
          * 初始化组件
          */
@@ -54,7 +60,7 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
     }
 
     public static String getAuthCode() {
-        return SDKInit.generateAuthCode();
+        return SDKCommonInit.generateAuthCode();
     }
 
     public static IAuthInfo getAuthInfo() {
@@ -64,7 +70,7 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
     public static void init(Application mApp, IAuthInfo iAuthInfo) throws RuntimeException {
         if (iAuthInfo != null) {
             IpuSoftSDK.iAuthInfo = iAuthInfo;
-            SDKInit.initSDKToken(iAuthInfo);
+            SDKCommonInit.initSDKToken(iAuthInfo);
         }
 
         init(mApp);
@@ -91,14 +97,14 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
     public static void updateAuthInfo(IAuthInfo iAuthInfo) {
         if (iAuthInfo != null) {
             IpuSoftSDK.iAuthInfo = iAuthInfo;
-            SDKInit.initSDKToken(iAuthInfo);
+            SDKCommonInit.initSDKToken(iAuthInfo);
         } else {
             Log.d(TAG, "updateAuthInfo: 更新认证信息失败,IAuthInfo = null");
         }
     }
 
     public static void reLogin(OnSDKLoginListener loginListener) {
-        SDKInit.initSDKToken(iAuthInfo, loginListener);
+        SDKCommonInit.initSDKToken(iAuthInfo, loginListener);
     }
 
     private static void initARouter() {
