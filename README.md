@@ -16,7 +16,6 @@ dependencies {
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-        <!--悬浮窗-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
 ```
@@ -35,30 +34,30 @@ public class MyApplication extends Application {
 ```
 2. 监听通话状态,需要实现 OnPhoneStateChangedListener 接口
 ```java
-public class OnPhoneStatusChangedListenerImpl implements OnPhoneStateChangedListener {
-    @Override
-    public void onDialingListener() {
-         //响铃
-         //在这个地方可以展示外呼弹屏
-    }
+    public class OnPhoneStatusChangedListenerImpl implements OnPhoneStateChangedListener {
+        @Override
+        public void onDialingListener() {
+             //响铃
+             //在这个地方可以展示外呼弹屏
+        }
 
-    @Override
-    public void onInComingListener() {
-       //呼入
-        //在这个地方可以展示呼入弹屏
-    }
+        @Override
+        public void onInComingListener() {
+           //呼入
+            //在这个地方可以展示呼入弹屏
+        }
 
-    @Override
-    public void onConnectedListener() {
-      //接通
-    }
+        @Override
+        public void onConnectedListener() {
+          //接通
+        }
 
-    @Override
-    public void onDisConnectedListener() {
-     //挂断
-      //在这个地方可以展示挂机弹屏
+        @Override
+        public void onDisConnectedListener() {
+         //挂断
+          //在这个地方可以展示挂机弹屏
+        }
     }
-}
 ```
 并把该接口的实现类 OnPhoneStatusChangedListenerImpl 注册到 SDK中
 ```java
@@ -73,6 +72,10 @@ public class OnPhoneStatusChangedListenerImpl implements OnPhoneStateChangedList
   WindowManager.LayoutParams mLayoutParams = IWindowManager.getFullWidthWindowParams();
   //把弹屏的自定义View 添加到Winddow中
   mWindowManager.addView(view, mLayoutParams);
+```
+- 4.查看通话记录，使用拨号键盘，查看电话统计，客户统计，综合排名等功能，可以跳转到内部的H5页面
+```java
+  startActivity(new Intent(this, IpuWebViewActivity.class));
 ```
 ## ProGuard rules
 ```pro
