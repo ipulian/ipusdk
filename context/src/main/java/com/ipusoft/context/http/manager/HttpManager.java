@@ -1,14 +1,12 @@
 package com.ipusoft.context.http.manager;
 
-import android.util.Log;
-
 import com.ipusoft.context.http.interceptors.BaseUrlInterceptor;
 import com.ipusoft.context.http.interceptors.LoggingInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * author : GWFan
@@ -27,34 +25,28 @@ public class HttpManager {
      *
      * @return
      */
-    public static OkHttpClient getHttpClient(boolean pResBody) {
+    public static OkHttpClient getHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
                 .readTimeout(READ_TIMEOUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-//                .addInterceptor(chain -> {
-//                    Request original = chain.request();
-//                    Request.Builder requestBuilder = original.newBuilder();
-//                    Request request = requestBuilder.build();
-//                    return chain.proceed(request);
-//                })
                 .addInterceptor(new LoggingInterceptor())
-                //.addInterceptor(getLoggingInterceptor())
+                .dispatcher(getDispatcher())
                 .addInterceptor(new BaseUrlInterceptor());
 
         return builder.build();
     }
 
     /**
-     * 返回Http请求的日志拦截器
+     * 自定义分发器
      *
      * @return
      */
-    private static HttpLoggingInterceptor getLoggingInterceptor() {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(
-                message -> Log.d("RetrofitLog", "retrofitBack = " + message));
+    public static Dispatcher getDispatcher() {
+        Dispatcher dispatcher = new Dispatcher();
+        dispatcher.setMaxRequests(64);
+        dispatcher.setMaxRequestsPerHost(3);
 
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        return loggingInterceptor;
+        return dispatcher;
     }
 }

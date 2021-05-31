@@ -27,10 +27,18 @@ public abstract class IpuSoftSDK extends Application implements IBaseApplication
     /**
      * 根据身份信息生成的Token
      */
-    public static String token;
+    private static String token;
 
     public static Application getAppContext() {
         return mApp;
+    }
+
+    public static void setToken(String token) {
+        IpuSoftSDK.token = token;
+    }
+
+    public static String getToken() {
+        return IpuSoftSDK.token;
     }
 
     public static void init(Application mApp) {

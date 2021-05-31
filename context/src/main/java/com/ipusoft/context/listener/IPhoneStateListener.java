@@ -11,6 +11,13 @@ import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.ipusoft.context.IpuSDKCache;
+import com.ipusoft.context.constant.PhoneState;
+import com.ipusoft.context.utils.ArrayUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class IPhoneStateListener extends android.telephony.PhoneStateListener {
     private static final String TAG = "MyPhoneStateListener";
@@ -18,7 +25,7 @@ public class IPhoneStateListener extends android.telephony.PhoneStateListener {
     private boolean wasAppInOffHook = false;
     private boolean wasAppInRinging = false;
     private TelephonyManager telephonyManager;
-    private OnPhoneStateChangedListener listener;
+    private List<OnPhoneStateChangedListener> listeners;
 
     public static IPhoneStateListener getInstance() {
         if (instance == null) {
@@ -37,7 +44,10 @@ public class IPhoneStateListener extends android.telephony.PhoneStateListener {
     public void registerPhoneListener(Application context, OnPhoneStateChangedListener listener) {
         telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         telephonyManager.listen(this, IPhoneStateListener.LISTEN_CALL_STATE);
-        this.listener = listener;
+        if (listeners == null) {
+            listeners = new ArrayList<>();
+        }
+        listeners.add(listener);
     }
 
     /**
@@ -50,15 +60,17 @@ public class IPhoneStateListener extends android.telephony.PhoneStateListener {
         }
     }
 
+
     @Override
     public void onCallStateChanged(int state, String incomingNumber) {
         try {
-            if (listener != null) {
+            if (ArrayUtils.isNotEmpty(listeners)) {
+                PhoneState phoneState = PhoneState.NULL;
                 switch (state) {
                     case TelephonyManager.CALL_STATE_IDLE:
                         if (wasAppInRinging || wasAppInOffHook) {
                             Log.d(TAG, "onCallStateChanged: DISCONNECTED");
-                            listener.onDisConnectedListener();
+                            phoneState = PhoneState.DISCONNECTED;
                         }
                         wasAppInRinging = false;
                         wasAppInOffHook = false;
@@ -66,24 +78,58 @@ public class IPhoneStateListener extends android.telephony.PhoneStateListener {
                     case TelephonyManager.CALL_STATE_OFFHOOK:
                         if (wasAppInOffHook || wasAppInRinging) {
                             Log.d(TAG, "onCallStateChanged: CONNECTED");
-                            listener.onConnectedListener();
+                            phoneState = PhoneState.CONNECTED;
                         } else {
                             Log.d(TAG, "onCallStateChanged: DIALING");
-                            listener.onDialingListener();
+                            phoneState = PhoneState.DIALING;
                         }
                         wasAppInOffHook = true;
                         break;
                     case TelephonyManager.CALL_STATE_RINGING:
                         wasAppInRinging = true;
                         Log.d(TAG, "onCallStateChanged: INCOMING");
-                        listener.onInComingListener();
+                        phoneState = PhoneState.INCOMING;
                         break;
                     default:
                         break;
                 }
+                dispatcherPhoneState(phoneState);
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 分发电话事件
+     *
+     * @param phoneState
+     */
+    private void dispatcherPhoneState(PhoneState phoneState) {
+        IpuSDKCache.setPhoneState(phoneState);
+        switch (phoneState) {
+            case DIALING:
+                for (OnPhoneStateChangedListener listener : listeners) {
+                    listener.onDialingListener();
+                }
+                break;
+            case INCOMING:
+                for (OnPhoneStateChangedListener listener : listeners) {
+                    listener.onInComingListener();
+                }
+                break;
+            case CONNECTED:
+                for (OnPhoneStateChangedListener listener : listeners) {
+                    listener.onConnectedListener();
+                }
+                break;
+            case DISCONNECTED:
+                for (OnPhoneStateChangedListener listener : listeners) {
+                    listener.onDisConnectedListener();
+                }
+                break;
+            default:
+                break;
         }
     }
 }

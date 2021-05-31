@@ -48,7 +48,7 @@ public class AuthHttp {
                         public void onNext(@NonNull IToken iToken) {
                             String status1 = iToken.getStatus();
                             if (HttpStatus.SUCCESS.equals(status1)) {
-                                IpuSoftSDK.token = iToken.getToken();
+                                IpuSoftSDK.setToken(iToken.getToken());
                                 loginListener.onLoginResult(OnSDKLoginListener.LoginStatus.SUCCESS);
                             } else {
                                 Log.d(Constant.TAG, "AuthHttp->onNext1: " + iToken.getMsg());

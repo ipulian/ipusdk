@@ -55,32 +55,10 @@ public class OpenRetrofitManager extends IpuSoftSDK {
             mRetrofit = new Retrofit.Builder()
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                    .client(HttpManager.getHttpClient(true))
+                    .client(HttpManager.getHttpClient())
                     .baseUrl(HttpConstant.INNER_BASE_URL)
                     .build();
         }
-    }
-
-    public void initRetrofit(boolean pResBody) {
-        if (mRetrofit == null) {
-            mRetrofit = new Retrofit.Builder()
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                    .client(HttpManager.getHttpClient(pResBody))
-                    .baseUrl(HttpConstant.INNER_BASE_URL)
-                    .build();
-        }
-    }
-
-    /**
-     * 是否输出 HttpBody
-     *
-     * @param pResBody
-     * @return
-     */
-    public Retrofit getRetrofit(boolean pResBody) {
-        initRetrofit(pResBody);
-        return mRetrofit;
     }
 
     /**

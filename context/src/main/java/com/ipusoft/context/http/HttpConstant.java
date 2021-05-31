@@ -12,13 +12,11 @@ public class HttpConstant {
      */
     public static final String CONTENT_TYPE = "Content-type:application/json;charset=UTF-8";
 
-    public static final String LOG_CONFIG = "log_config";
-
-    public static final String LOG_BODY = LOG_CONFIG + ":" + "BODY";
-
-    public static final String LOG_NONE = LOG_CONFIG + ":" + "NONE";
-
     public static final String HOST_NAME = "host_name";
+    /**
+     * 对外接口预发布
+     */
+    public static final String OPEN_URL_PRE = HOST_NAME + ":" + "https://preapi.51lianlian.cn";
     /**
      * 对外接口
      */
