@@ -1,6 +1,7 @@
 package com.ipusoft.context;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -38,6 +39,7 @@ public abstract class AppContext extends Application {
      * 初始化运行时环境
      */
     protected static void initRuntimeEnvironment() {
+        Log.d(TAG, "initRuntimeEnvironment: -------》" + env);
         OpenRetrofitManager.getInstance().initRetrofit();
     }
 
@@ -54,11 +56,13 @@ public abstract class AppContext extends Application {
     }
 
     protected static void setRuntimeEnv(Env env) {
+        Log.d(TAG, "setRuntimeEnv: ------" + env);
         AppContext.env = env;
     }
 
     public static Env getRuntimeEnv() {
-        return env;
+        Log.d(TAG, "getRuntimeEnv: ------？" + AppContext.env);
+        return AppContext.env;
     }
 
     public static void setToken(String token) {

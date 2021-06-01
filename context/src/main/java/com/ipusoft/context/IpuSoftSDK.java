@@ -71,6 +71,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
      * @throws RuntimeException
      */
     public static void init(Application mApp, Env env, IAuthInfo iAuthInfo) throws RuntimeException {
+        setRuntimeEnv(env);
         if (iAuthInfo != null) {
             AppContext.iAuthInfo = iAuthInfo;
             SDKCommonInit.initSDKToken(iAuthInfo);
@@ -87,6 +88,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
      * @throws RuntimeException
      */
     public static void init(Application mApp, Env env, String token) throws RuntimeException {
+        setRuntimeEnv(env);
         if (StringUtils.isNotEmpty(token)) {
             IpuSoftSDK.setToken(token);
         }

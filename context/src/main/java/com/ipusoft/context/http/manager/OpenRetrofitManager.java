@@ -6,6 +6,8 @@ package com.ipusoft.context.http.manager;
  * desc   :
  */
 
+import android.util.Log;
+
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.config.Env;
 import com.ipusoft.context.http.HttpConstant;
@@ -53,6 +55,7 @@ public class OpenRetrofitManager {
      */
     public void initRetrofit() {
         if (mRetrofit == null) {
+            Log.d(TAG, "initRetrofit: ---------" + AppContext.getRuntimeEnv());
             mRetrofit = new Retrofit.Builder()
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava3CallAdapterFactory.create())

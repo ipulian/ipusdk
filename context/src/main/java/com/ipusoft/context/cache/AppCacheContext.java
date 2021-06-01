@@ -25,7 +25,7 @@ public abstract class AppCacheContext extends AppContext {
      * SIP外呼的号码
      */
     private static String SIPCallOutNumber;
-    
+
     /**
      * 当前通话状态
      */
