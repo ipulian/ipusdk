@@ -27,4 +27,9 @@ public class LiveDataConstant {
     public static final String WINDOW_SHOW_UNKNOWN_CALL = "window_show_unknown_call";
     //隐藏陌生电话的通话弹屏
     public static final String WINDOW_DISMISS_UNKNOWN_CALL = "window_dismiss_unknown_call";
+
+    //展示SIP外呼的通话弹屏
+    public static final String WINDOW_SHOW_SIP_CALL = "window_show_sip_call";
+    //隐藏SIP外呼的通话弹屏
+    public static final String WINDOW_DISMISS_SIP_CALL = "window_dismiss_sip_call";
 }

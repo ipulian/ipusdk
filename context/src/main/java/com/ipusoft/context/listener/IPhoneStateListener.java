@@ -11,7 +11,7 @@ import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.ipusoft.context.IpuSDKCache;
+import com.ipusoft.context.cache.AppCacheContext;
 import com.ipusoft.context.constant.PhoneState;
 import com.ipusoft.context.utils.ArrayUtils;
 
@@ -106,7 +106,7 @@ public class IPhoneStateListener extends android.telephony.PhoneStateListener {
      * @param phoneState
      */
     private void dispatcherPhoneState(PhoneState phoneState) {
-        IpuSDKCache.setPhoneState(phoneState);
+        AppCacheContext.setPhoneState(phoneState);
         switch (phoneState) {
             case DIALING:
                 for (OnPhoneStateChangedListener listener : listeners) {

@@ -1,5 +1,7 @@
 package com.ipusoft.context.http.interceptors;
 
+import com.ipusoft.context.AppContext;
+import com.ipusoft.context.config.Env;
 import com.ipusoft.context.http.HttpConstant;
 import com.ipusoft.context.utils.StringUtils;
 
@@ -39,7 +41,20 @@ public class BaseUrlInterceptor implements Interceptor {
                 if (pathSegments.size() > 0) {
                     requestPath = StringUtils.join(pathSegments);
                 }
-                newBaseUrl = HttpUrl.parse(headerValue + "/" + requestPath);
+                /*
+                 * 动态改变运行时环境
+                 */
+                String baseUrl = "";
+                if (AppContext.getRuntimeEnv() == Env.DEV) {
+                    if (StringUtils.equals(HttpConstant.OPEN, headerValue)) {
+                        baseUrl = HttpConstant.OPEN_URL_DEV;//对外开发环境
+                    }
+                } else if (AppContext.getRuntimeEnv() == Env.PRO) {
+                    if (StringUtils.equals(HttpConstant.OPEN, headerValue)) {
+                        baseUrl = HttpConstant.OPEN_URL_PRO;//对外生产环境
+                    }
+                }
+                newBaseUrl = HttpUrl.parse(baseUrl + "/" + requestPath);
             } else {
                 newBaseUrl = oldHttpUrl;
             }

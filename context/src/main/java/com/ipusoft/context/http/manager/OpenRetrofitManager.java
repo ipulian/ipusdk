@@ -6,7 +6,8 @@ package com.ipusoft.context.http.manager;
  * desc   :
  */
 
-import com.ipusoft.context.IpuSoftSDK;
+import com.ipusoft.context.AppContext;
+import com.ipusoft.context.config.Env;
 import com.ipusoft.context.http.HttpConstant;
 import com.ipusoft.context.utils.GsonUtils;
 
@@ -18,7 +19,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class OpenRetrofitManager extends IpuSoftSDK {
+public class OpenRetrofitManager {
     private static final String TAG = "OpenRetrofitManager";
 
     private static volatile OpenRetrofitManager mInstance;
@@ -56,7 +57,9 @@ public class OpenRetrofitManager extends IpuSoftSDK {
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                     .client(HttpManager.getHttpClient())
-                    .baseUrl(HttpConstant.INNER_BASE_URL)
+                    .baseUrl(
+                            AppContext.getRuntimeEnv() == Env.DEV ? HttpConstant.INNER_BASE_URL_DEV
+                                    : HttpConstant.INNER_BASE_URL_PRO)
                     .build();
         }
     }
@@ -70,10 +73,5 @@ public class OpenRetrofitManager extends IpuSoftSDK {
     public RequestBody getRequestBody(Map<String, Object> params) {
         return RequestBody.create(MediaType.parse("application/json;charset=UTF-8"),
                 GsonUtils.toJson(params));
-    }
-
-    @Override
-    public void initModule() {
-        initRetrofit();
     }
 }

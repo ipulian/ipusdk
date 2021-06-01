@@ -30,9 +30,10 @@ public class HttpManager {
         builder.connectTimeout(CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
                 .readTimeout(READ_TIMEOUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-                .addInterceptor(new LoggingInterceptor())
                 .dispatcher(getDispatcher())
+                .addInterceptor(new LoggingInterceptor())
                 .addInterceptor(new BaseUrlInterceptor());
+//                .addInterceptor(new ParamsInterceptor());
 
         return builder.build();
     }
@@ -46,7 +47,6 @@ public class HttpManager {
         Dispatcher dispatcher = new Dispatcher();
         dispatcher.setMaxRequests(64);
         dispatcher.setMaxRequestsPerHost(3);
-
         return dispatcher;
     }
 }

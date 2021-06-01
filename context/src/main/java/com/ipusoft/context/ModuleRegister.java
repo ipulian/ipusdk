@@ -7,12 +7,10 @@ package com.ipusoft.context;
  */
 
 public interface ModuleRegister {
-
     /**
      * base_datastore
      */
     String DATA_STORE_LIBRARY = "com.ipusoft.datastore.DataStoreApp";
-
     /**
      * base_network
      */
@@ -24,10 +22,13 @@ public interface ModuleRegister {
 
     String SIM_MODULE = "com.ipusoft.sim.SimModuleApp";
 
+    String SIP_MODULE = "com.ipusoft.siplibrary.SipModuleApp";
+
     String[] modules = {
             DATA_STORE_LIBRARY,
             BASE_NETWORK,
             DATA_BASE,
-            SIM_MODULE
+            SIM_MODULE,
+            SIP_MODULE
     };
 }
