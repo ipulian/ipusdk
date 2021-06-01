@@ -26,9 +26,10 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        IpuSoftSDK.init(this);//之后通过IpuSoftSDK.updateAuthInfo()更新 IAuthInfo
+        //env 标识运行时环境，有两种Env.DEV 对应预发布环境，Env.PRO 对应正式环境
+        IpuSoftSDK.init(this,env);//之后通过IpuSoftSDK.updateAuthInfo()更新 IAuthInfo
         //OR
-        IpuSoftSDK.init(this,new IAuthInfo("key","secret","username"));
+        IpuSoftSDK.init(this,env,new IAuthInfo("key","secret","username"));
     }
 }
 ```
