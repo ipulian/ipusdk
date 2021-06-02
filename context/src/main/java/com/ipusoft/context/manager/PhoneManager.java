@@ -15,6 +15,10 @@ import com.ipusoft.context.IpuSoftSDK;
  */
 
 public class PhoneManager {
+    private static final String SMS_TO = "smsto:";
+
+    private static final String SMS_BODY = "sms_body";
+
     /**
      * 拨打电话
      *
@@ -28,6 +32,25 @@ public class PhoneManager {
             currentActivity.startActivity(intent);
         } else {
             IpuSoftSDK.getAppContext().startActivity(intent);
+        }
+    }
+
+    /**
+     * 发送短息
+     *
+     * @param phone
+     */
+    public static void sendSms(String phone) {
+        sendSms(phone, "");
+    }
+
+    public static void sendSms(String phone, String content) {
+        Uri smsToUri = Uri.parse(SMS_TO + phone);
+        Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
+        intent.putExtra(SMS_BODY, content);
+        AppCompatActivity currentActivity = IActivityLifecycle.getCurrentActivity();
+        if (currentActivity != null) {
+            currentActivity.startActivity(intent);
         }
     }
 }
