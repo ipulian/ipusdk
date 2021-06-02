@@ -76,7 +76,6 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
             AppContext.iAuthInfo = iAuthInfo;
             SDKCommonInit.initSDKToken(iAuthInfo);
         }
-
         init(mApp, env);
     }
 

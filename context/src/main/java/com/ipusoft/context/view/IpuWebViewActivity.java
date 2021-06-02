@@ -1,15 +1,16 @@
 package com.ipusoft.context.view;
 
-import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import androidx.databinding.DataBindingUtil;
 
+import com.ipusoft.context.AppContext;
 import com.ipusoft.context.BaseActivity;
 import com.ipusoft.context.IpuSoftSDK;
 import com.ipusoft.context.R;
 import com.ipusoft.context.bridge.NativeJSBridge;
+import com.ipusoft.context.config.Env;
 import com.ipusoft.context.databinding.ContextActivityIpuWebViewBinding;
 import com.ipusoft.context.iface.IpuWebInterface;
 import com.ipusoft.context.manager.PhoneManager;
@@ -42,12 +43,13 @@ public class IpuWebViewActivity extends BaseActivity implements NativeJSBridge {
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         webView.addJavascriptInterface(new IpuWebInterface(this), "android");
-//        String url = "https://presaas.51lianlian.cn/h5/container.html?authCode="
-//                + IpuSoftSDK.getAuthCode() + "&type=SDK";
 
-        String url = "http://192.168.0.64:8086/h5/container.html?authCode="
+        String url = "https://presaas.51lianlian.cn/h5/container.html?authCode="
                 + IpuSoftSDK.getAuthCode() + "&type=SDK";
-        Log.d(TAG, "initUI: ---" + url);
+        if (AppContext.getRuntimeEnv() == Env.PRO) {
+            url = "https://saas.51lianlian.cn/h5/container.html?authCode="
+                    + IpuSoftSDK.getAuthCode() + "&type=SDK";
+        }
         webView.loadUrl(url);
     }
 
