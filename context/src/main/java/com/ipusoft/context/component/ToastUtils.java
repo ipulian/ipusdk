@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ipusoft.context.AppContext;
 import com.ipusoft.context.IpuSoftSDK;
 import com.ipusoft.context.R;
 
@@ -30,12 +31,15 @@ public class ToastUtils {
     }
 
     public static synchronized void showLoading(String msg) {
-        View view = View.inflate(IpuSoftSDK.getAppContext(), R.layout.context_layout_custom_loading, null);
+        View view = View.inflate(AppContext.getAppContext(), R.layout.context_layout_custom_loading, null);
         TextView textView = view.findViewById(R.id.tv_msg);
         LoadingView loadingView = view.findViewById(R.id.loading);
         loadingView.setSize(80);
         textView.setText(msg);
-        toastLoading = new Toast(IpuSoftSDK.getAppContext());
+        if (toastLoading != null) {
+            toastLoading.cancel();
+        }
+        toastLoading = new Toast(AppContext.getAppContext());
         toastLoading.setGravity(Gravity.CENTER, 0, 0);
         toastLoading.setDuration(Toast.LENGTH_LONG);
         toastLoading.setView(view);
@@ -49,7 +53,8 @@ public class ToastUtils {
      * @param msg
      */
     public static void showMessage(String msg) {
-        Toast toast = new Toast(IpuSoftSDK.getAppContext());
+        dismiss();
+        Toast toast = new Toast(AppContext.getAppContext());
         View view = LayoutInflater.from(IpuSoftSDK.getAppContext()).inflate(R.layout.context_layout_custom_toast, null, false);
         TextView textView = view.findViewById(R.id.tv_msg);
         textView.setText(msg);

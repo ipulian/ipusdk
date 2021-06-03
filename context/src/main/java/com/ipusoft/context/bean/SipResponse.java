@@ -1,15 +1,19 @@
 package com.ipusoft.context.bean;
 
+import java.io.Serializable;
+
 /**
  * author : GWFan
  * time   : 1/11/21 6:42 PM
  * desc   : sip 状态
  */
 
-public class SipResponse {
+public class SipResponse implements Serializable {
     private String date;
+
     private String type;
     private int code;
+    //错误消息
     private String msg;
 
     public String getDate() {

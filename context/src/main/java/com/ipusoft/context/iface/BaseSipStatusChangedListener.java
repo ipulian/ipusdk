@@ -10,24 +10,13 @@ import com.ipusoft.context.bean.SipResponse;
  */
 
 public interface BaseSipStatusChangedListener {
+    /**
+     * SIP发生错误
+     */
+    void onSipResponseError(SipResponse sipResponse);
 
     /**
-     * 初始化状态发生改变
+     * SIP状态正常
      */
-    void onInitCodeChanged(int code, String msg);
-
-    /**
-     * 登陆状态发生改变
-     */
-    void onLoginCodeChanged(SipResponse sipResponse);
-
-    /**
-     * http状态发生改变
-     */
-    void onHttpCodeChanged(SipResponse sipResponse);
-
-    /**
-     * 通话状态发生改变
-     */
-    void onCallStatusCodeChanged(SipResponse sipResponse);
+    void onSipResponseSuccess(SipResponse sipResponse);
 }

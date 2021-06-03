@@ -22,11 +22,6 @@ public abstract class AppCacheContext extends AppContext {
     private static String SIMCallOutNumber;
 
     /**
-     * SIP外呼的号码
-     */
-    private static String SIPCallOutNumber;
-
-    /**
      * 当前通话状态
      */
     private static PhoneState phoneState = PhoneState.NULL;
@@ -53,13 +48,5 @@ public abstract class AppCacheContext extends AppContext {
 
     public static void setSIMOutCallNumber(String outCallNumber) {
         AppCacheContext.SIMCallOutNumber = outCallNumber;
-    }
-
-    public static String getSIPCallOutNumber() {
-        return SIPCallOutNumber;
-    }
-
-    public static void setSIPCallOutNumber(String callOutNumber) {
-        AppCacheContext.SIPCallOutNumber = callOutNumber;
     }
 }

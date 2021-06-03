@@ -104,4 +104,18 @@ public class IWindowManager {
         layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
         return layoutParams;
     }
+
+
+    public static WindowManager.LayoutParams getWindowToastParams() {
+        WindowManager.LayoutParams layoutParams = initWindowParams();
+        layoutParams.gravity = Gravity.CENTER;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.format = PixelFormat.TRANSLUCENT;
+        layoutParams.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+
+        return layoutParams;
+    }
 }

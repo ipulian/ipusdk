@@ -115,8 +115,19 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
     public static void registerSipStatusChangedListener(BaseSipStatusChangedListener sipListener) {
         if (sipStatusChangedListenerList == null) {
             sipStatusChangedListenerList = new ArrayList<>();
+            sipStatusChangedListenerList.add(sipListener);
+            Log.d(TAG, "registerSipStatusChangedListener: ---------3");
+        } else {
+            for (BaseSipStatusChangedListener listener : sipStatusChangedListenerList) {
+                if (!StringUtils.equals(sipListener.getClass().getName(), listener.getClass().getName())) {
+                    sipStatusChangedListenerList.add(sipListener);
+                    Log.d(TAG, "registerSipStatusChangedListener: --------1");
+                } else {
+                    Log.d(TAG, "registerSipStatusChangedListener: --------2");
+                }
+            }
         }
-        sipStatusChangedListenerList.add(sipListener);
+        initSipModule();
     }
 
     /**
@@ -133,10 +144,20 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         }
     }
 
+    /**
+     * 更新Token
+     *
+     * @param token
+     */
     public static void updateToken(String token) {
         IpuSoftSDK.setToken(token);
     }
 
+    /**
+     * 重新登陆
+     *
+     * @param loginListener
+     */
     public static void reLogin(OnSDKLoginListener loginListener) {
         if (iAuthInfo == null) {
             Toast.makeText(mApp, "登陆失败，认证信息为空", Toast.LENGTH_SHORT).show();
@@ -146,6 +167,9 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         SDKCommonInit.initSDKToken(iAuthInfo, loginListener);
     }
 
+    /**
+     * 初始化ARouter
+     */
     private static void initARouter() {
         if (BuildConfig.DEBUG) {
             ARouter.openLog();
@@ -159,16 +183,15 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
      */
     private static void initIModule() {
         for (String module : ModuleRegister.modules) {
-            if (StringUtils.equals(ModuleRegister.SIP_MODULE, module)) {
-                initSipModule();
-            } else {
-                try {
-                    Class<?> clazz = Class.forName(module);
-                    IBaseApplication baseApplication = (IBaseApplication) clazz.newInstance();
-                    baseApplication.initModule();
-                } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-                    e.printStackTrace();
+            try {
+                Class<?> clazz = Class.forName(module);
+                IBaseApplication baseApplication = (IBaseApplication) clazz.newInstance();
+                baseApplication.initModule();
+                if (StringUtils.equals(ModuleRegister.SIP_MODULE, module)) {
+                    initSipModule();
                 }
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -176,15 +199,16 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
     /**
      * 初始化SIP组件
      */
-    private static void initSipModule() {
-        if (iAuthInfo != null) {
+    private synchronized static void initSipModule() {
+        if (iAuthInfo != null || StringUtils.isNotEmpty(token)) {
             try {
                 Class<?> clazz = Class.forName(ModuleRegister.SIP_MODULE);
-                Method initMethod = clazz.getDeclaredMethod("initSipModule");
+                Method initMethod = clazz.getDeclaredMethod("initSipModule",
+                        List.class);
                 initMethod.setAccessible(true);
-                initMethod.invoke(null, sipStatusChangedListenerList);
+                initMethod.invoke(clazz.newInstance(), sipStatusChangedListenerList);
             } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException
-                    | InvocationTargetException e) {
+                    | InvocationTargetException | InstantiationException e) {
                 e.printStackTrace();
             }
         }
