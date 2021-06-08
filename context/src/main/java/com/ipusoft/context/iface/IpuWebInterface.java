@@ -18,8 +18,8 @@ public class IpuWebInterface {
     }
 
     @JavascriptInterface
-    public void call(String phone) {
-        bridge.call(phone);
+    public void call(String type, String phone) {
+        bridge.call(type, phone);
     }
 
     @JavascriptInterface

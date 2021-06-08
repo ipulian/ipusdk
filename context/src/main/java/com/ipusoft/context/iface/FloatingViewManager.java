@@ -7,8 +7,13 @@ package com.ipusoft.context.iface;
  */
 
 public interface FloatingViewManager {
-
+    /**
+     * 显示
+     */
     void show();
 
+    /**
+     * 隐藏
+     */
     void dismiss();
 }

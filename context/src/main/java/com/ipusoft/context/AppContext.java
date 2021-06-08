@@ -1,10 +1,10 @@
 package com.ipusoft.context;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ipusoft.context.bean.AuthInfo;
 import com.ipusoft.context.bean.IAuthInfo;
 import com.ipusoft.context.config.Env;
 import com.ipusoft.context.http.manager.OpenRetrofitManager;
@@ -27,57 +27,103 @@ public abstract class AppContext extends Application {
      */
     protected static Env env;
     /**
-     * 调用者的身份信息
+     * 外部认证信息
+     */
+    protected static AuthInfo authInfo;
+    /**
+     * 内部认证信息
      */
     protected static IAuthInfo iAuthInfo;
     /**
-     * 根据身份信息生成的Token
+     * 根据身份信息生成的Token(通用)
      */
     protected static String token = "";
+
+    protected static String uid = "";
 
     /**
      * 初始化运行时环境
      */
     protected static void initRuntimeEnvironment() {
-        Log.d(TAG, "initRuntimeEnvironment: -------》" + env);
         OpenRetrofitManager.getInstance().initRetrofit();
     }
 
+    /**
+     * @param mApp Application
+     */
     protected static void setAppContext(Application mApp) {
         AppContext.mApp = mApp;
     }
 
+    /**
+     * @return Application
+     */
     public static Application getAppContext() {
         return mApp;
     }
 
+    /**
+     * @return 返回当前Activity
+     */
     public static AppCompatActivity getActivityContext() {
         return IActivityLifecycle.getCurrentActivity();
     }
 
+    /**
+     * @param env 设置运行环境
+     */
     protected static void setRuntimeEnv(Env env) {
-        Log.d(TAG, "setRuntimeEnv: ------" + env);
         AppContext.env = env;
     }
 
+    /**
+     * @return 运行环境
+     */
     public static Env getRuntimeEnv() {
-        Log.d(TAG, "getRuntimeEnv: ------？" + AppContext.env);
         return AppContext.env;
     }
 
+    /**
+     * @param token 设置Token(外部)
+     */
     public static void setToken(String token) {
-        IpuSoftSDK.token = token;
+        AppContext.token = token;
     }
 
+    /**
+     * @return Token(通用)
+     */
     public static String getToken() {
-        return IpuSoftSDK.token;
+        return AppContext.token;
     }
 
+    /**
+     * @return 外部认证code
+     */
     public static String getAuthCode() {
         return SDKCommonInit.generateAuthCode();
     }
 
-    public static IAuthInfo getAuthInfo() {
-        return iAuthInfo;
+    /**
+     * @return 外部认证信息
+     */
+    public static AuthInfo getAuthInfo() {
+        return authInfo;
+    }
+
+    /**
+     * @param iAuthInfo 更新内部认证信息
+     */
+    protected static void updateIAuthInfo(IAuthInfo iAuthInfo) {
+        AppContext.iAuthInfo = iAuthInfo;
+        AppContext.token = iAuthInfo.getToken();
+        AppContext.uid = iAuthInfo.getUid();
+    }
+
+    /**
+     * @return 返回内部UID
+     */
+    public static String getUid() {
+        return AppContext.uid;
     }
 }

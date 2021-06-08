@@ -19,6 +19,10 @@ public class WToast {
     private static WindowManager windowManager;
     private static View windowView;
 
+    public static synchronized void showLoading() {
+        showLoading("正在加载");
+    }
+
     public static synchronized void showLoading(String msg) {
         dismiss();
         windowManager = IWindowManager.getWindowManager(AppContext.getAppContext());

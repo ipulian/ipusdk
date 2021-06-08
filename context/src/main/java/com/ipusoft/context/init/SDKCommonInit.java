@@ -3,7 +3,7 @@ package com.ipusoft.context.init;
 import android.util.Log;
 
 import com.ipusoft.context.OnSDKLoginListener;
-import com.ipusoft.context.bean.IAuthInfo;
+import com.ipusoft.context.bean.AuthInfo;
 import com.ipusoft.context.http.AuthHttp;
 import com.ipusoft.context.utils.MD5Utils;
 import com.ipusoft.context.utils.StringUtils;
@@ -22,16 +22,16 @@ public class SDKCommonInit {
 
     private static String authCode;
 
-    private static IAuthInfo iAuthInfo;
+    private static AuthInfo authInfo;
 
-    public static void initSDKToken(IAuthInfo iAuthInfo) {
-        initSDKToken(iAuthInfo, status -> {
+    public static void initSDKToken(AuthInfo authInfo) {
+        initSDKToken(authInfo, status -> {
 
         });
     }
 
-    public static void initSDKToken(IAuthInfo iAuthInfo, OnSDKLoginListener loginListener) {
-        SDKCommonInit.iAuthInfo = iAuthInfo;
+    public static void initSDKToken(AuthInfo authInfo, OnSDKLoginListener loginListener) {
+        SDKCommonInit.authInfo = authInfo;
         generateAuthCode();
         AuthHttp.checkIdentity(authCode, loginListener);
     }
@@ -42,10 +42,10 @@ public class SDKCommonInit {
      * @return
      */
     public static String generateAuthCode() {
-        if (iAuthInfo != null) {
-            String key = iAuthInfo.getKey(),
-                    secret = iAuthInfo.getSecret(),
-                    username = iAuthInfo.getUsername();
+        if (authInfo != null) {
+            String key = authInfo.getKey(),
+                    secret = authInfo.getSecret(),
+                    username = authInfo.getUsername();
             if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(secret)
                     && StringUtils.isNotEmpty(username)) {
                 String sign = getSign(key, secret, username);

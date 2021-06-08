@@ -2,7 +2,7 @@ package com.ipusoft.context.http;
 
 import android.util.Log;
 
-import com.ipusoft.context.IpuSoftSDK;
+import com.ipusoft.context.AppContext;
 import com.ipusoft.context.OnSDKLoginListener;
 import com.ipusoft.context.base.IObserver;
 import com.ipusoft.context.bean.IAuthCode;
@@ -48,7 +48,7 @@ public class AuthHttp {
                         public void onNext(@NonNull IToken iToken) {
                             String status1 = iToken.getStatus();
                             if (HttpStatus.SUCCESS.equals(status1)) {
-                                IpuSoftSDK.setToken(iToken.getToken());
+                                AppContext.setToken(iToken.getToken());
                                 loginListener.onLoginResult(OnSDKLoginListener.LoginStatus.SUCCESS);
                             } else {
                                 Log.d(Constant.TAG, "AuthHttp->onNext1: " + iToken.getMsg());

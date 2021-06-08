@@ -10,10 +10,12 @@ import com.ipusoft.context.BaseActivity;
 import com.ipusoft.context.IpuSoftSDK;
 import com.ipusoft.context.R;
 import com.ipusoft.context.bridge.NativeJSBridge;
+import com.ipusoft.context.component.ToastUtils;
 import com.ipusoft.context.config.Env;
 import com.ipusoft.context.databinding.ContextActivityIpuWebViewBinding;
 import com.ipusoft.context.iface.IpuWebInterface;
 import com.ipusoft.context.manager.PhoneManager;
+import com.ipusoft.context.utils.StringUtils;
 
 /**
  * author : GWFan
@@ -64,9 +66,20 @@ public class IpuWebViewActivity extends BaseActivity implements NativeJSBridge {
     }
 
     @Override
+    public void call(String type, String phone) {
+        if (StringUtils.equals("SIP", type)) {
+            ToastUtils.showMessage("系统功能维护中");
+        } else {
+            PhoneManager.callPhone(phone);
+        }
+    }
+
+    @Deprecated
+    @Override
     public void call(String phone) {
         PhoneManager.callPhone(phone);
     }
+
 
     @Override
     public void goBack() {

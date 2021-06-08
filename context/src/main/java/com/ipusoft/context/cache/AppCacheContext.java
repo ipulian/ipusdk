@@ -1,5 +1,7 @@
 package com.ipusoft.context.cache;
 
+import android.util.Log;
+
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.constant.PhoneState;
 
@@ -27,6 +29,7 @@ public abstract class AppCacheContext extends AppContext {
     private static PhoneState phoneState = PhoneState.NULL;
 
     public static void setPhoneState(PhoneState state) {
+        Log.d(TAG, "setPhoneState: ------->" + state);
         phoneState = state;
     }
 

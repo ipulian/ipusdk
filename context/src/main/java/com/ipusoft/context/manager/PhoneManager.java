@@ -20,7 +20,7 @@ public class PhoneManager {
     private static final String SMS_BODY = "sms_body";
 
     /**
-     * 拨打电话
+     * 通过SIM 或者 X 拨打电话
      *
      * @param phone
      */
@@ -33,6 +33,28 @@ public class PhoneManager {
         } else {
             IpuSoftSDK.getAppContext().startActivity(intent);
         }
+    }
+
+    public static void callPhoneBySIP() {
+
+    }
+
+    /**
+     * 小号外呼
+     *
+     * @param phone
+     */
+    public static void callPhoneByX(String phone) {
+        callPhone(phone);
+    }
+
+    /**
+     * 主卡外呼
+     *
+     * @param phone
+     */
+    public static void callPhoneBySim(String phone) {
+        callPhone(phone);
     }
 
     /**

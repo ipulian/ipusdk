@@ -8,7 +8,13 @@ package com.ipusoft.context.bridge;
 
 public interface NativeJSBridge {
 
+    /**
+     * @param phone 电话号码
+     */
+    @Deprecated
     void call(String phone);
-    
+
+    void call(String type, String phone);
+
     void goBack();
 }

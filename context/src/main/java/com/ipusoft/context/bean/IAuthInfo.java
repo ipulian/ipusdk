@@ -4,45 +4,36 @@ import java.io.Serializable;
 
 /**
  * author : GWFan
- * time   : 5/18/21 11:43 AM
+ * time   : 6/4/21 6:14 PM
  * desc   :
  */
 
 public class IAuthInfo implements Serializable {
-    private String key;
-    private String secret;
-    private String username;
 
-    private IAuthInfo() {
+    private String token;
+
+    private String uid;
+
+    public IAuthInfo(){}
+
+    public IAuthInfo(String token, String uid) {
+        this.token = token;
+        this.uid = uid;
     }
 
-    public IAuthInfo(String key, String secret, String username) {
-        this.key = key;
-        this.secret = secret;
-        this.username = username;
+    public String getToken() {
+        return token;
     }
 
-    public String getKey() {
-        return key;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public String getUid() {
+        return uid;
     }
 
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

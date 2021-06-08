@@ -2,7 +2,7 @@ package com.ipusoft.context.http;
 
 import androidx.annotation.Nullable;
 
-import com.ipusoft.context.IpuSoftSDK;
+import com.ipusoft.context.AppContext;
 
 import java.util.HashMap;
 
@@ -26,7 +26,7 @@ public class RequestMap extends HashMap<String, Object> {
      */
     public static RequestMap getRequestMap() {
         RequestMap map = new RequestMap();
-        map.put(TOKEN, IpuSoftSDK.getToken());
+        map.put(TOKEN, AppContext.getToken());
         return map;
     }
 

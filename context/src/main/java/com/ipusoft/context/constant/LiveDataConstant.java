@@ -1,4 +1,4 @@
-package com.ipusoft.context;
+package com.ipusoft.context.constant;
 
 /**
  * author : GWFan
@@ -23,14 +23,14 @@ public class LiveDataConstant {
     public static final String AUDIO_PLAY_FINISH = "audio_play_finish";
     //展示播放的悬浮按钮
     public static final String AUDIO_SHOW_PLAY_FLOATING = "audio_show_play_floating";
-    //展示陌生电话的通话弹屏
-    public static final String WINDOW_SHOW_UNKNOWN_CALL = "window_show_unknown_call";
-    //隐藏陌生电话的通话弹屏
-    public static final String WINDOW_DISMISS_UNKNOWN_CALL = "window_dismiss_unknown_call";
     //展示SIP外呼的通话弹屏
     public static final String WINDOW_SHOW_SIP_CALL = "window_show_sip_call";
-    //隐藏SIP外呼的通话弹屏
-    public static final String WINDOW_DISMISS_SIP_CALL = "window_dismiss_sip_call";
     //更新SIP通话状态
     public static final String UPDATE_SIP_CALL_STATUS = "update_sip_call_status";
+    //刷新客户列表
+    public static final String REFRESH_CUSTOMER_LIST = "refresh_customer_list";
+    //刷新线索列表
+    public static final String REFRESH_CLUE_LIST = "refresh_clue_list";
+    //网络状态改变
+    public static final String NETWORK_CHANGED = "network_changed";
 }

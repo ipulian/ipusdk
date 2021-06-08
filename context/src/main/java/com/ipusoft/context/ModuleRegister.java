@@ -24,11 +24,14 @@ public interface ModuleRegister {
 
     String SIP_MODULE = "com.ipusoft.siplibrary.SipModuleApp";
 
+    String WINDOW_MODULE = "com.ipusoft.floatingwindow.WindowApp";
+
     String[] modules = {
             DATA_STORE_LIBRARY,
             BASE_NETWORK,
             DATA_BASE,
             SIM_MODULE,
-            SIP_MODULE
+            SIP_MODULE,
+            WINDOW_MODULE
     };
 }
