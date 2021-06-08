@@ -63,7 +63,7 @@ public class MyApplication extends Application {
 并把该接口的实现类 OnPhoneStatusChangedListenerImpl 注册到 SDK中
 ```java
    //该方法在Application的onCreate中调用
-  IpuSoftSDK.setOnPhoneStatusChangedListener(new OnPhoneStatusChangedListenerImpl());
+  IpuSoftSDK.registerPhoneStatusChangedListener(new OnPhoneStatusChangedListenerImpl());
 ```
 3. 实现弹屏
 ```java
