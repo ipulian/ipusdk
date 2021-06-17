@@ -27,9 +27,9 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         //env 标识运行时环境，有两种Env.DEV 对应预发布环境，Env.PRO 对应正式环境
-        IpuSoftSDK.init(this,env);//之后通过IpuSoftSDK.updateAuthInfo()更新 IAuthInfo
+        IpuSoftSDK.init(this,env);//之后通过IpuSoftSDK.updateAuthInfo()更新 AuthInfo
         //OR
-        IpuSoftSDK.init(this,env,new IAuthInfo("key","secret","username"));
+        IpuSoftSDK.init(this,env,new AuthInfo("key","secret","username"));
     }
 }
 ```
@@ -63,7 +63,7 @@ public class MyApplication extends Application {
 并把该接口的实现类 OnPhoneStatusChangedListenerImpl 注册到 SDK中
 ```java
    //该方法在Application的onCreate中调用
-  IpuSoftSDK.setOnPhoneStatusChangedListener(new OnPhoneStatusChangedListenerImpl());
+  IpuSoftSDK.registerPhoneStatusChangedListener(new OnPhoneStatusChangedListenerImpl());
 ```
 3. 实现弹屏
 ```java
