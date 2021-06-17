@@ -68,9 +68,9 @@ public class MyApplication extends Application {
 3. 实现弹屏
 ```java
   //初始化WindowManager
-  WindowManager mWindowManager = IWindowManager.getWindowManager(context);
+  WindowManager mWindowManager = IWindowManager.getWindowManager();
   //初始化LayoutParams
-  WindowManager.LayoutParams mLayoutParams = IWindowManager.getFullWidthWindowParams();
+  WindowManager.LayoutParams mLayoutParams = IWindowManager.getWindowParams();
   //把弹屏的自定义View 添加到Winddow中
   mWindowManager.addView(view, mLayoutParams);
 ```
