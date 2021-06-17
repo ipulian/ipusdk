@@ -106,7 +106,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         }
     }
 
-    public static void querySeatInfo() {
+    protected static void querySeatInfo() {
         QuerySeatInfoHttp.querySeatInfo((seatInfo, localCallType) -> {
             AppDataStore.setSeatInfo(seatInfo);
             if (StringUtils.equals(CallTypeConfig.SIP.getType(), localCallType)) {
@@ -121,7 +121,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
      *
      * @param seatInfo
      */
-    public static void registerSip(SeatInfo seatInfo) {
+    private static void registerSip(SeatInfo seatInfo) {
         if (seatInfo != null) {
             try {
                 Class<?> clazz = Class.forName(ModuleRegister.SIP_MODULE);
