@@ -1,4 +1,6 @@
-package com.ipusoft.context.http;
+package com.ipusoft.http;
+
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -13,7 +15,7 @@ import java.util.HashMap;
  */
 
 public class RequestMap extends HashMap<String, Object> {
-
+    private static final String TAG = "RequestMap";
     private static final String TOKEN = "token";
 
     private RequestMap() {

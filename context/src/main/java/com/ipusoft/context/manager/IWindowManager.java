@@ -5,8 +5,7 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.WindowManager;
-
-import com.ipusoft.context.utils.SizeUtils;
+import android.widget.LinearLayout;
 
 /**
  * author : GWFan
@@ -40,55 +39,6 @@ public class IWindowManager {
     }
 
     /**
-     * 自定义宽高的悬浮窗
-     *
-     * @param width
-     * @param height
-     * @return
-     */
-    public static WindowManager.LayoutParams getWindowParams(int width, int height) {
-        WindowManager.LayoutParams layoutParams = initWindowParams();
-        layoutParams.y = 0;
-        layoutParams.format = PixelFormat.RGBA_8888;
-        layoutParams.flags = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-        layoutParams.gravity = Gravity.TOP;
-        if (width <= 0) {
-            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        } else {
-            layoutParams.width = SizeUtils.dp2px(height);
-        }
-        if (height <= 0) {
-            layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-        } else {
-            layoutParams.height = SizeUtils.dp2px(height);
-        }
-        return layoutParams;
-    }
-
-    /**
-     * 自定义高度的悬浮窗
-     *
-     * @param height
-     * @return
-     */
-    public static WindowManager.LayoutParams getWindowParams(int height) {
-        WindowManager.LayoutParams layoutParams = initWindowParams();
-        layoutParams.y = 0;
-        layoutParams.format = PixelFormat.RGBA_8888;
-        layoutParams.flags = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-        layoutParams.gravity = Gravity.TOP;
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        if (height <= 0) {
-            layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-        } else {
-            layoutParams.height = SizeUtils.dp2px(height);
-        }
-        return layoutParams;
-    }
-
-    /**
      * 全屏的悬浮窗
      *
      * @return
@@ -117,5 +67,23 @@ public class IWindowManager {
                 | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
 
         return layoutParams;
+    }
+
+    public static WindowManager.LayoutParams getWrapLayoutParams() {
+        WindowManager.LayoutParams mLayoutParams = new WindowManager.LayoutParams();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+                    | WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
+        }
+        mLayoutParams.format = PixelFormat.RGBA_8888;
+        mLayoutParams.gravity = Gravity.START | Gravity.TOP;
+        mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        mLayoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        mLayoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        return mLayoutParams;
     }
 }

@@ -14,11 +14,7 @@ public enum CallTypeConfig {
 
     SIM("SIM", "SIM卡呼叫"),
     SIP("SIP", "线路呼叫"),
-    X("X", "小号呼叫"),
-    //主卡和SIP组合,默认SIP,用户可手动切换
-    SIM_SIP("SIM_SIP", ""),
-    //主卡和小号组合,默认小号,用户可手动切换
-    SIM_X("SIM_X", "");
+    X("X", "小号呼叫");
 
     private final String type;
     private final String val;
@@ -34,17 +30,6 @@ public enum CallTypeConfig {
 
     public String getVal() {
         return val;
-    }
-
-    public static List<String> getCallTypeItem(String outCallType) {
-        List<String> list = new ArrayList<>();
-        list.add(SIM.val);
-        if (CallTypeConfig.SIM_SIP.getType().equals(outCallType)) {
-            list.add(SIP.val);
-        } else if (CallTypeConfig.SIM_X.getType().equals(outCallType)) {
-            list.add(X.val);
-        }
-        return list;
     }
 
     public static String getValByType(String type) {
@@ -65,5 +50,15 @@ public enum CallTypeConfig {
             }
         }
         return type;
+    }
+
+    public static List<String> getValListByTypeList(List<String> typeList) {
+        List<String> valList = new ArrayList<>();
+        for (CallTypeConfig item : CallTypeConfig.values()) {
+            if (typeList.contains(item.getType())) {
+                valList.add(item.val);
+            }
+        }
+        return valList;
     }
 }

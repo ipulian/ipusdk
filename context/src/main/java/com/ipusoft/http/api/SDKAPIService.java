@@ -1,14 +1,20 @@
-package com.ipusoft.context.api;
+package com.ipusoft.http.api;
 
 import com.ipusoft.context.bean.IAuthCode;
 import com.ipusoft.context.bean.IToken;
+import com.ipusoft.context.bean.SeatInfo;
+import com.ipusoft.context.bean.base.BaseHttpResponse;
+import com.ipusoft.http.HttpConstant;
 
 import java.util.Map;
 
 import io.reactivex.rxjava3.core.Observable;
+import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -36,4 +42,24 @@ public interface SDKAPIService {
     @POST("/getAuthCodeInfo")
     @FormUrlEncoded
     Observable<IToken> getAuthCodeInfo(@FieldMap Map<String, Object> params);
+
+    /**
+     * 返回坐席呼叫类型
+     *
+     * @param requestBody
+     * @return
+     */
+    @Headers({HttpConstant.CONTENT_TYPE})
+    @POST("/call/getSeatInfo")
+    Observable<SeatInfo> querySeatInfo(@Body RequestBody requestBody);
+
+    /**
+     * 切换呼叫方式
+     *
+     * @param requestBody
+     * @return
+     */
+    @Headers({HttpConstant.CONTENT_TYPE})
+    @POST("/app/user/status")
+    Observable<BaseHttpResponse> updateCallType(@Body RequestBody requestBody);
 }

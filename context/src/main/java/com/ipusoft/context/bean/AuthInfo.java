@@ -1,5 +1,7 @@
 package com.ipusoft.context.bean;
 
+import com.ipusoft.context.utils.StringUtils;
+
 import java.io.Serializable;
 
 /**
@@ -47,5 +49,29 @@ public class AuthInfo implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (this.getClass() != obj.getClass())
+            return false;
+        AuthInfo other = (AuthInfo) obj;
+        return StringUtils.equals(key, other.key)
+                && StringUtils.equals(secret, other.secret)
+                && StringUtils.equals(username, other.username);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((StringUtils.isEmpty(username)) ? 0 : username.hashCode());
+        result = result * 31 + key.hashCode();
+        result = result * 31 + secret.hashCode();
+        return result;
     }
 }

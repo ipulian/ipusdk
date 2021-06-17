@@ -6,13 +6,13 @@ package com.ipusoft.context.config;
  * desc   :
  */
 
-public enum Env {
+public class Env {
     /**
      * 开发环境
      */
-    DEV,
+    public static final String DEV = "DEV";
     /**
      * 正式环境
      */
-    PRO
+    public static final String PRO = "PRO";
 }

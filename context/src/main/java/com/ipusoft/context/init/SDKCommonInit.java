@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.ipusoft.context.OnSDKLoginListener;
 import com.ipusoft.context.bean.AuthInfo;
-import com.ipusoft.context.http.AuthHttp;
+import com.ipusoft.http.AuthHttp;
 import com.ipusoft.context.utils.MD5Utils;
 import com.ipusoft.context.utils.StringUtils;
 

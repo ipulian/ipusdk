@@ -1,15 +1,18 @@
 package com.ipusoft.context.component;
 
-import android.os.Handler;
+import android.app.Application;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.ipusoft.context.AppContext;
-import com.ipusoft.context.IpuSoftSDK;
 import com.ipusoft.context.R;
+
+import java.lang.ref.WeakReference;
 
 
 /**
@@ -20,8 +23,8 @@ import com.ipusoft.context.R;
 
 public class ToastUtils {
     private static final String TAG = "ToastUtils";
-    private static final Handler handler = new Handler();
-    private static Toast toastLoading;
+    private static WeakReference<LoadingDialog> dialogWeakReference;
+    private static WeakReference<Toast> toastWeakReference;
 
     /**
      * 显示LoadingDialog
@@ -31,20 +34,13 @@ public class ToastUtils {
     }
 
     public static synchronized void showLoading(String msg) {
-        View view = View.inflate(AppContext.getAppContext(), R.layout.context_layout_custom_loading, null);
-        TextView textView = view.findViewById(R.id.tv_msg);
-        LoadingView loadingView = view.findViewById(R.id.loading);
-        loadingView.setSize(80);
-        textView.setText(msg);
-        if (toastLoading != null) {
-            toastLoading.cancel();
+        AppCompatActivity activityContext = AppContext.getActivityContext();
+        dismiss();
+        if (activityContext != null) {
+            LoadingDialog dialog = LoadingDialog.get().setText(msg);
+            dialog.show();
+            dialogWeakReference = new WeakReference<>(dialog);
         }
-        toastLoading = new Toast(AppContext.getAppContext());
-        toastLoading.setGravity(Gravity.CENTER, 0, 0);
-        toastLoading.setDuration(Toast.LENGTH_LONG);
-        toastLoading.setView(view);
-        toastLoading.show();
-        handler.postDelayed(toastLoading::cancel, 9 * 1000);
     }
 
     /**
@@ -54,20 +50,35 @@ public class ToastUtils {
      */
     public static void showMessage(String msg) {
         dismiss();
-        Toast toast = new Toast(AppContext.getAppContext());
-        View view = LayoutInflater.from(IpuSoftSDK.getAppContext()).inflate(R.layout.context_layout_custom_toast, null, false);
+        Toast toast;
+        if (toastWeakReference != null) {
+            toast = toastWeakReference.get();
+            if (toast != null) {
+                toast.cancel();
+            }
+        }
+        Application appContext = AppContext.getAppContext();
+        toast = new Toast(appContext);
+        View view = LayoutInflater.from(appContext).inflate(R.layout.context_layout_custom_toast, null, false);
         TextView textView = view.findViewById(R.id.tv_msg);
         textView.setText(msg);
         toast.setView(view);
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
+        toastWeakReference = new WeakReference<>(toast);
     }
 
-    public static void dismiss() {
+    public static synchronized void dismiss() {
         try {
-            if (toastLoading != null) {
-                toastLoading.cancel();
+            if (dialogWeakReference != null) {
+                LoadingDialog dialog = dialogWeakReference.get();
+                if (dialog != null) {
+                    if (!dialog.isHidden()) {
+                        dialog.dismiss();
+                        dialogWeakReference = null;
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

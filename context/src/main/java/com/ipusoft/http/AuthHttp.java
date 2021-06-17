@@ -1,4 +1,4 @@
-package com.ipusoft.context.http;
+package com.ipusoft.http;
 
 import android.util.Log;
 
@@ -9,7 +9,7 @@ import com.ipusoft.context.bean.IAuthCode;
 import com.ipusoft.context.bean.IToken;
 import com.ipusoft.context.constant.Constant;
 import com.ipusoft.context.constant.HttpStatus;
-import com.ipusoft.context.module.SDKService;
+import com.ipusoft.http.module.SDKService;
 
 import java.util.HashMap;
 

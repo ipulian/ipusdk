@@ -1,4 +1,4 @@
-package com.ipusoft.context.http.manager;
+package com.ipusoft.http.manager;
 
 /**
  * author : GWFan
@@ -6,9 +6,7 @@ package com.ipusoft.context.http.manager;
  * desc   :
  */
 
-import com.ipusoft.context.AppContext;
-import com.ipusoft.context.config.Env;
-import com.ipusoft.context.http.HttpConstant;
+import com.ipusoft.context.AppRuntimeContext;
 import com.ipusoft.context.utils.GsonUtils;
 
 import java.util.Map;
@@ -19,21 +17,17 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class OpenRetrofitManager {
-    private static final String TAG = "OpenRetrofitManager";
+public class RetrofitManager {
+    private static final String TAG = "RetrofitManager";
 
-    private static volatile OpenRetrofitManager mInstance;
     private Retrofit mRetrofit;
 
-    public static OpenRetrofitManager getInstance() {
-        if (mInstance == null) {
-            synchronized (OpenRetrofitManager.class) {
-                if (mInstance == null) {
-                    mInstance = new OpenRetrofitManager();
-                }
-            }
-        }
-        return mInstance;
+    private static class RetrofitManagerHolder {
+        private static final RetrofitManager INSTANCE = new RetrofitManager();
+    }
+
+    public static RetrofitManager getInstance() {
+        return RetrofitManagerHolder.INSTANCE;
     }
 
     /**
@@ -57,14 +51,9 @@ public class OpenRetrofitManager {
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                     .client(HttpManager.getHttpClient())
-                    .baseUrl(getBaseUrlByRuntimeEnv())
+                    .baseUrl(AppRuntimeContext.BASE_URL)
                     .build();
         }
-    }
-
-    private String getBaseUrlByRuntimeEnv() {
-        return AppContext.getRuntimeEnv() == Env.DEV ? HttpConstant.INNER_BASE_URL_DEV
-                : HttpConstant.INNER_BASE_URL_PRO;
     }
 
     /**
@@ -74,7 +63,6 @@ public class OpenRetrofitManager {
      * @return
      */
     public RequestBody getRequestBody(Map<String, Object> params) {
-        return RequestBody.create(MediaType.parse("application/json;charset=UTF-8"),
-                GsonUtils.toJson(params));
+        return RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), GsonUtils.toJson(params));
     }
 }

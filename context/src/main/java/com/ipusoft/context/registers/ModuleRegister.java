@@ -1,20 +1,16 @@
-package com.ipusoft.context;
+package com.ipusoft.context.registers;
 
 /**
  * author : GWFan
  * time   : 5/18/21 10:15 AM
- * desc   :
+ * desc   : module注册中心
  */
 
 public interface ModuleRegister {
     /**
      * base_datastore
      */
-    String DATA_STORE_LIBRARY = "com.ipusoft.datastore.DataStoreApp";
-    /**
-     * base_network
-     */
-    String BASE_NETWORK = "com.ipusoft.network.RetrofitManager";
+    String DATA_STORE_LIBRARY = "com.ipusoft.mmkv.datastore.DataStoreApp";
     /**
      * database
      */
@@ -24,14 +20,13 @@ public interface ModuleRegister {
 
     String SIP_MODULE = "com.ipusoft.siplibrary.SipModuleApp";
 
-    String WINDOW_MODULE = "com.ipusoft.floatingwindow.WindowApp";
+    String PHONE_MODULE = "com.ipusoft.phone.PhoneApp";
 
     String[] modules = {
             DATA_STORE_LIBRARY,
-            BASE_NETWORK,
             DATA_BASE,
             SIM_MODULE,
             SIP_MODULE,
-            WINDOW_MODULE
+            PHONE_MODULE
     };
 }

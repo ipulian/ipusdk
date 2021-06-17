@@ -5,7 +5,7 @@ import android.webkit.WebView;
 
 import androidx.databinding.DataBindingUtil;
 
-import com.ipusoft.context.AppContext;
+import com.ipusoft.context.AppRuntimeContext;
 import com.ipusoft.context.BaseActivity;
 import com.ipusoft.context.IpuSoftSDK;
 import com.ipusoft.context.R;
@@ -48,7 +48,7 @@ public class IpuWebViewActivity extends BaseActivity implements NativeJSBridge {
 
         String url = "https://presaas.51lianlian.cn/h5/container.html?authCode="
                 + IpuSoftSDK.getAuthCode() + "&type=SDK";
-        if (AppContext.getRuntimeEnv() == Env.PRO) {
+        if (StringUtils.equals(Env.PRO, AppRuntimeContext.getRuntimeEnv())) {
             url = "https://saas.51lianlian.cn/h5/container.html?authCode="
                     + IpuSoftSDK.getAuthCode() + "&type=SDK";
         }

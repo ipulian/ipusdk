@@ -1,6 +1,8 @@
-package com.ipusoft.context.http.interceptors;
+package com.ipusoft.http.interceptors;
 
 import android.util.Log;
+
+import com.ipusoft.context.utils.GsonUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,8 +30,9 @@ public class LoggingInterceptor implements Interceptor {
         Request request = chain.request();
         RequestBody body = request.body();
         long t1 = System.nanoTime();
-        Log.i(TAG, String.format("发送请求 %s on %s%n%s", request.url(), chain.connection(),
-                request.headers()));
+        Log.i(TAG, String.format("发送请求 %s%n", request.url()));
+        Log.i(TAG, String.format("请求参数 %s%n", GsonUtils.toJson(request.body())));
+
         Response response = chain.proceed(request);
         long t2 = System.nanoTime();
         //不能直接使用response.body（）.string()的方式输出日志

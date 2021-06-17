@@ -11,7 +11,7 @@ import com.ipusoft.context.db.dao.SysRecordingDao;
  * desc   :
  */
 
-public class DBManager {
+public class AppDBManager {
     private static final String TAG = "DBManager";
     private static AppDatabase appDB;
 
@@ -26,7 +26,9 @@ public class DBManager {
      * 清空所有数据库表
      */
     public static void clearAllTables() {
-        appDB.clearAllTables();
+        if (appDB != null) {
+            new Thread(() -> appDB.clearAllTables()).start();
+        }
     }
 
     public static SysRecordingDao getSysRecordingDao() {

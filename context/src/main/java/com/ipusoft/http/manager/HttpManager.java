@@ -1,7 +1,7 @@
-package com.ipusoft.context.http.manager;
+package com.ipusoft.http.manager;
 
-import com.ipusoft.context.http.interceptors.BaseUrlInterceptor;
-import com.ipusoft.context.http.interceptors.LoggingInterceptor;
+import com.ipusoft.http.interceptors.base.BaseUrlInterceptor;
+import com.ipusoft.http.interceptors.LoggingInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +33,6 @@ public class HttpManager {
                 .dispatcher(getDispatcher())
                 .addInterceptor(new LoggingInterceptor())
                 .addInterceptor(new BaseUrlInterceptor());
-//                .addInterceptor(new ParamsInterceptor());
 
         return builder.build();
     }

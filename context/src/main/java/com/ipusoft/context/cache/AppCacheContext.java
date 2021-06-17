@@ -1,8 +1,6 @@
 package com.ipusoft.context.cache;
 
-import android.util.Log;
-
-import com.ipusoft.context.AppContext;
+import com.ipusoft.context.AppRuntimeContext;
 import com.ipusoft.context.constant.PhoneState;
 
 /**
@@ -11,8 +9,8 @@ import com.ipusoft.context.constant.PhoneState;
  * desc   :
  */
 
-public abstract class AppCacheContext extends AppContext {
-    private static final String TAG = "AppCache";
+public abstract class AppCacheContext extends AppRuntimeContext {
+    private static final String TAG = "AppCacheContext";
     /**
      * 主卡外呼的callId
      */
@@ -28,13 +26,28 @@ public abstract class AppCacheContext extends AppContext {
      */
     private static PhoneState phoneState = PhoneState.NULL;
 
+    private static int sipState = 0;
+
+    /**
+     * @param state SIM（X）通话状态
+     */
     public static void setPhoneState(PhoneState state) {
-        Log.d(TAG, "setPhoneState: ------->" + state);
         phoneState = state;
     }
 
     public static PhoneState getPhoneState() {
         return phoneState;
+    }
+
+    /**
+     * @param state SIP通话状态
+     */
+    public static void setSipState(int state) {
+        sipState = state;
+    }
+
+    public static int getSipState() {
+        return sipState;
     }
 
     public static void setSIMCallOutCallId(long simCallOutCallId) {

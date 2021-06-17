@@ -3,6 +3,7 @@ package com.ipusoft.context;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +39,7 @@ public class IActivityLifecycle implements Application.ActivityLifecycleCallback
 
     @Override
     public void onActivityResumed(@NonNull Activity activity) {
+        Log.d(TAG, "onActivityResumed: ------->"+activity.getLocalClassName());
         setCurrentActivity(activity);
     }
 

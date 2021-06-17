@@ -7,4 +7,20 @@
         <item name="vertical_Space">20dp</item>
         <item name="isFull">false</item>
     </style>
+
+    <style name="LoadingDialog" parent="@android:style/Theme.Dialog">
+        <!--去掉Dialog的windowFrame框-->
+        <item name="android:windowFrame">@null</item>
+        <!--浮在activity之上-->
+        <item name="android:windowIsFloating">true</item>
+        <!--非半透明-->
+        <item name="android:windowIsTranslucent">false</item>
+        <!-- Dialog以外的区域模糊效果，这里我们设为false,是为了防止dialog出现导致页面变暗 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!--去掉title-->
+        <item name="android:windowNoTitle">true</item>
+        <!--dialog的背景透明-->
+        <item name="android:windowBackground">@color/black1</item>
+
+    </style>
 </resources>

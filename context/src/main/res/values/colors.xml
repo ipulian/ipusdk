@@ -3,6 +3,7 @@
     <color name="themeColor">#267DE1</color>
     <color name="themeColorPress">#7EB1EE</color>
 
+    <color name="textColor8">#999999</color>
     <color name="black">#FF000000</color>
     <color name="black95">#F2000000</color>
     <color name="black90">#E6000000</color>

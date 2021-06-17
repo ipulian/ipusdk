@@ -1,4 +1,4 @@
-package com.ipusoft.network;
+package com.ipusoft.context.constant;
 
 /**
  * author : GWFan

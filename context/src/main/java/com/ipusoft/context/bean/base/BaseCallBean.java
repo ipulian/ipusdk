@@ -31,8 +31,6 @@ public abstract class BaseCallBean extends FloatingWindowStatus implements Seria
     private String channelName;
     //标签
     private List<String> labelList;
-    //阶段
-    private List<String> stageList;
 
     //分类
     private List<String> sortList;
@@ -45,9 +43,6 @@ public abstract class BaseCallBean extends FloatingWindowStatus implements Seria
 
     //待联
     private String nextConnect;
-
-    //阶段
-    private String stage;
 
     //分类
     private String sort;
@@ -135,14 +130,6 @@ public abstract class BaseCallBean extends FloatingWindowStatus implements Seria
         this.outCallType = outCallType;
     }
 
-    public List<String> getStageList() {
-        return stageList;
-    }
-
-    public void setStageList(List<String> stageList) {
-        this.stageList = stageList;
-    }
-
     public List<String> getSortList() {
         return sortList;
     }
@@ -165,14 +152,6 @@ public abstract class BaseCallBean extends FloatingWindowStatus implements Seria
 
     public void setNextConnect(String nextConnect) {
         this.nextConnect = nextConnect;
-    }
-
-    public String getStage() {
-        return stage;
-    }
-
-    public void setStage(String stage) {
-        this.stage = stage;
     }
 
     public String getSort() {

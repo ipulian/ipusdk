@@ -6,16 +6,20 @@ import android.widget.Toast;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.ipusoft.context.bean.AuthInfo;
-import com.ipusoft.context.bean.IAuthInfo;
+import com.ipusoft.context.bean.SeatInfo;
 import com.ipusoft.context.cache.AppCacheContext;
-import com.ipusoft.context.config.Env;
-import com.ipusoft.context.db.DBManager;
+import com.ipusoft.context.constant.CallTypeConfig;
+import com.ipusoft.context.db.AppDBManager;
 import com.ipusoft.context.iface.BaseSipStatusChangedListener;
 import com.ipusoft.context.init.SDKCommonInit;
 import com.ipusoft.context.listener.IPhoneStateListener;
 import com.ipusoft.context.listener.OnPhoneStateChangedListener;
+import com.ipusoft.context.registers.ModuleRegister;
+import com.ipusoft.context.utils.ArrayUtils;
 import com.ipusoft.context.utils.GsonUtils;
 import com.ipusoft.context.utils.StringUtils;
+import com.ipusoft.http.QuerySeatInfoHttp;
+import com.ipusoft.mmkv.datastore.AppDataStore;
 import com.tencent.mmkv.MMKV;
 
 import java.lang.reflect.InvocationTargetException;
@@ -33,13 +37,13 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
     private static final String TAG = "IpuSoftSDK";
     private static List<BaseSipStatusChangedListener> sipStatusChangedListenerList;
 
-    public static void init(Application mApp, Env env) {
+    public static void init(Application mApp, String env) {
 
         setAppContext(mApp);
 
         setRuntimeEnv(env);
 
-        initRuntimeEnvironment();
+        initHttpEnvironment();
 
         /*
          * 初始化MMKV
@@ -57,7 +61,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         /**
          * 初始化SDK数据库
          */
-        DBManager.initDataBase();
+        AppDBManager.initDataBase();
         /*
          * 初始化组件
          */
@@ -65,32 +69,70 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
     }
 
     /**
-     * 传外部认证信息，由SDK生成token
+     * 外部认证信息，由SDK生成token
      *
      * @param mApp
      * @param authInfo
      * @throws RuntimeException
      */
-    public static void init(Application mApp, Env env, AuthInfo authInfo) throws RuntimeException {
-        setRuntimeEnv(env);
-        if (authInfo != null) {
-            AppContext.authInfo = authInfo;
-            SDKCommonInit.initSDKToken(authInfo);
-        }
+    public static void init(Application mApp, String env, AuthInfo authInfo) throws RuntimeException {
         init(mApp, env);
+        updateAuthInfo(authInfo);
     }
 
     /**
-     * 传内部认证信息
+     * 更新外部认证信息
      *
-     * @param mApp
-     * @param iAuthInfo
-     * @throws RuntimeException
+     * @param authInfo
      */
-    public static void init(Application mApp, Env env, IAuthInfo iAuthInfo) throws RuntimeException {
-        setRuntimeEnv(env);
-        AppContext.updateIAuthInfo(iAuthInfo);
-        init(mApp, env);
+    public static void updateAuthInfo(AuthInfo authInfo) {
+        if (authInfo != null) {
+            AuthInfo oldAuthInfo = AppContext.getAuthInfo();
+            if (!authInfo.equals(oldAuthInfo)) {
+                /*
+                 * 认证信息和上次不一样，清空上一个认证信息的相关数据
+                 */
+                unInitIModule();
+                AppContext.setAuthInfo(authInfo);
+            }
+            SDKCommonInit.initSDKToken(authInfo, status -> {
+                if (OnSDKLoginListener.LoginStatus.SUCCESS == status) {
+                    querySeatInfo();
+                }
+            });
+        } else {
+            Log.d(TAG, "updateAuthInfo: 更新认证信息失败,IAuthInfo = null");
+            throw new RuntimeException("更新认证信息失败,IAuthInfo = null");
+        }
+    }
+
+    public static void querySeatInfo() {
+        QuerySeatInfoHttp.querySeatInfo((seatInfo, localCallType) -> {
+            AppDataStore.setSeatInfo(seatInfo);
+            if (StringUtils.equals(CallTypeConfig.SIP.getType(), localCallType)) {
+                registerSip(seatInfo);
+                registerSipListener();
+            }
+        });
+    }
+
+    /**
+     * 注册SIP服务
+     *
+     * @param seatInfo
+     */
+    public static void registerSip(SeatInfo seatInfo) {
+        if (seatInfo != null) {
+            try {
+                Class<?> clazz = Class.forName(ModuleRegister.SIP_MODULE);
+                Method initMethod = clazz.getDeclaredMethod("registerSipService", SeatInfo.class);
+                initMethod.setAccessible(true);
+                initMethod.invoke(clazz.newInstance(), seatInfo);
+            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException
+                    | InvocationTargetException | InstantiationException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -114,38 +156,18 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
     public static void registerSipStatusChangedListener(BaseSipStatusChangedListener sipListener) {
         if (sipStatusChangedListenerList == null) {
             sipStatusChangedListenerList = new ArrayList<>();
-            sipStatusChangedListenerList.add(sipListener);
-        } else {
-            for (BaseSipStatusChangedListener listener : sipStatusChangedListenerList) {
-                if (!StringUtils.equals(sipListener.getClass().getName(), listener.getClass().getName())) {
-                    sipStatusChangedListenerList.add(sipListener);
-                }
+        }
+        boolean flag = false;
+        for (int i = 0; i < sipStatusChangedListenerList.size(); i++) {
+            if (sipListener.getClass().getName().equals(sipStatusChangedListenerList.get(i).getClass().getName())) {
+                flag = true;
+                break;
             }
         }
-        initSipModule();
-    }
-
-    /**
-     * 更新外部认证信息
-     *
-     * @param authInfo
-     */
-    public static void updateAuthInfo(AuthInfo authInfo) {
-        if (authInfo != null) {
-            AppContext.authInfo = authInfo;
-            SDKCommonInit.initSDKToken(authInfo);
-        } else {
-            Log.d(TAG, "updateAuthInfo: 更新认证信息失败,IAuthInfo = null");
+        if (!flag) {
+            sipStatusChangedListenerList.add(sipListener);
         }
-    }
-
-    /**
-     * 更新内部认证信息
-     *
-     * @param iAuthInfo
-     */
-    public static void updateIAuthInfo(IAuthInfo iAuthInfo) {
-        AppContext.updateIAuthInfo(iAuthInfo);
+        registerSipListener();
     }
 
     /**
@@ -154,6 +176,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
      * @param loginListener
      */
     public static void reLogin(OnSDKLoginListener loginListener) {
+        AuthInfo authInfo = getAuthInfo();
         if (authInfo == null) {
             Toast.makeText(mApp, "登陆失败，认证信息为空", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "reLogin: ->" + "登陆失败，认证信息为空：" + GsonUtils.toJson(authInfo));
@@ -180,28 +203,44 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         for (String module : ModuleRegister.modules) {
             try {
                 Class<?> clazz = Class.forName(module);
-                Log.d(TAG, "initIModule: --------->" + module);
                 IBaseApplication baseApplication = (IBaseApplication) clazz.newInstance();
                 baseApplication.initModule();
                 if (StringUtils.equals(ModuleRegister.SIP_MODULE, module)) {
-                    initSipModule();
+                    registerSipListener();
                 }
             } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
-                Log.d(TAG, "initIModule: ---------->" + e.toString());
             }
         }
     }
 
     /**
-     * 初始化SIP组件
+     * 反初始化各个组件
      */
-    private synchronized static void initSipModule() {
-        if (authInfo != null || StringUtils.isNotEmpty(token)) {
+    public static void unInitIModule() {
+
+        AppDBManager.clearAllTables();
+        AppDataStore.clearAllData();
+
+        for (String module : ModuleRegister.modules) {
+            try {
+                Class<?> clazz = Class.forName(module);
+                IBaseApplication baseApplication = (IBaseApplication) clazz.newInstance();
+                baseApplication.unInitModule();
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 初始化SIP状态listener
+     */
+    private static void registerSipListener() {
+        if (StringUtils.isNotEmpty(getToken()) && ArrayUtils.isNotEmpty(sipStatusChangedListenerList)) {
             try {
                 Class<?> clazz = Class.forName(ModuleRegister.SIP_MODULE);
-                Method initMethod = clazz.getDeclaredMethod("initSipModule",
-                        List.class);
+                Method initMethod = clazz.getDeclaredMethod("registerSipListener", List.class);
                 initMethod.setAccessible(true);
                 initMethod.invoke(clazz.newInstance(), sipStatusChangedListenerList);
             } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException

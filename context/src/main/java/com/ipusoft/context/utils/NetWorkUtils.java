@@ -7,7 +7,7 @@ import android.telephony.TelephonyManager;
 
 import androidx.annotation.RequiresPermission;
 
-import com.ipusoft.network.NetWorkType;
+import com.ipusoft.context.constant.NetWorkType;
 
 /**
  * author : GWFan
