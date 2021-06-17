@@ -26,7 +26,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //env 标识运行时环境，有两种Env.DEV 对应预发布环境，Env.PRO 对应正式环境
+        //env 标识运行时环境，有两种Env.OPEN_DEV 对应预发布环境，Env.OPEN_PRO 对应正式环境
         IpuSoftSDK.init(this,env);//之后通过IpuSoftSDK.updateAuthInfo()更新 AuthInfo
         //OR
         IpuSoftSDK.init(this,env,new AuthInfo("key","secret","username"));
