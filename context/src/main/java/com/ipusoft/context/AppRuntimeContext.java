@@ -1,9 +1,10 @@
 package com.ipusoft.context;
 
 import com.ipusoft.context.config.Env;
+import com.ipusoft.context.config.IEnv;
+import com.ipusoft.context.utils.StringUtils;
 import com.ipusoft.http.HttpConstant;
 import com.ipusoft.http.manager.RetrofitManager;
-import com.ipusoft.context.utils.StringUtils;
 
 /**
  * author : GWFan
@@ -21,7 +22,7 @@ public class AppRuntimeContext extends AppContext {
 
     public static String BASE_URL = "";
 
-    public static String SIP_URL = "";
+    public static String OPEN_BASE_URL = "";
 
     public static String GATE_WAY_URL = "";
 
@@ -32,12 +33,16 @@ public class AppRuntimeContext extends AppContext {
      */
     protected static void setRuntimeEnv(String env) {
         AppRuntimeContext.env = env;
-        if (StringUtils.equals(Env.DEV, env)) {
+        if (StringUtils.equals(IEnv.DEV, env)) {
             BASE_URL = HttpConstant.INNER_BASE_URL_DEV;
-            SIP_URL = HttpConstant.OPEN_URL_DEV;
-        } else if (StringUtils.equals(Env.PRO, env)) {
+        } else if (StringUtils.equals(IEnv.PRO, env)) {
             BASE_URL = HttpConstant.INNER_BASE_URL_PRO;
-            SIP_URL = HttpConstant.OPEN_URL_PRO;
+        } else if (StringUtils.equals(Env.OPEN_DEV, env)) {
+            BASE_URL = HttpConstant.INNER_BASE_URL_DEV;
+            OPEN_BASE_URL = HttpConstant.OPEN_URL_DEV;
+        } else if (StringUtils.equals(Env.OPEN_PRO, env)) {
+            BASE_URL = HttpConstant.INNER_BASE_URL_PRO;
+            OPEN_BASE_URL = HttpConstant.OPEN_URL_PRO;
         }
     }
 

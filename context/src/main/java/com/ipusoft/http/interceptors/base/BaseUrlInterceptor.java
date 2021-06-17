@@ -45,7 +45,7 @@ public class BaseUrlInterceptor implements Interceptor {
                  */
                 String baseUrl = "";
                 if (StringUtils.equals(HttpConstant.OPEN, headerValue)) {
-                    baseUrl = AppRuntimeContext.BASE_URL;
+                    baseUrl = AppRuntimeContext.OPEN_BASE_URL;
                 } else if (StringUtils.equals(HttpConstant.GATEWAY, headerValue)) {
                     baseUrl = AppRuntimeContext.GATE_WAY_URL;
                 }

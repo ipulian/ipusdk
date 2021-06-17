@@ -20,8 +20,6 @@ public class SDKCommonInit {
 
     private static final String TAG = "XLibraryApplication";
 
-    private static String authCode;
-
     private static AuthInfo authInfo;
 
     public static void initSDKToken(AuthInfo authInfo) {
@@ -32,7 +30,7 @@ public class SDKCommonInit {
 
     public static void initSDKToken(AuthInfo authInfo, OnSDKLoginListener loginListener) {
         SDKCommonInit.authInfo = authInfo;
-        generateAuthCode();
+        String authCode = generateAuthCode();
         AuthHttp.checkIdentity(authCode, loginListener);
     }
 
@@ -42,6 +40,7 @@ public class SDKCommonInit {
      * @return
      */
     public static String generateAuthCode() {
+        String authCode = "";
         if (authInfo != null) {
             String key = authInfo.getKey(),
                     secret = authInfo.getSecret(),

@@ -67,7 +67,7 @@ public abstract class LianLianApp extends IpuSoftSDK {
                 } else if (StringUtils.equals("GATE_WAY_URL", fieldName)) {
                     GATE_WAY_URL = fieldValue;
                 } else if (StringUtils.equals("SIP_URL", fieldName)) {
-                    SIP_URL = fieldValue;
+                    OPEN_BASE_URL = fieldValue;
                 } else if (StringUtils.equals("WE_CHAT_BASE_URL", fieldName)) {
                     WE_CHAT_BASE_URL = fieldValue;
                 } else if (StringUtils.equals("SERVICE_AGREEMENT", fieldName)) {

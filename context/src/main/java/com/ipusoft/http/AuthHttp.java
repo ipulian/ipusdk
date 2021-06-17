@@ -9,6 +9,7 @@ import com.ipusoft.context.bean.IAuthCode;
 import com.ipusoft.context.bean.IToken;
 import com.ipusoft.context.constant.Constant;
 import com.ipusoft.context.constant.HttpStatus;
+import com.ipusoft.context.utils.GsonUtils;
 import com.ipusoft.http.module.SDKService;
 
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import io.reactivex.rxjava3.annotations.NonNull;
  */
 
 public class AuthHttp {
+    private static final String TAG = "AuthHttp";
 
     /**
      * 验证身份信息
@@ -43,6 +45,7 @@ public class AuthHttp {
                     String authCode = result.getAuthCode();
                     HashMap<String, Object> params = new HashMap<>();
                     params.put("authCode", authCode);
+                    Log.d(TAG, "onNext: --------<" + GsonUtils.toJson(params));
                     SDKService.Companion.getAuthCodeInfo(params, new IObserver<IToken>() {
                         @Override
                         public void onNext(@NonNull IToken iToken) {
@@ -58,19 +61,19 @@ public class AuthHttp {
 
                         @Override
                         public void onError(@NonNull Throwable e) {
-                            Log.d(Constant.TAG, "AuthHttp->onNext1: " + e.toString());
+                            Log.d(Constant.TAG, "AuthHttp->onNext2: " + e.toString());
                             loginListener.onLoginResult(OnSDKLoginListener.LoginStatus.FAILED);
                         }
                     });
                 } else {
-                    Log.d(Constant.TAG, "AuthHttp->onNext2: " + result.getMsg());
+                    Log.d(Constant.TAG, "AuthHttp->onNext3: " + result.getMsg());
                     loginListener.onLoginResult(OnSDKLoginListener.LoginStatus.FAILED);
                 }
             }
 
             @Override
             public void onError(@NonNull Throwable e) {
-                Log.d(Constant.TAG, "AuthHttp->onNext2: " + e.toString());
+                Log.d(Constant.TAG, "AuthHttp->onNext4: " + e.toString());
                 loginListener.onLoginResult(OnSDKLoginListener.LoginStatus.FAILED);
             }
         });

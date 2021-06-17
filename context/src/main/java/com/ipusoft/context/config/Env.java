@@ -8,11 +8,11 @@ package com.ipusoft.context.config;
 
 public class Env {
     /**
-     * 开发环境
+     * 对外开发环境
      */
-    public static final String DEV = "DEV";
+    public static final String OPEN_DEV = "OPEN_DEV";
     /**
-     * 正式环境
+     * 对外正式环境
      */
-    public static final String PRO = "PRO";
+    public static final String OPEN_PRO = "OPEN_PRO";
 }
