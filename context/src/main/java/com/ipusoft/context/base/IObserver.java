@@ -1,5 +1,7 @@
 package com.ipusoft.context.base;
 
+import com.ipusoft.context.component.ToastUtils;
+
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -23,7 +25,7 @@ public class IObserver<T> implements Observer<T> {
 
     @Override
     public void onError(@NonNull Throwable e) {
-
+        ToastUtils.dismiss();
     }
 
     @Override

@@ -81,8 +81,14 @@ public class LoadingDialog extends DialogFragment {
     public void dismiss() {
         super.dismiss();
         isShowing = false;
-        iCountDownTimer.onFinish();
-        iCountDownTimer.cancel();
+        try {
+            if (iCountDownTimer != null) {
+                iCountDownTimer.onFinish();
+                iCountDownTimer.cancel();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

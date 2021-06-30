@@ -23,9 +23,9 @@ public class StorageConstant {
      * 本地外呼类型
      */
     public static final String LOCAL_CALL_TYPE = "local_call_type";
-
     /**
      * 坐席信息
      */
     public static final String SEAT_INFO = "seat_info";
+
 }

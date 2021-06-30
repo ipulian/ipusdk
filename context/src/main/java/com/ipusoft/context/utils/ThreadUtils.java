@@ -23,4 +23,8 @@ public class ThreadUtils {
     public static void runOnUiThreadDelayed(final Runnable runnable, long delayMillis) {
         HANDLER.postDelayed(runnable, delayMillis);
     }
+
+    public static void cancelDelayedTask() {
+        HANDLER.removeMessages(HANDLER.obtainMessage().what);
+    }
 }

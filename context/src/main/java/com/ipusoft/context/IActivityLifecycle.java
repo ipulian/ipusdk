@@ -3,7 +3,6 @@ package com.ipusoft.context;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +26,9 @@ public class IActivityLifecycle implements Application.ActivityLifecycleCallback
 
     private static WeakReference<AppCompatActivity> sCurrentActivityWeakRef;
 
+    private int activityCount;//activity的count数
+    private boolean isForeground;//是否在前台
+
     @Override
     public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
         addActivity(activity);
@@ -34,12 +36,11 @@ public class IActivityLifecycle implements Application.ActivityLifecycleCallback
 
     @Override
     public void onActivityStarted(@NonNull Activity activity) {
-
+        activityCount++;
     }
 
     @Override
     public void onActivityResumed(@NonNull Activity activity) {
-        Log.d(TAG, "onActivityResumed: ------->"+activity.getLocalClassName());
         setCurrentActivity(activity);
     }
 
@@ -50,7 +51,10 @@ public class IActivityLifecycle implements Application.ActivityLifecycleCallback
 
     @Override
     public void onActivityStopped(@NonNull Activity activity) {
-
+        activityCount--;
+        if (0 == activityCount) {
+            isForeground = false;
+        }
     }
 
     @Override
@@ -97,13 +101,14 @@ public class IActivityLifecycle implements Application.ActivityLifecycleCallback
         return currentActivity;
     }
 
+
     /**
      * 设置当前Activity
      *
      * @param activity
      */
     private static void setCurrentActivity(Activity activity) {
-        sCurrentActivityWeakRef = new WeakReference<AppCompatActivity>((AppCompatActivity) activity);
+        sCurrentActivityWeakRef = new WeakReference<>((AppCompatActivity) activity);
     }
 
     /**

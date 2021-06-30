@@ -13,7 +13,7 @@ public interface NativeJSBridge {
      *
      * @param phone 电话号码
      */
-    @Deprecated()
+    @Deprecated
     void call(String phone);
 
     /**

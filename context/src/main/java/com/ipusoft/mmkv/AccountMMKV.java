@@ -10,15 +10,15 @@ import java.util.Set;
 
 /**
  * author : GWFan
- * time   : 5/12/21 9:56 AM
+ * time   : 5/12/21 9:21 AM
  * desc   :
  */
 
-public class AppMMKV {
+public class AccountMMKV {
 
-    private static final MMKV mv = MMKV.mmkvWithID(DSConfig.APP_DS);
+    private static final MMKV mv = MMKV.mmkvWithID(DSConfig.ACCOUNT_DS);
 
-    private AppMMKV() {
+    private AccountMMKV() {
     }
 
     public static void set(String key, Object object) {
@@ -59,6 +59,10 @@ public class AppMMKV {
 
     public static Long getLong(String key) {
         return mv.decodeLong(key, 0L);
+    }
+
+    public static Long getLong(String key, long defVal) {
+        return mv.decodeLong(key, defVal);
     }
 
     public static Boolean getBoolean(String key) {

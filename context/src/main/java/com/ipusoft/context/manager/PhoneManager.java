@@ -5,8 +5,9 @@ import android.net.Uri;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ipusoft.context.AppContext;
 import com.ipusoft.context.IActivityLifecycle;
-import com.ipusoft.context.IpuSoftSDK;
+import com.ipusoft.context.cache.AppCacheContext;
 
 /**
  * author : GWFan
@@ -31,7 +32,7 @@ public class PhoneManager {
         if (currentActivity != null) {
             currentActivity.startActivity(intent);
         } else {
-            IpuSoftSDK.getAppContext().startActivity(intent);
+            AppContext.getAppContext().startActivity(intent);
         }
     }
 
@@ -54,6 +55,7 @@ public class PhoneManager {
      * @param phone
      */
     public static void callPhoneBySim(String phone) {
+        AppCacheContext.setSIMOutCallNumber(phone);
         callPhone(phone);
     }
 

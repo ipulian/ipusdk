@@ -18,7 +18,8 @@ public class IEnv extends Env {
     /**
      * 环信 OEM
      */
-    public static final String HX = "HX";
+    public static final String HX_PRO = "HX_PRO";
+    public static final String HX_DEV = "HX_DEV";
     /**
      * 电信 OEM
      */

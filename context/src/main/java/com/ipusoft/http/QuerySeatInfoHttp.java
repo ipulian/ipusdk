@@ -1,5 +1,7 @@
 package com.ipusoft.http;
 
+import android.util.Log;
+
 import com.ipusoft.context.LiveDataBus;
 import com.ipusoft.context.base.IObserver;
 import com.ipusoft.context.bean.SeatInfo;
@@ -7,10 +9,10 @@ import com.ipusoft.context.bean.base.BaseHttpResponse;
 import com.ipusoft.context.constant.CallTypeConfig;
 import com.ipusoft.context.constant.HttpStatus;
 import com.ipusoft.context.constant.LiveDataConstant;
-import com.ipusoft.http.module.SDKService;
 import com.ipusoft.context.utils.ArrayUtils;
 import com.ipusoft.context.utils.StringUtils;
-import com.ipusoft.mmkv.datastore.AppDataStore;
+import com.ipusoft.http.module.SDKService;
+import com.ipusoft.mmkv.datastore.CommonDataRepo;
 
 import java.util.List;
 
@@ -37,10 +39,12 @@ public class QuerySeatInfoHttp {
             @Override
             public void onNext(@NonNull SeatInfo seatInfo) {
                 //  SipDataStore.setSeatInfo(seatInfo);
+                //  Log.d(TAG, "onNext: ------->" + GsonUtils.toJson(seatInfo));
                 String status = seatInfo.getStatus();
                 if (StringUtils.equals(HttpStatus.SUCCESS, status)) {
                     String callType = seatInfo.getCallType();
-                    String localCallType = AppDataStore.getLocalCallType();
+                    String localCallType = CommonDataRepo.getLocalCallType();
+                    Log.d(TAG, "onNext: 1---------->" + localCallType);
                     if (StringUtils.isNotEmpty(callType)) {
                         List<String> list = ArrayUtils.createList(callType.split(","));
                         if (list.size() == 1) {
@@ -114,16 +118,17 @@ public class QuerySeatInfoHttp {
                             }
                         }
 
-                        if (listener != null) {
-                            listener.onQuerySeatInfo(seatInfo, localCallType);
-                        }
-
-                        AppDataStore.setLocalCallType(localCallType);
+                        //   Log.d(TAG, "onNext: -2-------》" + localCallType);
+                        CommonDataRepo.setLocalCallType(localCallType);
 
                         LiveDataBus.get().with(LiveDataConstant.REFRESH_CALL_TYPE_CONFIG, String.class)
                                 .postValue(localCallType);
 
                         updateCallType(localCallType);
+
+                        if (listener != null) {
+                            listener.onQuerySeatInfo(seatInfo, localCallType);
+                        }
                     }
                 }
             }

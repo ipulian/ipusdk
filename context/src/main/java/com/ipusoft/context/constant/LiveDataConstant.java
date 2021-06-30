@@ -35,5 +35,7 @@ public class LiveDataConstant {
     public static final String NETWORK_CHANGED = "network_changed";
     //外呼方法配置
     public static final String REFRESH_CALL_TYPE_CONFIG = "refresh_call_type_config";
+    //上传进度
+    public static final String UPLOAD_PROGRESS = "uploadProgress";
 
 }

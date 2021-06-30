@@ -19,7 +19,7 @@ import com.ipusoft.context.utils.ArrayUtils;
 import com.ipusoft.context.utils.GsonUtils;
 import com.ipusoft.context.utils.StringUtils;
 import com.ipusoft.http.QuerySeatInfoHttp;
-import com.ipusoft.mmkv.datastore.AppDataStore;
+import com.ipusoft.mmkv.datastore.CommonDataRepo;
 import com.tencent.mmkv.MMKV;
 
 import java.lang.reflect.InvocationTargetException;
@@ -40,15 +40,15 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
     public static void init(Application mApp, String env) {
 
         setAppContext(mApp);
+        /*
+         * 初始化MMKV
+         */
+        MMKV.initialize(mApp);
 
         setRuntimeEnv(env);
 
         initHttpEnvironment();
 
-        /*
-         * 初始化MMKV
-         */
-        MMKV.initialize(mApp);
         /*
          * 初始化ARouter
          */
@@ -57,9 +57,8 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
          * 注册Activity声明周期
          */
         mApp.registerActivityLifecycleCallbacks(new IActivityLifecycle());
-
-        /**
-         * 初始化SDK数据库
+        /*
+         * 初始化数据库
          */
         AppDBManager.initDataBase();
         /*
@@ -88,16 +87,18 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
     public static void updateAuthInfo(AuthInfo authInfo) {
         if (authInfo != null) {
             AuthInfo oldAuthInfo = AppContext.getAuthInfo();
-            if (!authInfo.equals(oldAuthInfo)) {
+            if (oldAuthInfo != null && !authInfo.equals(oldAuthInfo)) {
                 /*
                  * 认证信息和上次不一样，清空上一个认证信息的相关数据
+                 * 重新初始化
                  */
                 unInitIModule();
                 AppContext.setAuthInfo(authInfo);
+                init(mApp, env);
             }
             SDKCommonInit.initSDKToken(authInfo, status -> {
                 if (OnSDKLoginListener.LoginStatus.SUCCESS == status) {
-                    querySeatInfo();
+                    querySeatInfoAndRegisterSIP();
                 }
             });
         } else {
@@ -106,9 +107,21 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         }
     }
 
-    protected static void querySeatInfo() {
+    /**
+     * 查询坐席信息，并注册SIP
+     */
+    private static long timestamp = 0;
+
+    public static void querySeatInfoAndRegisterSIP() {
+        long l = System.currentTimeMillis();
+        if (l - timestamp < 3 * 1000) {
+            return;
+        }
+        timestamp = l;
+        Log.d(TAG, "querySeatInfoAndRegisterSIP: ----------");
         QuerySeatInfoHttp.querySeatInfo((seatInfo, localCallType) -> {
-            AppDataStore.setSeatInfo(seatInfo);
+            CommonDataRepo.setSeatInfo(seatInfo);
+            Log.d(TAG, "querySeatInfoAndRegisterSIP: ----------->" + localCallType);
             if (StringUtils.equals(CallTypeConfig.SIP.getType(), localCallType)) {
                 registerSip(seatInfo);
                 registerSipListener();
@@ -125,6 +138,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         if (seatInfo != null) {
             try {
                 Class<?> clazz = Class.forName(ModuleRegister.SIP_MODULE);
+                Log.d(TAG, "registerSip: 0--------------");
                 Method initMethod = clazz.getDeclaredMethod("registerSipService", SeatInfo.class);
                 initMethod.setAccessible(true);
                 initMethod.invoke(clazz.newInstance(), seatInfo);
@@ -220,7 +234,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
     public static void unInitIModule() {
 
         AppDBManager.clearAllTables();
-        AppDataStore.clearAllData();
+        CommonDataRepo.clearAllData();
 
         for (String module : ModuleRegister.modules) {
             try {

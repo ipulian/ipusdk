@@ -18,9 +18,6 @@ import java.lang.reflect.Modifier;
 public abstract class LianLianApp extends IpuSoftSDK {
     private static final String TAG = "LianLianApp";
 
-    public static String SERVICE_AGREEMENT = "";
-    public static String PRIVACY_POLICY = "";
-
     /**
      * 内部认证信息
      *
@@ -34,19 +31,15 @@ public abstract class LianLianApp extends IpuSoftSDK {
     }
 
     /**
-     * @param iAuthInfo 更新内部认证信息
+     * 设置内部认证信息
+     *
+     * @param iAuthInfo
      */
-    public static void updateIAuthInfo(IAuthInfo iAuthInfo) {
-        if (iAuthInfo != null) {
-            IAuthInfo oldIAuthInfo = AppContext.getIAuthInfo();
-            if (oldIAuthInfo != null && !oldIAuthInfo.equals(iAuthInfo)) {
-                unInitIModule();
-            }
-            AppContext.setIAuthInfo(iAuthInfo);
-            querySeatInfo();
-        } else {
-            throw new RuntimeException("认证信息为空 IAuthInfo == null");
-        }
+    public static void setIAuthInfo(IAuthInfo iAuthInfo) {
+        unInitIModule();
+
+        AppContext.setIAuthInfo(iAuthInfo);
+        querySeatInfoAndRegisterSIP();
     }
 
     private static void getAppConfig(Class<?> appConfigClazz) {
@@ -70,10 +63,6 @@ public abstract class LianLianApp extends IpuSoftSDK {
                     OPEN_BASE_URL = fieldValue;
                 } else if (StringUtils.equals("WE_CHAT_BASE_URL", fieldName)) {
                     WE_CHAT_BASE_URL = fieldValue;
-                } else if (StringUtils.equals("SERVICE_AGREEMENT", fieldName)) {
-                    SERVICE_AGREEMENT = fieldValue;
-                } else if (StringUtils.equals("PRIVACY_POLICY", fieldName)) {
-                    PRIVACY_POLICY = fieldValue;
                 }
             } catch (IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();

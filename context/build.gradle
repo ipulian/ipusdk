@@ -79,6 +79,12 @@ dependencies {
     api 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
 
     /**
+     * RxPermissions
+     * https://github.com/tbruyelle/RxPermissions
+     */
+    api 'com.github.tbruyelle:rxpermissions:0.12'
+
+    /**
      * Room
      */
     implementation "androidx.room:room-runtime:$room_version"

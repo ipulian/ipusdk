@@ -11,7 +11,7 @@ import com.ipusoft.context.IpuSoftSDK;
 import com.ipusoft.context.R;
 import com.ipusoft.context.bridge.NativeJSBridge;
 import com.ipusoft.context.component.ToastUtils;
-import com.ipusoft.context.config.IEnv;
+import com.ipusoft.context.config.Env;
 import com.ipusoft.context.databinding.ContextActivityIpuWebViewBinding;
 import com.ipusoft.context.iface.IpuWebInterface;
 import com.ipusoft.context.manager.PhoneManager;
@@ -48,7 +48,7 @@ public class IpuWebViewActivity extends BaseActivity implements NativeJSBridge {
 
         String url = "https://presaas.51lianlian.cn/h5/container.html?authCode="
                 + IpuSoftSDK.getAuthCode() + "&type=SDK";
-        if (StringUtils.equals(IEnv.PRO, AppRuntimeContext.getRuntimeEnv())) {
+        if (StringUtils.equals(Env.OPEN_PRO, AppRuntimeContext.getRuntimeEnv())) {
             url = "https://saas.51lianlian.cn/h5/container.html?authCode="
                     + IpuSoftSDK.getAuthCode() + "&type=SDK";
         }

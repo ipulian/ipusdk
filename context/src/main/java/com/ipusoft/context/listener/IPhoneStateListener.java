@@ -27,15 +27,12 @@ public class IPhoneStateListener extends android.telephony.PhoneStateListener {
     private TelephonyManager telephonyManager;
     private List<OnPhoneStateChangedListener> listeners;
 
+    private static class IPhoneStateListenerHolder {
+        private static final IPhoneStateListener INSTANCE = new IPhoneStateListener();
+    }
+
     public static IPhoneStateListener getInstance() {
-        if (instance == null) {
-            synchronized (IPhoneStateListener.class) {
-                if (instance == null) {
-                    instance = new IPhoneStateListener();
-                }
-            }
-        }
-        return instance;
+        return IPhoneStateListenerHolder.INSTANCE;
     }
 
     /**

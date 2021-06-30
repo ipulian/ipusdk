@@ -28,6 +28,7 @@ public class RequestMap extends HashMap<String, Object> {
      */
     public static RequestMap getRequestMap() {
         RequestMap map = new RequestMap();
+        Log.d(TAG, "getRequestMap: ---》" + AppContext.getToken());
         map.put(TOKEN, AppContext.getToken());
         return map;
     }

@@ -34,8 +34,8 @@ public class ToastUtils {
     }
 
     public static synchronized void showLoading(String msg) {
-        AppCompatActivity activityContext = AppContext.getActivityContext();
         dismiss();
+        AppCompatActivity activityContext = AppContext.getActivityContext();
         if (activityContext != null) {
             LoadingDialog dialog = LoadingDialog.get().setText(msg);
             dialog.show();

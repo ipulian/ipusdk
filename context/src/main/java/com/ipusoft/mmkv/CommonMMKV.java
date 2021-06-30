@@ -10,15 +10,15 @@ import java.util.Set;
 
 /**
  * author : GWFan
- * time   : 5/12/21 9:56 AM
+ * time   : 5/20/21 10:08 AM
  * desc   :
  */
 
-public class AppMMKV {
+public class CommonMMKV {
 
-    private static final MMKV mv = MMKV.mmkvWithID(DSConfig.APP_DS);
+    private static final MMKV mv = MMKV.mmkvWithID(DSConfig.SDK_COMMON_DS);
 
-    private AppMMKV() {
+    private CommonMMKV() {
     }
 
     public static void set(String key, Object object) {
@@ -104,16 +104,13 @@ public class AppMMKV {
     }
 
     /**
-     * 清除所有key
-     */
-    public static void clearAll() {
-        mv.clearAll();
-    }
-
-    /**
      * 判断是否含有某个key
      */
     public static boolean hasKey(String key) {
         return mv.containsKey(key);
+    }
+
+    public static void clearDataStore() {
+        mv.clearAll();
     }
 }

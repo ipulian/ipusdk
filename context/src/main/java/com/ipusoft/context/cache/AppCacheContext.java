@@ -17,6 +17,11 @@ public abstract class AppCacheContext extends AppRuntimeContext {
     private static long SIMCallOutCallId;
 
     /**
+     * SIP外呼的callId
+     */
+    private static String SIPCallOutCallId;
+
+    /**
      * 主卡外呼的号码
      */
     private static String SIMCallOutNumber;
@@ -64,5 +69,13 @@ public abstract class AppCacheContext extends AppRuntimeContext {
 
     public static void setSIMOutCallNumber(String outCallNumber) {
         AppCacheContext.SIMCallOutNumber = outCallNumber;
+    }
+
+    public static String getSIPCallOutId() {
+        return SIPCallOutCallId;
+    }
+
+    public static void setSIPCallOutId(String SIPCallId) {
+        AppCacheContext.SIPCallOutCallId = SIPCallId;
     }
 }

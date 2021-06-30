@@ -1,13 +1,14 @@
 package com.ipusoft.context;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ipusoft.context.bean.AuthInfo;
 import com.ipusoft.context.bean.IAuthInfo;
 import com.ipusoft.context.init.SDKCommonInit;
-import com.ipusoft.mmkv.datastore.AppDataStore;
+import com.ipusoft.mmkv.datastore.CommonDataRepo;
 
 /**
  * author : GWFan
@@ -36,6 +37,8 @@ public abstract class AppContext extends Application {
         return mApp;
     }
 
+    private static final Object object = new Object();
+
     /**
      * @return 返回当前Activity
      */
@@ -47,14 +50,18 @@ public abstract class AppContext extends Application {
      * @param token 设置Token(外部)
      */
     public static void setToken(String token) {
-        AppDataStore.setToken(token);
+        synchronized (object) {
+            CommonDataRepo.setToken(token);
+        }
     }
 
     /**
      * @return Token(通用)
      */
     public static String getToken() {
-        return AppDataStore.getToken();
+        synchronized (object) {
+            return CommonDataRepo.getToken();
+        }
     }
 
     /**
@@ -68,11 +75,11 @@ public abstract class AppContext extends Application {
      * @return 外部认证信息
      */
     public static void setAuthInfo(AuthInfo authInfo) {
-        AppDataStore.setAuthInfo(authInfo);
+        CommonDataRepo.setAuthInfo(authInfo);
     }
 
     public static AuthInfo getAuthInfo() {
-        return AppDataStore.getAuthInfo();
+        return CommonDataRepo.getAuthInfo();
     }
 
     /**
@@ -82,16 +89,16 @@ public abstract class AppContext extends Application {
      */
     public static void setIAuthInfo(IAuthInfo iAuthInfo) {
         if (iAuthInfo != null) {
-            AppDataStore.setIAuthInfo(iAuthInfo);
+            CommonDataRepo.setIAuthInfo(iAuthInfo);
             AppContext.setToken(iAuthInfo.getToken());
         }
     }
 
     public static IAuthInfo getIAuthInfo() {
-        return AppDataStore.getIAuthInfo();
+        return CommonDataRepo.getIAuthInfo();
     }
 
     public static String getUid() {
-        return AppDataStore.getUid();
+        return CommonDataRepo.getUid();
     }
 }

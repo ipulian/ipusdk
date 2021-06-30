@@ -12,6 +12,8 @@ import com.ipusoft.context.R;
 import com.ipusoft.context.manager.IWindowManager;
 import com.ipusoft.context.utils.ThreadUtils;
 
+import java.lang.ref.WeakReference;
+
 /**
  * author : GWFan
  * time   : 5/8/21 9:18 AM
@@ -20,7 +22,7 @@ import com.ipusoft.context.utils.ThreadUtils;
 
 public class WToast {
     private static WindowManager windowManager;
-    private static View windowView;
+    private static WeakReference<View> windowViewReference;
     private static WindowManager.LayoutParams layoutParams;
 
     public static synchronized void showLoading() {
@@ -30,33 +32,27 @@ public class WToast {
     public static synchronized void showLoading(String msg) {
         dismiss();
         windowManager = IWindowManager.getWindowManager();
-        windowView = View.inflate(AppContext.getAppContext(), R.layout.context_layout_custom_loading, null);
-        try {
-            WindowManager.LayoutParams mParams = getWindowToastParams();
-            TextView textView = windowView.findViewById(R.id.tv_msg);
-            LoadingView loadingView = windowView.findViewById(R.id.loading);
-            loadingView.setSize(80);
-            textView.setText(msg);
-            windowManager.addView(windowView, mParams);
-            ThreadUtils.runOnUiThreadDelayed(WToast::dismiss, 8 * 1000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        View view = View.inflate(AppContext.getAppContext(), R.layout.context_layout_custom_loading, null);
+        WindowManager.LayoutParams mParams = getWindowToastParams();
+        TextView textView = view.findViewById(R.id.tv_msg);
+        LoadingView loadingView = view.findViewById(R.id.loading);
+        loadingView.setSize(80);
+        textView.setText(msg);
+        windowManager.addView(view, mParams);
+        windowViewReference = new WeakReference<>(view);
+        ThreadUtils.runOnUiThreadDelayed(WToast::dismiss, 8 * 1000);
     }
 
     public static void showMessage(String msg) {
         dismiss();
         windowManager = IWindowManager.getWindowManager();
-        windowView = View.inflate(AppContext.getAppContext(), R.layout.context_window_layout_custom_toast, null);
-        try {
-            WindowManager.LayoutParams mParams = getWindowToastParams();
-            TextView textView = windowView.findViewById(R.id.tv_msg);
-            textView.setText(msg);
-            windowManager.addView(windowView, mParams);
-            ThreadUtils.runOnUiThreadDelayed(WToast::dismiss, 1100);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        View view = View.inflate(AppContext.getAppContext(), R.layout.context_window_layout_custom_toast, null);
+        WindowManager.LayoutParams mParams = getWindowToastParams();
+        TextView textView = view.findViewById(R.id.tv_msg);
+        textView.setText(msg);
+        windowManager.addView(view, mParams);
+        windowViewReference = new WeakReference<>(view);
+        ThreadUtils.runOnUiThreadDelayed(WToast::dismiss, 1100);
     }
 
     /**
@@ -64,17 +60,18 @@ public class WToast {
      */
     public static void dismiss() {
         try {
-            if (windowView != null) {
-                if (windowView.getParent() != null) {
-                    windowManager.removeView(windowView);
+            if (windowViewReference != null) {
+                View view = windowViewReference.get();
+                if (view != null) {
+                    if (view.getParent() != null) {
+                        windowManager.removeView(view);
+                    }
+                    windowManager = null;
                 }
-                windowManager = null;
-                windowView = null;
             }
         } catch (Exception e) {
-            windowManager = null;
-            windowView = null;
             e.printStackTrace();
+            windowManager = null;
         }
     }
 

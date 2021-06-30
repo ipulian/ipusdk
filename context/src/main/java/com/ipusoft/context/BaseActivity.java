@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,17 +24,25 @@ public abstract class BaseActivity extends AppCompatActivity {
         initUI();
         //绑定LiveData
         bindLiveData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         //页面初始化时的网络请求
         initRequest();
     }
 
     protected abstract void initViewModel();
 
-    protected abstract void initData();
+    protected void initData() {
+    }
 
     protected abstract void initUI();
 
-    protected abstract void bindLiveData();
+    protected void bindLiveData() {
+    }
 
-    protected abstract void initRequest();
+    protected void initRequest() {
+    }
 }
