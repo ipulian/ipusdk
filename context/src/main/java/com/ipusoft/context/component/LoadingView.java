@@ -13,7 +13,7 @@ import android.view.animation.LinearInterpolator;
 import androidx.annotation.NonNull;
 
 import com.ipusoft.context.R;
-import com.ipusoft.context.utils.SizeUtils;
+import com.ipusoft.utils.SizeUtils;
 
 
 /**

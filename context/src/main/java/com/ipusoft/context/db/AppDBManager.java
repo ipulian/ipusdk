@@ -2,7 +2,7 @@ package com.ipusoft.context.db;
 
 import androidx.room.Room;
 
-import com.ipusoft.context.IpuSoftSDK;
+import com.ipusoft.context.AppContext;
 import com.ipusoft.context.db.dao.SysRecordingDao;
 
 /**
@@ -16,7 +16,7 @@ public class AppDBManager {
     private static AppDatabase appDB;
 
     public static void initDataBase() {
-        appDB = Room.databaseBuilder(IpuSoftSDK.getAppContext(), AppDatabase.class,
+        appDB = Room.databaseBuilder(AppContext.getAppContext(), AppDatabase.class,
                 "ipusdk.db")
                 .addMigrations()
                 .build();

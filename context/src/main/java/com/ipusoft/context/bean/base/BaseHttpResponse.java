@@ -22,12 +22,12 @@ public class BaseHttpResponse implements Serializable {
      */
     private String msg;
 
-    public String getStatus() {
+    public String getHttpStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setHttpStatus(String httpStatus) {
+        this.status = httpStatus;
     }
 
     public String getMsg() {

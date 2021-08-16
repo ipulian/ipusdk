@@ -1,6 +1,6 @@
 package com.ipusoft.http.manager;
 
-import com.ipusoft.http.interceptors.base.BaseUrlInterceptor;
+import com.ipusoft.http.interceptors.BaseUrlInterceptor;
 import com.ipusoft.http.interceptors.LoggingInterceptor;
 
 import java.util.concurrent.TimeUnit;

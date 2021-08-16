@@ -9,8 +9,10 @@ import com.ipusoft.context.bean.IAuthCode;
 import com.ipusoft.context.bean.IToken;
 import com.ipusoft.context.constant.Constant;
 import com.ipusoft.context.constant.HttpStatus;
-import com.ipusoft.context.utils.GsonUtils;
+import com.ipusoft.utils.GsonUtils;
 import com.ipusoft.http.module.SDKService;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
@@ -39,8 +41,8 @@ public class AuthHttp {
     public static void checkIdentity(String auth, @androidx.annotation.NonNull OnSDKLoginListener loginListener) {
         SDKService.Companion.getAuthCode(auth, new IObserver<IAuthCode>() {
             @Override
-            public void onNext(@NonNull IAuthCode result) {
-                String status = result.getStatus();
+            public void onNext(@NotNull @NonNull IAuthCode result) {
+                String status = result.getHttpStatus();
                 if (HttpStatus.SUCCESS.equals(status)) {
                     String authCode = result.getAuthCode();
                     HashMap<String, Object> params = new HashMap<>();
@@ -48,8 +50,8 @@ public class AuthHttp {
                     Log.d(TAG, "onNext: --------<" + GsonUtils.toJson(params));
                     SDKService.Companion.getAuthCodeInfo(params, new IObserver<IToken>() {
                         @Override
-                        public void onNext(@NonNull IToken iToken) {
-                            String status1 = iToken.getStatus();
+                        public void onNext(@NotNull @NonNull IToken iToken) {
+                            String status1 = iToken.getHttpStatus();
                             if (HttpStatus.SUCCESS.equals(status1)) {
                                 AppContext.setToken(iToken.getToken());
                                 loginListener.onLoginResult(OnSDKLoginListener.LoginStatus.SUCCESS);

@@ -2,7 +2,7 @@ package com.ipusoft.http.interceptors;
 
 import android.util.Log;
 
-import com.ipusoft.context.utils.GsonUtils;
+import com.ipusoft.utils.GsonUtils;
 
 import org.jetbrains.annotations.NotNull;
 

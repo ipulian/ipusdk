@@ -1,7 +1,7 @@
 package com.ipusoft.context.manager;
 
 
-import com.ipusoft.context.utils.ArrayUtils;
+import com.ipusoft.utils.ArrayUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -153,21 +153,15 @@ public final class ThreadPoolManager {
      * 向线程池中添加任务方法
      */
     public void addExecuteTask(Runnable task) {
-//        String token = LocalStorageUtils.getToken();
-//        if (task != null && StringUtils.isNotEmpty(token)) {
         mThreadPool.execute(task);
-        //    }
     }
 
     public void addExecuteTasks(List<Runnable> taskList) {
-//        String token = LocalStorageUtils.getToken();
-//        if (StringUtils.isNotEmpty(token)) {
         if (ArrayUtils.isNotEmpty(taskList)) {
             for (Runnable r : taskList) {
                 mThreadPool.execute(r);
             }
         }
-        //   }
     }
 
     protected boolean isTaskEnd() {

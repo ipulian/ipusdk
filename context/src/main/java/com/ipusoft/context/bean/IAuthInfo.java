@@ -1,6 +1,6 @@
 package com.ipusoft.context.bean;
 
-import com.ipusoft.context.utils.StringUtils;
+import com.ipusoft.utils.StringUtils;
 
 import java.io.Serializable;
 

@@ -9,6 +9,7 @@ import java.io.Serializable;
  */
 
 public class FloatingWindowStatus implements Serializable {
+
     private boolean isShow;
 
     public boolean isShow() {

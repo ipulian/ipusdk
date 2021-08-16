@@ -1,56 +1,64 @@
 package com.ipusoft.context.bean;
 
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.ipusoft.context.bean.base.BaseHttpResponse;
+import com.ipusoft.context.bean.adapter.String2LongAdapter;
 
 /**
  * author : GWFan
  * time   : 7/13/20 1:41 PM
- * desc   :
+ * desc   : 客户
  */
 
-public class Customer extends BaseHttpResponse {
-    private static final long serialVersionUID = 9007586325843529149L;
-    private String name;
-    private Integer sex;
-    private String mSex;
-    private String stage;
-    private String phone;
+public class Customer extends BaseCustomerBean {
+    //客户Id
+    @JsonAdapter(String2LongAdapter.class)
+    @SerializedName(value = "id")
+    private Long customerId;
+    //紧急电话
     private String urgentPhone;
+    //收藏
     private Integer collected;
-    private Integer lastCallStatus;
-    private String nextContactTime;
+    //来自企业微信
     private Integer workchated;
-    private Long id;
-    private String picUrl;
-    private String sort;
-    private String source;
-    private String province;
-    private String city;
-    private String age;
-    private String remark;
-    private String idCard;
-    private String corporation;
-    private String label;
-    private String job;
+    //转入时间
     private String transferTime;
-    private String lastCallTime;
-    private String lastCallDirect;
+    //归属
     private String owner;
-    private String industry;
+    //行业
     private String mIndustry;
-    @SerializedName("customerLevel")
-    private String level;
-    private int ownerType;
-    private String title;//职位
-    private String salary;
-    private Long ownerId;
-    private String tag;//标记
-    private String area;
+    //是否贡献客户
     private String isSharedCustomer;
-    private String mTag;
+    //线索Id
     private Long clueId;
+    //阶段
+    private String stage;
+    //待联
+    private String nextContactTime;
+    //分类
+    private String sort;
+    //归属客户池名称
     private String mPoolName;
+    //等级
+    private String customerLevel;
+    //标记
+    private String tag;
+    //职位
+    private String title;
+    //收入
+    private String salary;
+    //职业
+    private String job;
+    //行业
+    private String industry;
+    //年龄
+    private String age;
+    //证件号码
+    private String idCard;
+    //公司
+    private String corporation;
+
+    //扩展字段
     private String extend1;
     private String extend2;
     private String extend3;
@@ -77,44 +85,12 @@ public class Customer extends BaseHttpResponse {
     private String extend24;
     private String extend25;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getSex() {
-        return sex;
-    }
-
-    public void setSex(Integer sex) {
-        this.sex = sex;
-    }
-
-    public String getmSex() {
-        return mSex;
-    }
-
-    public void setmSex(String mSex) {
-        this.mSex = mSex;
-    }
-
     public String getStage() {
         return stage;
     }
 
     public void setStage(String stage) {
         this.stage = stage;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getUrgentPhone() {
@@ -133,14 +109,6 @@ public class Customer extends BaseHttpResponse {
         this.collected = collected;
     }
 
-    public Integer getLastCallStatus() {
-        return lastCallStatus;
-    }
-
-    public void setLastCallStatus(Integer lastCallStatus) {
-        this.lastCallStatus = lastCallStatus;
-    }
-
     public String getNextContactTime() {
         return nextContactTime;
     }
@@ -148,7 +116,6 @@ public class Customer extends BaseHttpResponse {
     public void setNextContactTime(String nextContactTime) {
         this.nextContactTime = nextContactTime;
     }
-
 
     public Integer getWorkchated() {
         return workchated;
@@ -158,20 +125,12 @@ public class Customer extends BaseHttpResponse {
         this.workchated = workchated;
     }
 
-    public Long getId() {
-        return id;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPicUrl() {
-        return picUrl;
-    }
-
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
     public String getSort() {
@@ -182,44 +141,12 @@ public class Customer extends BaseHttpResponse {
         this.sort = sort;
     }
 
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     public String getAge() {
         return age;
     }
 
     public void setAge(String age) {
         this.age = age;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 
     public String getIdCard() {
@@ -238,14 +165,6 @@ public class Customer extends BaseHttpResponse {
         this.corporation = corporation;
     }
 
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
     public String getJob() {
         return job;
     }
@@ -260,22 +179,6 @@ public class Customer extends BaseHttpResponse {
 
     public void setTransferTime(String transferTime) {
         this.transferTime = transferTime;
-    }
-
-    public String getLastCallTime() {
-        return lastCallTime;
-    }
-
-    public void setLastCallTime(String lastCallTime) {
-        this.lastCallTime = lastCallTime;
-    }
-
-    public String getLastCallDirect() {
-        return lastCallDirect;
-    }
-
-    public void setLastCallDirect(String lastCallDirect) {
-        this.lastCallDirect = lastCallDirect;
     }
 
     public String getOwner() {
@@ -302,20 +205,12 @@ public class Customer extends BaseHttpResponse {
         this.mIndustry = mIndustry;
     }
 
-    public String getLevel() {
-        return level;
+    public String getCustomerLevel() {
+        return customerLevel;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
-    public int getOwnerType() {
-        return ownerType;
-    }
-
-    public void setOwnerType(int ownerType) {
-        this.ownerType = ownerType;
+    public void setCustomerLevel(String customerLevel) {
+        this.customerLevel = customerLevel;
     }
 
     public String getTitle() {
@@ -334,13 +229,6 @@ public class Customer extends BaseHttpResponse {
         this.salary = salary;
     }
 
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
 
     public String getTag() {
         return tag;
@@ -350,28 +238,12 @@ public class Customer extends BaseHttpResponse {
         this.tag = tag;
     }
 
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
     public String getIsSharedCustomer() {
         return isSharedCustomer;
     }
 
     public void setIsSharedCustomer(String isSharedCustomer) {
         this.isSharedCustomer = isSharedCustomer;
-    }
-
-    public String getmTag() {
-        return mTag;
-    }
-
-    public void setmTag(String mTag) {
-        this.mTag = mTag;
     }
 
     public Long getClueId() {

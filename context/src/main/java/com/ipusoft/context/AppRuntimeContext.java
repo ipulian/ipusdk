@@ -1,7 +1,7 @@
 package com.ipusoft.context;
 
 import com.ipusoft.context.config.Env;
-import com.ipusoft.context.utils.StringUtils;
+import com.ipusoft.utils.StringUtils;
 import com.ipusoft.http.HttpConstant;
 import com.ipusoft.http.manager.RetrofitManager;
 
@@ -13,11 +13,12 @@ import com.ipusoft.http.manager.RetrofitManager;
 
 public class AppRuntimeContext extends AppContext {
     private static final String TAG = "AppRuntimeContext";
-
     /**
      * SDK运行环境
      */
     protected static String env;
+
+    protected static String isDebug = "false";
 
     public static String BASE_URL = "";
 
@@ -54,5 +55,9 @@ public class AppRuntimeContext extends AppContext {
      */
     protected static void initHttpEnvironment() {
         RetrofitManager.getInstance().initRetrofit();
+    }
+
+    public static String isDebug() {
+        return AppRuntimeContext.isDebug;
     }
 }

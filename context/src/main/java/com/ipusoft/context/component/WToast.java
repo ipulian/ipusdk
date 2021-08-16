@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.R;
 import com.ipusoft.context.manager.IWindowManager;
-import com.ipusoft.context.utils.ThreadUtils;
+import com.ipusoft.utils.ThreadUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -64,7 +64,7 @@ public class WToast {
                 View view = windowViewReference.get();
                 if (view != null) {
                     if (view.getParent() != null) {
-                        windowManager.removeView(view);
+                        windowManager.removeViewImmediate(view);
                     }
                     windowManager = null;
                 }

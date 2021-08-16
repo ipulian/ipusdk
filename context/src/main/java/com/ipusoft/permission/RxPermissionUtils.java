@@ -1,9 +1,11 @@
 package com.ipusoft.permission;
 
 import android.Manifest;
-import android.app.Activity;
+import android.content.Context;
+import android.os.Binder;
 import android.os.Build;
 import android.provider.Settings;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -11,6 +13,11 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.ipusoft.context.base.IObserver;
 import com.tbruyelle.rxpermissions3.RxPermissions;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 
 /**
@@ -94,9 +101,51 @@ public class RxPermissionUtils {
      * @param context
      * @return
      */
-    public static boolean hasOverLayPermission(Activity context) {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(context);
+//    public static boolean hasOverLayPermission(Activity context) {
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+//            return true;
+//        }
+//        return Settings.canDrawOverlays(context);
+//    }
+    public static boolean hasOverLayPermission(Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            try {
+                Class cls = Class.forName("android.content.Context");
+                Field declaredField = cls.getDeclaredField("APP_OPS_SERVICE");
+                declaredField.setAccessible(true);
+                Object obj = declaredField.get(cls);
+                if (!(obj instanceof String)) {
+                    return false;
+                }
+                String str2 = (String) obj;
+                obj = cls.getMethod("getSystemService", String.class).invoke(context, str2);
+                cls = Class.forName("android.app.AppOpsManager");
+                Field declaredField2 = cls.getDeclaredField("MODE_ALLOWED");
+                declaredField2.setAccessible(true);
+                Method checkOp = cls.getMethod("checkOp", Integer.TYPE, Integer.TYPE, String.class);
+                int result = (Integer) checkOp.invoke(obj, 24, Binder.getCallingUid(), context.getPackageName());
+                return result == declaredField2.getInt(cls);
+            } catch (Exception e) {
+                return false;
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                Log.d(TAG, "hasOverLayPermission: ---------》"+);
+//                AppOpsManager appOpsMgr = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+//                if (appOpsMgr == null)
+//                    return false;
+//                int mode = appOpsMgr.checkOpNoThrow("android:system_alert_window", android.os.Process.myUid(), context
+//                        .getPackageName());
+//                return mode == AppOpsManager.MODE_ALLOWED || mode == AppOpsManager.MODE_IGNORED;
+
+                return Settings.canDrawOverlays(context);
+
+            } else {
+                return Settings.canDrawOverlays(context);
+            }
+        }
     }
+
 
     /**
      * 请求App相关权限
@@ -115,12 +164,48 @@ public class RxPermissionUtils {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_NETWORK_STATE,
                 Manifest.permission.GET_TASKS,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.CHANGE_WIFI_STATE,
+                Manifest.permission.READ_PHONE_STATE)
                 .observe(new IObserver<Boolean>() {
                     @Override
-                    public void onNext(@NonNull Boolean aBoolean) {
+                    public void onNext(@NotNull @NonNull Boolean aBoolean) {
+                        Log.d(TAG, "onNext: -------------" + aBoolean);
                     }
                 });
+
+        requestLocationPermission2(activity);
+        requestLocationPermission3(activity);
+    }
+
+
+    public static void requestAppPermission(FragmentActivity activity, IObserver<Boolean> observer) {
+        RxPermissionUtils.with(activity).requestPermission(
+//                Manifest.permission.READ_CONTACTS,
+//                Manifest.permission.WRITE_CONTACTS,
+                Manifest.permission.READ_CALL_LOG,
+                Manifest.permission.WRITE_CALL_LOG,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.MODIFY_AUDIO_SETTINGS,
+                Manifest.permission.BLUETOOTH,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.GET_TASKS,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.CHANGE_WIFI_STATE,
+                Manifest.permission.READ_PHONE_STATE)
+                .observe(observer);
+
+        requestLocationPermission2(activity);
+        requestLocationPermission3(activity);
     }
 
     /**
@@ -137,7 +222,8 @@ public class RxPermissionUtils {
                 Manifest.permission.CHANGE_WIFI_STATE)
                 .observe(new IObserver<Boolean>() {
                     @Override
-                    public void onNext(@NonNull Boolean aBoolean) {
+                    public void onNext(@NotNull @NonNull Boolean aBoolean) {
+                        Log.d(TAG, "onNext: ------------>" + aBoolean);
                     }
                 });
 
@@ -164,7 +250,7 @@ public class RxPermissionUtils {
                     Manifest.permission.FOREGROUND_SERVICE)
                     .observe(new IObserver<Boolean>() {
                         @Override
-                        public void onNext(@NonNull Boolean aBoolean) {
+                        public void onNext(@NotNull @NonNull Boolean aBoolean) {
                             requestLocationPermission3(activity);
                         }
                     });
@@ -177,7 +263,7 @@ public class RxPermissionUtils {
                     Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                     .observe(new IObserver<Boolean>() {
                         @Override
-                        public void onNext(@NonNull Boolean aBoolean) {
+                        public void onNext(@NotNull @NonNull Boolean aBoolean) {
 
                         }
                     });
@@ -190,7 +276,7 @@ public class RxPermissionUtils {
                     Manifest.permission.FOREGROUND_SERVICE)
                     .observe(new IObserver<Boolean>() {
                         @Override
-                        public void onNext(@NonNull Boolean aBoolean) {
+                        public void onNext(@NotNull @NonNull Boolean aBoolean) {
                             requestLocationPermission3(fragment);
                         }
                     });
@@ -203,7 +289,7 @@ public class RxPermissionUtils {
                     Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                     .observe(new IObserver<Boolean>() {
                         @Override
-                        public void onNext(@NonNull Boolean aBoolean) {
+                        public void onNext(@NotNull @NonNull Boolean aBoolean) {
 
                         }
                     });
@@ -216,7 +302,7 @@ public class RxPermissionUtils {
                     Manifest.permission.FOREGROUND_SERVICE)
                     .observe(new IObserver<Boolean>() {
                         @Override
-                        public void onNext(@NonNull Boolean aBoolean) {
+                        public void onNext(@NotNull @NonNull Boolean aBoolean) {
                             requestLocationPermission3(activity, iObserver);
                         }
                     });

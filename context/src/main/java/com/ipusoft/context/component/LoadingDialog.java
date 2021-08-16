@@ -19,7 +19,9 @@ import androidx.fragment.app.FragmentManager;
 
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.R;
-import com.ipusoft.context.utils.ThreadUtils;
+import com.ipusoft.logger.XLogger;
+import com.ipusoft.utils.ExceptionUtils;
+import com.ipusoft.utils.ThreadUtils;
 
 /**
  * author : GWFan
@@ -58,22 +60,31 @@ public class LoadingDialog extends DialogFragment {
     }
 
     public synchronized void show(String tag) {
-        FragmentActivity mActivity = AppContext.getActivityContext();
-        if (mActivity != null) {
-            ThreadUtils.runOnUiThread(() -> {
-                FragmentManager fm = mActivity.getSupportFragmentManager();
-                Fragment prev = fm.findFragmentByTag(tag);
-                if (prev != null) {
-                    fm.beginTransaction().remove(prev);
-                }
-                if (isShowing) {
-                    dismiss();
-                }
-                show(fm, tag);
-                isShowing = true;
-                iCountDownTimer = new ICountDownTimer(10 * 1000, 1000);
-                iCountDownTimer.start();
-            });
+        try {
+            FragmentActivity mActivity = AppContext.getActivityContext();
+            if (mActivity != null) {
+                ThreadUtils.runOnUiThread(() -> {
+                    FragmentManager fm = mActivity.getSupportFragmentManager();
+                    Fragment prev = fm.findFragmentByTag(tag);
+                    if (prev != null) {
+                        fm.beginTransaction().remove(prev);
+                    }
+                    if (isShowing) {
+                        dismissAllowingStateLoss();
+                    }
+
+                    if (!isAdded() && !isVisible() && !isRemoving()) {
+                        // show(fm, tag);
+                        fm.beginTransaction().add(this, tag).commitAllowingStateLoss();
+                    }
+
+                    isShowing = true;
+                    iCountDownTimer = new ICountDownTimer(10 * 1000, 1000);
+                    iCountDownTimer.start();
+                });
+            }
+        } catch (Exception e) {
+            XLogger.e(TAG + "->show：" + ExceptionUtils.getErrorInfo(e));
         }
     }
 
@@ -88,6 +99,22 @@ public class LoadingDialog extends DialogFragment {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            XLogger.e(TAG + "->dismiss：" + ExceptionUtils.getErrorInfo(e));
+        }
+    }
+
+    @Override
+    public void dismissAllowingStateLoss() {
+        super.dismissAllowingStateLoss();
+        isShowing = false;
+        try {
+            if (iCountDownTimer != null) {
+                iCountDownTimer.onFinish();
+                iCountDownTimer.cancel();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            XLogger.e(TAG + "->dismissAllowingStateLoss：" + ExceptionUtils.getErrorInfo(e));
         }
     }
 
@@ -134,11 +161,12 @@ public class LoadingDialog extends DialogFragment {
         public void onFinish() {
             try {
                 if (LoadingDialog.this.isVisible()) {
-                    LoadingDialog.this.dismiss();
+                    LoadingDialog.this.dismissAllowingStateLoss();
                     this.cancel();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                XLogger.e(TAG + "->onFinish:" + ExceptionUtils.getErrorInfo(e));
             }
         }
     }

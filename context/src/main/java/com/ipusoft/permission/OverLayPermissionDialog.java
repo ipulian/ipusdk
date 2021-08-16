@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -25,7 +23,10 @@ import androidx.fragment.app.FragmentManager;
 
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.R;
-import com.ipusoft.context.utils.ScreenUtils;
+import com.ipusoft.context.component.ToastUtils;
+import com.ipusoft.context.manager.PlatformManager;
+import com.ipusoft.context.platform.OPPO;
+import com.ipusoft.utils.ScreenUtils;
 
 /**
  * author : GWFan
@@ -34,8 +35,7 @@ import com.ipusoft.context.utils.ScreenUtils;
  */
 
 public class OverLayPermissionDialog extends DialogFragment {
-    private static final int OVERLAY_PERMISSION_REQUEST_CODE = 1024;
-
+    private static final String TAG = "OverLayPermissionDialog";
     protected static FragmentActivity mActivity;
 
     private PermissionCallBack layPermissionListener;
@@ -109,10 +109,19 @@ public class OverLayPermissionDialog extends DialogFragment {
         tvMsg.setText(tip);
 
         view.findViewById(R.id.ll_agree).setOnClickListener(v -> {
-            startActivityForResult(
-                    new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + AppContext.getAppContext().getPackageName())),
-                    OVERLAY_PERMISSION_REQUEST_CODE);
+            try {
+                if (PlatformManager.isOPPO()) {
+                    OPPO.settingOverlayPermission(mActivity);
+                } else {
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                        startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                Uri.parse("package:" + AppContext.getAppContext().getPackageName())));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                ToastUtils.showMessage("请手动打开");
+            }
             dismiss();
         });
 
@@ -122,17 +131,5 @@ public class OverLayPermissionDialog extends DialogFragment {
                 layPermissionListener.invoke(false);
             }
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d("onActivityResult", "onActivityResult: -------");
-        //打开悬浮窗权限结果返回
-        if (requestCode == OVERLAY_PERMISSION_REQUEST_CODE) {
-            if (layPermissionListener != null) {
-                layPermissionListener.invoke(true);
-            }
-        }
     }
 }

@@ -18,6 +18,8 @@ public abstract class SimRiskControlBean extends BaseHttpResponse {
      */
     private String phone;
 
+    private String callTime;
+
     public int getType() {
         return type;
     }
@@ -32,5 +34,13 @@ public abstract class SimRiskControlBean extends BaseHttpResponse {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getCallTime() {
+        return callTime;
+    }
+
+    public void setCallTime(String callTime) {
+        this.callTime = callTime;
     }
 }

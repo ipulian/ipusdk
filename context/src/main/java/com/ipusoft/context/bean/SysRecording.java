@@ -74,6 +74,8 @@ public class SysRecording implements Serializable {
     private int progress;
     @Ignore
     private boolean isChecked;
+    @Ignore
+    private String callTimeServer;
 
     public long getId() {
         return id;
@@ -217,6 +219,14 @@ public class SysRecording implements Serializable {
 
     public void setCallId(long callId) {
         this.callId = callId;
+    }
+
+    public String getCallTimeServer() {
+        return callTimeServer;
+    }
+
+    public void setCallTimeServer(String callTimeServer) {
+        this.callTimeServer = callTimeServer;
     }
 
     @Override

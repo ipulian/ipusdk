@@ -1,7 +1,6 @@
 package com.ipusoft.context.bean.base;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * author : GWFan
@@ -29,11 +28,6 @@ public abstract class BaseCallBean extends FloatingWindowStatus implements Seria
      * 小号渠道
      */
     private String channelName;
-    //标签
-    private List<String> labelList;
-
-    //分类
-    private List<String> sortList;
 
     //SIM，SIP，X。 其中SIP不能发送短信
     private String outCallType;
@@ -42,7 +36,7 @@ public abstract class BaseCallBean extends FloatingWindowStatus implements Seria
     private String name;
 
     //待联
-    private String nextConnect;
+    private String nextContactTime;
 
     //分类
     private String sort;
@@ -56,7 +50,16 @@ public abstract class BaseCallBean extends FloatingWindowStatus implements Seria
 
     private String recordId;
 
-    private String followUp;
+    //跟进记录
+    private String followText;
+
+    //省份
+    private String province;
+    //城市
+    private String city;
+
+    //来源
+    private String source;
 
     public String getCPhone() {
         return cPhone;
@@ -114,28 +117,12 @@ public abstract class BaseCallBean extends FloatingWindowStatus implements Seria
         this.channelName = channelName;
     }
 
-    public List<String> getLabelList() {
-        return labelList;
-    }
-
-    public void setLabelList(List<String> labelList) {
-        this.labelList = labelList;
-    }
-
     public String getOutCallType() {
         return outCallType;
     }
 
     public void setOutCallType(String outCallType) {
         this.outCallType = outCallType;
-    }
-
-    public List<String> getSortList() {
-        return sortList;
-    }
-
-    public void setSortList(List<String> sortList) {
-        this.sortList = sortList;
     }
 
     public String getName() {
@@ -146,12 +133,12 @@ public abstract class BaseCallBean extends FloatingWindowStatus implements Seria
         this.name = name;
     }
 
-    public String getNextConnect() {
-        return nextConnect;
+    public String getNextContactTime() {
+        return nextContactTime;
     }
 
-    public void setNextConnect(String nextConnect) {
-        this.nextConnect = nextConnect;
+    public void setNextContactTime(String nextContactTime) {
+        this.nextContactTime = nextContactTime;
     }
 
     public String getSort() {
@@ -194,11 +181,35 @@ public abstract class BaseCallBean extends FloatingWindowStatus implements Seria
         this.recordId = recordId;
     }
 
-    public String getFollowUp() {
-        return followUp;
+    public String getFollowText() {
+        return followText;
     }
 
-    public void setFollowUp(String followUp) {
-        this.followUp = followUp;
+    public void setFollowText(String followText) {
+        this.followText = followText;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

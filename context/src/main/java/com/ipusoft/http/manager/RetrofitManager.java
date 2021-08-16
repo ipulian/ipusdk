@@ -7,7 +7,7 @@ package com.ipusoft.http.manager;
  */
 
 import com.ipusoft.context.AppRuntimeContext;
-import com.ipusoft.context.utils.GsonUtils;
+import com.ipusoft.utils.GsonUtils;
 
 import java.util.Map;
 

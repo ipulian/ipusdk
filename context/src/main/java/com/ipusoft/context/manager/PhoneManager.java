@@ -6,8 +6,9 @@ import android.net.Uri;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ipusoft.context.AppContext;
-import com.ipusoft.context.IActivityLifecycle;
 import com.ipusoft.context.cache.AppCacheContext;
+import com.ipusoft.localcall.bean.SIMCallOutBean;
+import com.ipusoft.logger.XLogger;
 
 /**
  * author : GWFan
@@ -28,7 +29,7 @@ public class PhoneManager {
     public static void callPhone(String phone) {
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        AppCompatActivity currentActivity = IActivityLifecycle.getCurrentActivity();
+        AppCompatActivity currentActivity = AppContext.getActivityContext();
         if (currentActivity != null) {
             currentActivity.startActivity(intent);
         } else {
@@ -54,8 +55,9 @@ public class PhoneManager {
      *
      * @param phone
      */
-    public static void callPhoneBySim(String phone) {
-        AppCacheContext.setSIMOutCallNumber(phone);
+    public static void callPhoneBySim(String phone, String callTime) {
+        XLogger.d("主卡外呼->开始，phone：" + phone);
+        AppCacheContext.setSIMCallOutBean(new SIMCallOutBean(phone, callTime));
         callPhone(phone);
     }
 
@@ -72,7 +74,7 @@ public class PhoneManager {
         Uri smsToUri = Uri.parse(SMS_TO + phone);
         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
         intent.putExtra(SMS_BODY, content);
-        AppCompatActivity currentActivity = IActivityLifecycle.getCurrentActivity();
+        AppCompatActivity currentActivity = AppContext.getActivityContext();
         if (currentActivity != null) {
             currentActivity.startActivity(intent);
         }

@@ -1,5 +1,7 @@
 package com.ipusoft.context.base;
 
+import android.util.Log;
+
 import com.ipusoft.context.component.ToastUtils;
 
 import io.reactivex.rxjava3.annotations.NonNull;
@@ -13,6 +15,8 @@ import io.reactivex.rxjava3.disposables.Disposable;
  */
 
 public class IObserver<T> implements Observer<T> {
+    private static final String TAG = "IObserver";
+
     @Override
     public void onSubscribe(@NonNull Disposable d) {
 
@@ -26,6 +30,7 @@ public class IObserver<T> implements Observer<T> {
     @Override
     public void onError(@NonNull Throwable e) {
         ToastUtils.dismiss();
+        Log.d(TAG, "onError: -------" + e.toString());
     }
 
     @Override

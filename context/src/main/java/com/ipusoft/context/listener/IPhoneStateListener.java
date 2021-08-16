@@ -13,7 +13,7 @@ import android.util.Log;
 
 import com.ipusoft.context.cache.AppCacheContext;
 import com.ipusoft.context.constant.PhoneState;
-import com.ipusoft.context.utils.ArrayUtils;
+import com.ipusoft.utils.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,6 @@ import java.util.List;
 
 public class IPhoneStateListener extends android.telephony.PhoneStateListener {
     private static final String TAG = "MyPhoneStateListener";
-    private static volatile IPhoneStateListener instance;
     private boolean wasAppInOffHook = false;
     private boolean wasAppInRinging = false;
     private TelephonyManager telephonyManager;

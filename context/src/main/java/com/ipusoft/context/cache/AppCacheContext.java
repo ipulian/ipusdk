@@ -2,6 +2,7 @@ package com.ipusoft.context.cache;
 
 import com.ipusoft.context.AppRuntimeContext;
 import com.ipusoft.context.constant.PhoneState;
+import com.ipusoft.localcall.bean.SIMCallOutBean;
 
 /**
  * author : GWFan
@@ -21,10 +22,7 @@ public abstract class AppCacheContext extends AppRuntimeContext {
      */
     private static String SIPCallOutCallId;
 
-    /**
-     * 主卡外呼的号码
-     */
-    private static String SIMCallOutNumber;
+    private static SIMCallOutBean simCallOutBean;
 
     /**
      * 当前通话状态
@@ -63,12 +61,12 @@ public abstract class AppCacheContext extends AppRuntimeContext {
         return SIMCallOutCallId;
     }
 
-    public static String getSIMOutCallNumber() {
-        return SIMCallOutNumber;
+    public static SIMCallOutBean getSIMCallOutBean() {
+        return simCallOutBean;
     }
 
-    public static void setSIMOutCallNumber(String outCallNumber) {
-        AppCacheContext.SIMCallOutNumber = outCallNumber;
+    public static void setSIMCallOutBean(SIMCallOutBean simCallOutBean) {
+        AppCacheContext.simCallOutBean = simCallOutBean;
     }
 
     public static String getSIPCallOutId() {

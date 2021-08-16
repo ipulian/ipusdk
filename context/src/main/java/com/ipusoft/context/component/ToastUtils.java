@@ -46,7 +46,7 @@ public class ToastUtils {
     /**
      * 消息提示
      *
-     * @param msg
+     * @param msg 提示内容
      */
     public static void showMessage(String msg) {
         dismiss();
@@ -75,7 +75,7 @@ public class ToastUtils {
                 LoadingDialog dialog = dialogWeakReference.get();
                 if (dialog != null) {
                     if (!dialog.isHidden()) {
-                        dialog.dismiss();
+                        dialog.dismissAllowingStateLoss();
                         dialogWeakReference = null;
                     }
                 }

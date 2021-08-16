@@ -24,8 +24,27 @@ public class StorageConstant {
      */
     public static final String LOCAL_CALL_TYPE = "local_call_type";
     /**
+     * 是否上传本地通话记录及录音
+     */
+    public static final String UPLOAD_LOCAL_RECORD = "upload_local_record";
+    /**
      * 坐席信息
      */
     public static final String SEAT_INFO = "seat_info";
+
+    /**
+     * 手机本地录音的路径
+     */
+    public static final String RECORDING_FILE_PATH = "recording_file_path";
+
+    /**
+     * 上次获取地区数据的时间
+     */
+    public static final String GET_AREA_DATA_TIME = "get_area_data_time";
+
+    /**
+     * 客户配置
+     */
+    public static final String CUSTOMER_CONFIG = "c_config";
 
 }

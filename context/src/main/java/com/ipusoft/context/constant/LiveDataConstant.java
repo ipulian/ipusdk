@@ -37,5 +37,7 @@ public class LiveDataConstant {
     public static final String REFRESH_CALL_TYPE_CONFIG = "refresh_call_type_config";
     //上传进度
     public static final String UPLOAD_PROGRESS = "uploadProgress";
+    //未读短信
+    public static final String UN_READ_MSG = "unreadMsg";
 
 }

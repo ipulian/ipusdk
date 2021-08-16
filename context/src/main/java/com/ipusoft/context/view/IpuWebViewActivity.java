@@ -1,12 +1,14 @@
 package com.ipusoft.context.view;
 
+import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.ipusoft.context.AppRuntimeContext;
-import com.ipusoft.context.BaseActivity;
 import com.ipusoft.context.IpuSoftSDK;
 import com.ipusoft.context.R;
 import com.ipusoft.context.bridge.NativeJSBridge;
@@ -15,7 +17,7 @@ import com.ipusoft.context.config.Env;
 import com.ipusoft.context.databinding.ContextActivityIpuWebViewBinding;
 import com.ipusoft.context.iface.IpuWebInterface;
 import com.ipusoft.context.manager.PhoneManager;
-import com.ipusoft.context.utils.StringUtils;
+import com.ipusoft.utils.StringUtils;
 
 /**
  * author : GWFan
@@ -23,21 +25,17 @@ import com.ipusoft.context.utils.StringUtils;
  * desc   :
  */
 
-public class IpuWebViewActivity extends BaseActivity implements NativeJSBridge {
+public class IpuWebViewActivity extends AppCompatActivity implements NativeJSBridge {
     private static final String TAG = "IpuWebViewActivity";
     private ContextActivityIpuWebViewBinding binding;
 
-
     @Override
-    protected void initViewModel() {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.context_activity_ipu_web_view);
+        initUI();
     }
 
-    @Override
-    protected void initData() {
-    }
-
-    @Override
     protected void initUI() {
         WebView webView = binding.webview;
         WebSettings settings = webView.getSettings();
@@ -53,16 +51,6 @@ public class IpuWebViewActivity extends BaseActivity implements NativeJSBridge {
                     + IpuSoftSDK.getAuthCode() + "&type=SDK";
         }
         webView.loadUrl(url);
-    }
-
-    @Override
-    protected void bindLiveData() {
-
-    }
-
-    @Override
-    protected void initRequest() {
-
     }
 
     @Override

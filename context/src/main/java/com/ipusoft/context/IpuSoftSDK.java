@@ -15,10 +15,11 @@ import com.ipusoft.context.init.SDKCommonInit;
 import com.ipusoft.context.listener.IPhoneStateListener;
 import com.ipusoft.context.listener.OnPhoneStateChangedListener;
 import com.ipusoft.context.registers.ModuleRegister;
-import com.ipusoft.context.utils.ArrayUtils;
-import com.ipusoft.context.utils.GsonUtils;
-import com.ipusoft.context.utils.StringUtils;
+import com.ipusoft.utils.ArrayUtils;
+import com.ipusoft.utils.GsonUtils;
+import com.ipusoft.utils.StringUtils;
 import com.ipusoft.http.QuerySeatInfoHttp;
+import com.ipusoft.logger.XLogger;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
 import com.tencent.mmkv.MMKV;
 
@@ -40,10 +41,20 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
     public static void init(Application mApp, String env) {
 
         setAppContext(mApp);
+
+        /*
+         * 注册Activity声明周期
+         */
+        mApp.registerActivityLifecycleCallbacks(new IActivityLifecycle());
+
         /*
          * 初始化MMKV
          */
         MMKV.initialize(mApp);
+        /*
+         * 初始化日志系统
+         */
+        XLogger.initXLog();
 
         setRuntimeEnv(env);
 
@@ -53,10 +64,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
          * 初始化ARouter
          */
         initARouter();
-        /*
-         * 注册Activity声明周期
-         */
-        mApp.registerActivityLifecycleCallbacks(new IActivityLifecycle());
+
         /*
          * 初始化数据库
          */
@@ -118,10 +126,8 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
             return;
         }
         timestamp = l;
-        Log.d(TAG, "querySeatInfoAndRegisterSIP: ----------");
         QuerySeatInfoHttp.querySeatInfo((seatInfo, localCallType) -> {
             CommonDataRepo.setSeatInfo(seatInfo);
-            Log.d(TAG, "querySeatInfoAndRegisterSIP: ----------->" + localCallType);
             if (StringUtils.equals(CallTypeConfig.SIP.getType(), localCallType)) {
                 registerSip(seatInfo);
                 registerSipListener();
@@ -138,7 +144,6 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         if (seatInfo != null) {
             try {
                 Class<?> clazz = Class.forName(ModuleRegister.SIP_MODULE);
-                Log.d(TAG, "registerSip: 0--------------");
                 Method initMethod = clazz.getDeclaredMethod("registerSipService", SeatInfo.class);
                 initMethod.setAccessible(true);
                 initMethod.invoke(clazz.newInstance(), seatInfo);

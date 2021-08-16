@@ -1,13 +1,11 @@
 package com.ipusoft.context;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.ipusoft.context.bean.IAuthInfo;
-import com.ipusoft.context.utils.StringUtils;
+import com.ipusoft.utils.StringUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 /**
  * author : GWFan
@@ -45,12 +43,12 @@ public abstract class LianLianApp extends IpuSoftSDK {
     private static void getAppConfig(Class<?> appConfigClazz) {
         Field[] fields = appConfigClazz.getFields();
         for (Field field : fields) {
-            String descriptor = Modifier.toString(field.getModifiers());
-            descriptor = descriptor.equals("") ? "" : descriptor + " ";
+            //   String descriptor = Modifier.toString(field.getModifiers());
+            //  descriptor = descriptor.equals("") ? "" : descriptor + " ";
             try {
-                Log.d(TAG, "getAppConfig: 修饰符：" + descriptor);
-                Log.d(TAG, "getAppConfig: 变量名：" + field.getName());
-                Log.d(TAG, "getAppConfig: 变量值：" + field.get(appConfigClazz.newInstance()));
+//                Log.d(TAG, "getAppConfig: 修饰符：" + descriptor);
+//                Log.d(TAG, "getAppConfig: 变量名：" + field.getName());
+//                Log.d(TAG, "getAppConfig: 变量值：" + field.get(appConfigClazz.newInstance()));
                 String fieldName = field.getName();
                 String fieldValue = (String) field.get(appConfigClazz.newInstance());
                 if (StringUtils.equals("RUNTIME_ENV", fieldName)) {
@@ -63,6 +61,8 @@ public abstract class LianLianApp extends IpuSoftSDK {
                     OPEN_BASE_URL = fieldValue;
                 } else if (StringUtils.equals("WE_CHAT_BASE_URL", fieldName)) {
                     WE_CHAT_BASE_URL = fieldValue;
+                } else if (StringUtils.equals("DEBUG", fieldName)) {
+                    isDebug = fieldValue;
                 }
             } catch (IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();

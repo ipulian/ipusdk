@@ -26,9 +26,6 @@ public class IActivityLifecycle implements Application.ActivityLifecycleCallback
 
     private static WeakReference<AppCompatActivity> sCurrentActivityWeakRef;
 
-    private int activityCount;//activity的count数
-    private boolean isForeground;//是否在前台
-
     @Override
     public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
         addActivity(activity);
@@ -36,7 +33,7 @@ public class IActivityLifecycle implements Application.ActivityLifecycleCallback
 
     @Override
     public void onActivityStarted(@NonNull Activity activity) {
-        activityCount++;
+
     }
 
     @Override
@@ -51,10 +48,6 @@ public class IActivityLifecycle implements Application.ActivityLifecycleCallback
 
     @Override
     public void onActivityStopped(@NonNull Activity activity) {
-        activityCount--;
-        if (0 == activityCount) {
-            isForeground = false;
-        }
     }
 
     @Override

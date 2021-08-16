@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/bg_custom_loading"
+    android:background="@drawable/context_bg_custom_loading"
     android:gravity="center"
     android:minWidth="125dp"
     android:minHeight="80dp"

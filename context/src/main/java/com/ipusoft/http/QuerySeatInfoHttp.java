@@ -1,7 +1,5 @@
 package com.ipusoft.http;
 
-import android.util.Log;
-
 import com.ipusoft.context.LiveDataBus;
 import com.ipusoft.context.base.IObserver;
 import com.ipusoft.context.bean.SeatInfo;
@@ -9,10 +7,12 @@ import com.ipusoft.context.bean.base.BaseHttpResponse;
 import com.ipusoft.context.constant.CallTypeConfig;
 import com.ipusoft.context.constant.HttpStatus;
 import com.ipusoft.context.constant.LiveDataConstant;
-import com.ipusoft.context.utils.ArrayUtils;
-import com.ipusoft.context.utils.StringUtils;
+import com.ipusoft.utils.ArrayUtils;
+import com.ipusoft.utils.StringUtils;
 import com.ipusoft.http.module.SDKService;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -37,14 +37,11 @@ public class QuerySeatInfoHttp {
     public static void querySeatInfo(OnQuerySeatInfoListener listener) {
         SDKService.Companion.querySeatInfo(RequestMap.getRequestMap(), new IObserver<SeatInfo>() {
             @Override
-            public void onNext(@NonNull SeatInfo seatInfo) {
-                //  SipDataStore.setSeatInfo(seatInfo);
-                //  Log.d(TAG, "onNext: ------->" + GsonUtils.toJson(seatInfo));
-                String status = seatInfo.getStatus();
+            public void onNext(@NotNull @NonNull SeatInfo seatInfo) {
+                String status = seatInfo.getHttpStatus();
                 if (StringUtils.equals(HttpStatus.SUCCESS, status)) {
                     String callType = seatInfo.getCallType();
                     String localCallType = CommonDataRepo.getLocalCallType();
-                    Log.d(TAG, "onNext: 1---------->" + localCallType);
                     if (StringUtils.isNotEmpty(callType)) {
                         List<String> list = ArrayUtils.createList(callType.split(","));
                         if (list.size() == 1) {
@@ -53,19 +50,15 @@ public class QuerySeatInfoHttp {
                             if (list.contains(CallTypeConfig.SIM.getType())
                                     && list.contains(CallTypeConfig.SIP.getType())) {
                                 if (StringUtils.isEmpty(localCallType)) {
-                                    //SipPhoneManager.registerSip();
                                     localCallType = CallTypeConfig.SIP.getType();
                                 } else {
                                     if (StringUtils.equals(localCallType, CallTypeConfig.X.getType())) {
-                                        // SipPhoneManager.registerSip();
                                         localCallType = CallTypeConfig.SIP.getType();
                                     } else if (StringUtils.equals(localCallType, CallTypeConfig.SIP.getType())) {
-                                        //SipPhoneManager.registerSip();
                                         localCallType = CallTypeConfig.SIP.getType();
                                     } else if (StringUtils.equals(localCallType, CallTypeConfig.SIM.getType())) {
                                         localCallType = CallTypeConfig.SIM.getType();
                                     } else {
-                                        // SipPhoneManager.registerSip();
                                         localCallType = CallTypeConfig.SIP.getType();
                                     }
                                 }
@@ -92,7 +85,6 @@ public class QuerySeatInfoHttp {
                                     if (StringUtils.equals(localCallType, CallTypeConfig.X.getType())) {
                                         localCallType = CallTypeConfig.X.getType();
                                     } else if (StringUtils.equals(localCallType, CallTypeConfig.SIP.getType())) {
-                                        //SipPhoneManager.registerSip();
                                         localCallType = CallTypeConfig.SIP.getType();
                                     } else if (StringUtils.equals(localCallType, CallTypeConfig.SIM.getType())) {
                                         localCallType = CallTypeConfig.X.getType();
@@ -108,7 +100,6 @@ public class QuerySeatInfoHttp {
                                 if (StringUtils.equals(localCallType, CallTypeConfig.X.getType())) {
                                     localCallType = CallTypeConfig.X.getType();
                                 } else if (StringUtils.equals(localCallType, CallTypeConfig.SIP.getType())) {
-                                    // SipPhoneManager.registerSip();
                                     localCallType = CallTypeConfig.SIP.getType();
                                 } else if (StringUtils.equals(localCallType, CallTypeConfig.SIM.getType())) {
                                     localCallType = CallTypeConfig.SIM.getType();
@@ -118,7 +109,6 @@ public class QuerySeatInfoHttp {
                             }
                         }
 
-                        //   Log.d(TAG, "onNext: -2-------》" + localCallType);
                         CommonDataRepo.setLocalCallType(localCallType);
 
                         LiveDataBus.get().with(LiveDataConstant.REFRESH_CALL_TYPE_CONFIG, String.class)
@@ -145,7 +135,7 @@ public class QuerySeatInfoHttp {
         requestMap.put("callType", callType);
         SDKService.Companion.updateCallType(requestMap, new IObserver<BaseHttpResponse>() {
             @Override
-            public void onNext(@NonNull BaseHttpResponse baseHttpResponse) {
+            public void onNext(@NotNull @NonNull BaseHttpResponse baseHttpResponse) {
 
             }
         });

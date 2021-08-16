@@ -19,7 +19,7 @@ import java.util.List;
 
 public class WrapLinearLayout extends ViewGroup {
 
-    private Type mType;
+    private final Type mType;
     private List<WarpLine> mWarpLineGroup;
 
     public WrapLinearLayout(Context context) {
