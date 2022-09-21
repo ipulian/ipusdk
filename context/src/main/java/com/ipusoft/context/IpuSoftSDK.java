@@ -62,7 +62,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         /*
          * 初始化ARouter
          */
-       // initARouter();
+        // initARouter();
 
         /*
          * 初始化数据库
@@ -103,6 +103,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
                 AppContext.setAuthInfo(authInfo);
                 init(mApp, env);
             }
+            Log.d(TAG, "updateAuthInfo: -------->" + GsonUtils.toJson(authInfo));
             SDKCommonInit.initSDKToken(authInfo, status -> {
                 if (OnSDKLoginListener.LoginStatus.SUCCESS == status) {
                     querySeatInfoAndRegisterSIP();
@@ -127,6 +128,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         timestamp = l;
         QuerySeatInfoHttp.querySeatInfo((seatInfo, localCallType) -> {
             CommonDataRepo.setSeatInfo(seatInfo);
+            Log.d(TAG, "querySeatInfoAndRegisterSIP: ---------->" + GsonUtils.toJson(localCallType));
             if (StringUtils.equals(CallTypeConfig.SIP.getType(), localCallType)) {
                 registerSip(seatInfo);
                 registerSipListener();

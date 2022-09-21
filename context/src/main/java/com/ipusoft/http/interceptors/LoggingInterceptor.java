@@ -37,49 +37,52 @@ public class LoggingInterceptor implements Interceptor {
             long endTime = System.currentTimeMillis();
             long duration = endTime - startTime;
             RequestBody requestBody = request.body();
-            assert requestBody != null;
-            okhttp3.MediaType mediaType = requestBody.contentType();
-            String content = Objects.requireNonNull(response.body()).string();
-            Log.d(TAG, "\n");
-            Log.d(TAG, "--------------Start-------------------");
-            Log.d(TAG, "| " + String.format("发送请求 %s%n", request.url()));
-            String method = request.method();
-            if ("POST".equals(method)) {
-                StringBuilder sb = new StringBuilder();
-                if (requestBody instanceof FormBody) {
-                    try {
-                        FormBody formBody = (FormBody) requestBody;
-                        for (int i = 0; i < formBody.size(); i++) {
-                            sb.append(formBody.encodedName(i)).append("=").append(formBody.encodedValue(i)).append(",");
+
+
+            if (requestBody != null) {
+                okhttp3.MediaType mediaType = requestBody.contentType();
+                String content = Objects.requireNonNull(response.body()).string();
+                Log.d(TAG, "\n");
+                Log.d(TAG, "--------------Start-------------------");
+                Log.d(TAG, "| " + String.format("发送请求 %s%n", request.url()));
+                String method = request.method();
+                if ("POST".equals(method)) {
+                    StringBuilder sb = new StringBuilder();
+                    if (requestBody instanceof FormBody) {
+                        try {
+                            FormBody formBody = (FormBody) requestBody;
+                            for (int i = 0; i < formBody.size(); i++) {
+                                sb.append(formBody.encodedName(i)).append("=").append(formBody.encodedValue(i)).append(",");
+                            }
+                            sb.delete(sb.length() - 1, sb.length());
+                            Log.d(TAG, "| 请求参数:{" + sb.toString() + "}");
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        sb.delete(sb.length() - 1, sb.length());
-                        Log.d(TAG, "| 请求参数:{" + sb.toString() + "}");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    // Log.d(TAG, "intercept: --------------------1");
-                } else {
-                    Buffer buffer = new Buffer();
-                    requestBody.writeTo(buffer);
-                    Charset charset = UTF8;
-                    MediaType contentType = requestBody.contentType();
-                    //Log.d(TAG, "intercept: ------<" + contentType);
-                    if (contentType != null) {
-                        charset = contentType.charset(UTF8);
-                    }
-                    assert charset != null;
-                    String body = buffer.readString(charset);
-                    Log.d(TAG, "| 请求参数:" + body);
+                        // Log.d(TAG, "intercept: --------------------1");
+                    } else {
+                        Buffer buffer = new Buffer();
+                        requestBody.writeTo(buffer);
+                        Charset charset = UTF8;
+                        MediaType contentType = requestBody.contentType();
+                        //Log.d(TAG, "intercept: ------<" + contentType);
+                        if (contentType != null) {
+                            charset = contentType.charset(UTF8);
+                        }
+                        assert charset != null;
+                        String body = buffer.readString(charset);
+                        Log.d(TAG, "| 请求参数:" + body);
 //                    Log.d(TAG, "intercept: ------------21>" + body);
 //                    Log.d(TAG, "intercept: ------------2>" + GsonUtils.toJson(requestBody));
-                    //Log.d(TAG, "| 请求参数:{" + body + "}");
+                        //Log.d(TAG, "| 请求参数:{" + body + "}");
+                    }
                 }
+                Log.d(TAG, "| 接收响应:" + content);
+                Log.d(TAG, "--------------End:" + duration + "ms--------------");
+                return response.newBuilder()
+                        .body(okhttp3.ResponseBody.create(mediaType, content))
+                        .build();
             }
-            Log.d(TAG, "| 接收响应:" + content);
-            Log.d(TAG, "--------------End:" + duration + "ms--------------");
-            return response.newBuilder()
-                    .body(okhttp3.ResponseBody.create(mediaType, content))
-                    .build();
         } catch (Exception e) {
             e.printStackTrace();
         }

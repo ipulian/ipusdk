@@ -124,7 +124,12 @@ public class RxPermissionUtils {
                 return false;
             }
         } else {
-            return Settings.canDrawOverlays(context);
+            try {
+                return Settings.canDrawOverlays(context);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return true;
         }
     }
 
