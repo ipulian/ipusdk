@@ -21,8 +21,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.gyf.immersionbar.BarHide;
-import com.gyf.immersionbar.ImmersionBar;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.R;
 import com.ipusoft.context.viewmodel.BaseViewModel;
@@ -177,36 +175,36 @@ public abstract class BaseDialogFragment<VB extends ViewDataBinding, VM extends 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getDialog() != null) {
-            if (shouldInitImmersionBar() || hideNavigationBar()) {
-                if (hideNavigationBar()) {
-                    ImmersionBar.with(this)
-                            .keyboardEnable(true)
-                            .fullScreen(false)
-                            .statusBarDarkFont(statusBarDarkFont())
-                            .autoDarkModeEnable(true)
-                            .autoStatusBarDarkModeEnable(true)
-                            .autoNavigationBarDarkModeEnable(true)
-                            .navigationBarColor(getNavigationBarColor())
-                            .hideBar(BarHide.FLAG_HIDE_NAVIGATION_BAR)
-                            .init();
-                } else {
-                    initImmersionBar();
-                }
-            }
+//            if (shouldInitImmersionBar() || hideNavigationBar()) {
+//                if (hideNavigationBar()) {
+//                    ImmersionBar.with(this)
+//                            .keyboardEnable(true)
+//                            .fullScreen(false)
+//                            .statusBarDarkFont(statusBarDarkFont())
+//                            .autoDarkModeEnable(true)
+//                            .autoStatusBarDarkModeEnable(true)
+//                            .autoNavigationBarDarkModeEnable(true)
+//                            .navigationBarColor(getNavigationBarColor())
+//                            .hideBar(BarHide.FLAG_HIDE_NAVIGATION_BAR)
+//                            .init();
+//                } else {
+//                    initImmersionBar();
+//                }
+//            }
         }
     }
 
-    protected void initImmersionBar() {
-        ImmersionBar.with(this)
-                .keyboardEnable(true)
-                .fullScreen(false)
-                .statusBarDarkFont(statusBarDarkFont())
-                .autoDarkModeEnable(true)
-                .autoStatusBarDarkModeEnable(true)
-                .autoNavigationBarDarkModeEnable(true)
-                .navigationBarColor(getNavigationBarColor())
-                .init();
-    }
+//    protected void initImmersionBar() {
+//        ImmersionBar.with(this)
+//                .keyboardEnable(true)
+//                .fullScreen(false)
+//                .statusBarDarkFont(statusBarDarkFont())
+//                .autoDarkModeEnable(true)
+//                .autoStatusBarDarkModeEnable(true)
+//                .autoNavigationBarDarkModeEnable(true)
+//                .navigationBarColor(getNavigationBarColor())
+//                .init();
+//    }
 
     /**
      * 状态栏字体颜色
@@ -245,7 +243,7 @@ public abstract class BaseDialogFragment<VB extends ViewDataBinding, VM extends 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        ImmersionBar.destroy(this);
+     //   ImmersionBar.destroy(this);
     }
 
     protected void initData() {

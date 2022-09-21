@@ -4,7 +4,6 @@ import android.app.Application;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.ipusoft.context.bean.AuthInfo;
 import com.ipusoft.context.bean.SeatInfo;
 import com.ipusoft.context.cache.AppCacheContext;
@@ -63,7 +62,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         /*
          * 初始化ARouter
          */
-        initARouter();
+       // initARouter();
 
         /*
          * 初始化数据库
@@ -204,16 +203,16 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         SDKCommonInit.initSDKToken(authInfo, loginListener);
     }
 
-    /**
-     * 初始化ARouter
-     */
-    private static void initARouter() {
-        if (BuildConfig.DEBUG) {
-            ARouter.openLog();
-            ARouter.openDebug();
-        }
-        ARouter.init(mApp);
-    }
+//    /**
+//     * 初始化ARouter
+//     */
+//    private static void initARouter() {
+//        if (BuildConfig.DEBUG) {
+//            ARouter.openLog();
+//            ARouter.openDebug();
+//        }
+//        ARouter.init(mApp);
+//    }
 
     /**
      * 初始化各个组件
