@@ -19,6 +19,7 @@ import com.alibaba.sdk.android.oss.model.HeadObjectResult;
 import com.alibaba.sdk.android.oss.model.ObjectMetadata;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.logger.XLogger;
+import com.ipusoft.utils.MD5Utils;
 
 /**
  * Created by GWFan on 2018/10/8.
@@ -34,7 +35,7 @@ public class AliYunManager {
     /**
      * OSSKey
      */
-    public static final String OSS_ACCESS_KEY_ID = "LTAIUDB32w25akBg";
+    public static final String OSS_ACCESS_KEY_ID = "8 5=!06GF\u0003FA\u0015\u001F6\u0013";
 
     /**
      * OSSSecret
@@ -74,7 +75,7 @@ public class AliYunManager {
      */
     public AliYunManager initAliOSS() {
         if (mOSS == null) {
-            OSSCredentialProvider credentialProvider = new OSSPlainTextAKSKCredentialProvider(OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET);
+            OSSCredentialProvider credentialProvider = new OSSPlainTextAKSKCredentialProvider(MD5Utils.convertMD5(OSS_ACCESS_KEY_ID), OSS_ACCESS_KEY_SECRET);
             mOSS = new OSSClient(AppContext.getAppContext(), "http://" + AliYunManager.OSS_END_POINT + ".aliyuncs.com",
                     credentialProvider);
         }
