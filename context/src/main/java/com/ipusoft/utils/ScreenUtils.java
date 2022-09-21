@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.view.WindowManager;
 
-import com.ipusoft.context.IpuSoftSDK;
+import com.ipusoft.context.AppContext;
 
 
 /**
@@ -14,8 +14,11 @@ import com.ipusoft.context.IpuSoftSDK;
  */
 public class ScreenUtils {
 
+    /**
+     * @return the application's width of screen, in pixel
+     */
     public static int getAppScreenWidth() {
-        WindowManager wm = (WindowManager) IpuSoftSDK.getAppContext().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) AppContext.getAppContext().getSystemService(Context.WINDOW_SERVICE);
         if (wm == null) return -1;
         Point point = new Point();
         wm.getDefaultDisplay().getSize(point);
@@ -26,7 +29,7 @@ public class ScreenUtils {
      * @return the application's height of screen, in pixel
      */
     public static int getAppScreenHeight() {
-        WindowManager wm = (WindowManager) IpuSoftSDK.getAppContext().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) AppContext.getAppContext().getSystemService(Context.WINDOW_SERVICE);
         if (wm == null) return -1;
         Point point = new Point();
         wm.getDefaultDisplay().getSize(point);

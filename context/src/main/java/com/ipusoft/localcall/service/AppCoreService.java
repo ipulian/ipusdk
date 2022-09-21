@@ -1,6 +1,5 @@
 package com.ipusoft.localcall.service;
 
-import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
@@ -8,6 +7,7 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 
 import com.ipusoft.context.AppContext;
+import com.ipusoft.context.BaseLifeCycleService;
 import com.ipusoft.context.base.IObserver;
 import com.ipusoft.context.bean.SysRecording;
 import com.ipusoft.localcall.bean.SIMCallOutBean;
@@ -35,7 +35,7 @@ import io.reactivex.rxjava3.annotations.NonNull;
  * desc   : 上传的Service
  */
 
-public class AppCoreService extends Service {
+public class AppCoreService extends BaseLifeCycleService {
     private static final String TAG = "WHCoreService";
 
     private static final int CHECK_PERIOD = 5 * 60 * 1000;
@@ -53,8 +53,17 @@ public class AppCoreService extends Service {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
+    protected void onICreate() {
+        XLogger.d("run: ------------>AppCoreService---->onICreate");
+    }
+
+    @Override
+    protected void bindLiveData() {
+
+    }
+
+    @Override
+    protected void onIStartCommand(Intent intent, int flags, int startId) {
         String token = AppContext.getToken();
         if (StringUtils.isNotEmpty(token)) {
 
@@ -92,19 +101,8 @@ public class AppCoreService extends Service {
         }
     }
 
-    /**
-     * 检查数据库中是否有更多记录
-     */
-    private void checkMoreRecording() {
-        if (mTimer == null) {
-            mTimer = new Timer();
-            mTimer.schedule(new CheckMoreDataTask(), 5 * 1000, CHECK_PERIOD);
-        }
-    }
-
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    protected void onIDestroy() {
         try {
             if (mTimer != null) {
                 mTimer.cancel();
@@ -116,11 +114,27 @@ public class AppCoreService extends Service {
     }
 
     /**
+     * 检查数据库中是否有更多记录
+     */
+    private void checkMoreRecording() {
+        if (mTimer == null) {
+            synchronized (AppCoreService.class) {
+                if (mTimer == null) {
+                    mTimer = new Timer();
+                    mTimer.schedule(task, 5 * 1000, CHECK_PERIOD);
+                }
+            }
+        }
+    }
+
+
+    /**
      * 定期检查系统中是否有更多待处理的数据
      */
-    private static class CheckMoreDataTask extends TimerTask {
+    private final TimerTask task = new TimerTask() {
         @Override
         public void run() {
+            XLogger.d("run: ------------>AppCoreService---->检查数据库待处理数据");
             CallLogManager.getInstance().queryCallLogAndRecording(new IObserver<Boolean>() {
                 @Override
                 public void onNext(@NotNull @NonNull Boolean aBoolean) {
@@ -132,12 +146,12 @@ public class AppCoreService extends Service {
                                     UploadStatus.WAIT_UPLOAD.getStatus(),
                                     UploadStatus.UPLOADING.getStatus(),
                                     UploadStatus.UPLOAD_FAILED.getStatus()),
-                            3, System.currentTimeMillis(),
-                            new IObserver<List<SysRecording>>() {
+                            3, System.currentTimeMillis(), new IObserver<List<SysRecording>>() {
                                 @Override
                                 public void onNext(@NotNull @NonNull List<SysRecording> list) {
                                     if (ArrayUtils.isNotEmpty(list)) {
                                         XLogger.d("数据库中需要上传的任务：" + GsonUtils.toJson(list));
+
                                         UploadManager.getInstance().addRecordingList2Task(list);
                                     } else {
                                         XLogger.d("数据库中没有需要上传的任务：");
@@ -147,5 +161,5 @@ public class AppCoreService extends Service {
                 }
             });
         }
-    }
+    };
 }

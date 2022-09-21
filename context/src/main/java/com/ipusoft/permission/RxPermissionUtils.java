@@ -4,14 +4,19 @@ import android.Manifest;
 import android.content.Context;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.Settings;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.elvishew.xlog.XLog;
+import com.ipusoft.context.AppContext;
 import com.ipusoft.context.base.IObserver;
+import com.ipusoft.context.view.dialog.OverLayPermissionDialog;
+import com.ipusoft.logger.XLogger;
+import com.ipusoft.utils.ExceptionUtils;
 import com.tbruyelle.rxpermissions3.RxPermissions;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +30,7 @@ import java.lang.reflect.Method;
  * time   : 4/20/21 4:51 PM
  * desc   : 权限管理类
  */
+
 public class RxPermissionUtils {
     private static final String TAG = "RxPermissionUtils";
     private static RxPermissions rxPermissions;
@@ -65,19 +71,9 @@ public class RxPermissionUtils {
      *
      * @param observe
      */
+
     private void observe(IObserver<Boolean> observe) {
         rxPermissions.request(permissions).subscribe(observe);
-    }
-
-    /**
-     * 请求电话相关权限
-     *
-     * @param observe3
-     */
-    private void requestCallPermission(IObserver<Boolean> observe3) {
-        rxPermissions.request(Manifest.permission.CALL_PHONE,
-                Manifest.permission.READ_PHONE_STATE)
-                .subscribe(observe3);
     }
 
     /**
@@ -86,27 +82,26 @@ public class RxPermissionUtils {
      * @param observe
      */
     public static void judgeHaveCallPermission(FragmentActivity mActivity, IObserver<Boolean> observe) {
-        RxPermissionUtils.requestOverLayPermission(mActivity, aBoolean ->
-                RxPermissionUtils.with(mActivity).requestCallPermission(observe));
+        RxPermissionUtils.requestOverLayPermission(mActivity, aBoolean -> {
+            try {
+                RxPermissionUtils.with(mActivity).requestPermission(
+                        Manifest.permission.CALL_PHONE,
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.READ_CONTACTS
+                ).observe(observe);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
-    public static void judgeHaveCallPermission(Fragment mFragment, IObserver<Boolean> observe) {
-        RxPermissionUtils.requestOverLayPermission(mFragment.getActivity(), aBoolean ->
-                RxPermissionUtils.with(mFragment).requestCallPermission(observe));
+    public static void requestCallPermission(FragmentActivity activity, IObserver<Boolean> observer) {
+        RxPermissionUtils.with(activity).requestPermission(
+                        Manifest.permission.CALL_PHONE,
+                        Manifest.permission.READ_PHONE_STATE)
+                .observe(observer);
     }
 
-    /**
-     * 检查是否已经被授予悬浮窗权限
-     *
-     * @param context
-     * @return
-     */
-//    public static boolean hasOverLayPermission(Activity context) {
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-//            return true;
-//        }
-//        return Settings.canDrawOverlays(context);
-//    }
     public static boolean hasOverLayPermission(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             try {
@@ -129,125 +124,43 @@ public class RxPermissionUtils {
                 return false;
             }
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                Log.d(TAG, "hasOverLayPermission: ---------》"+);
-//                AppOpsManager appOpsMgr = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-//                if (appOpsMgr == null)
-//                    return false;
-//                int mode = appOpsMgr.checkOpNoThrow("android:system_alert_window", android.os.Process.myUid(), context
-//                        .getPackageName());
-//                return mode == AppOpsManager.MODE_ALLOWED || mode == AppOpsManager.MODE_IGNORED;
-
-                return Settings.canDrawOverlays(context);
-
-            } else {
-                return Settings.canDrawOverlays(context);
-            }
+            return Settings.canDrawOverlays(context);
         }
     }
 
-
-    /**
-     * 请求App相关权限
-     *
-     * @param activity
-     */
-    public static void requestAppPermission(FragmentActivity activity) {
-        RxPermissionUtils.with(activity).requestPermission(
-//                Manifest.permission.READ_CONTACTS,
-//                Manifest.permission.WRITE_CONTACTS,
-                Manifest.permission.READ_CALL_LOG,
-                Manifest.permission.WRITE_CALL_LOG,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.MODIFY_AUDIO_SETTINGS,
-                Manifest.permission.BLUETOOTH,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_NETWORK_STATE,
-                Manifest.permission.GET_TASKS,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_NETWORK_STATE,
-                Manifest.permission.ACCESS_WIFI_STATE,
-                Manifest.permission.CHANGE_WIFI_STATE,
-                Manifest.permission.READ_PHONE_STATE)
-                .observe(new IObserver<Boolean>() {
-                    @Override
-                    public void onNext(@NotNull @NonNull Boolean aBoolean) {
-                        Log.d(TAG, "onNext: -------------" + aBoolean);
-                    }
-                });
-
-        requestLocationPermission2(activity);
-        requestLocationPermission3(activity);
-    }
-
-
     public static void requestAppPermission(FragmentActivity activity, IObserver<Boolean> observer) {
-        RxPermissionUtils.with(activity).requestPermission(
-//                Manifest.permission.READ_CONTACTS,
-//                Manifest.permission.WRITE_CONTACTS,
-                Manifest.permission.READ_CALL_LOG,
-                Manifest.permission.WRITE_CALL_LOG,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.MODIFY_AUDIO_SETTINGS,
-                Manifest.permission.BLUETOOTH,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_NETWORK_STATE,
-                Manifest.permission.GET_TASKS,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_NETWORK_STATE,
-                Manifest.permission.ACCESS_WIFI_STATE,
-                Manifest.permission.CHANGE_WIFI_STATE,
-                Manifest.permission.READ_PHONE_STATE)
-                .observe(observer);
+        try {
+            RxPermissionUtils.with(activity).requestPermission(
+                            Manifest.permission.CALL_PHONE,
+                            Manifest.permission.READ_CALL_LOG,
+                            Manifest.permission.WRITE_CALL_LOG,
+                            Manifest.permission.READ_CONTACTS,
+                            Manifest.permission.RECORD_AUDIO,
+                            Manifest.permission.MODIFY_AUDIO_SETTINGS,
+                            Manifest.permission.BLUETOOTH,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.ACCESS_NETWORK_STATE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_NETWORK_STATE,
+                            Manifest.permission.ACCESS_WIFI_STATE,
+                            Manifest.permission.CHANGE_WIFI_STATE,
+                            Manifest.permission.READ_PHONE_STATE)
+                    .observe(observer);
 
-        requestLocationPermission2(activity);
-        requestLocationPermission3(activity);
-    }
-
-    /**
-     * 请求定位权限
-     *
-     * @param activity
-     */
-    public static void requestLocationPermission(FragmentActivity activity) {
-        RxPermissionUtils.with(activity).requestPermission(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_NETWORK_STATE,
-                Manifest.permission.ACCESS_WIFI_STATE,
-                Manifest.permission.CHANGE_WIFI_STATE)
-                .observe(new IObserver<Boolean>() {
-                    @Override
-                    public void onNext(@NotNull @NonNull Boolean aBoolean) {
-                        Log.d(TAG, "onNext: ------------>" + aBoolean);
-                    }
-                });
-
-        requestLocationPermission2(activity);
-        requestLocationPermission3(activity);
-    }
-
-
-    public static void requestLocationPermission(Fragment mFragment, IObserver<Boolean> iObserver) {
-        RxPermissionUtils.with(mFragment).requestPermission(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_NETWORK_STATE,
-                Manifest.permission.ACCESS_WIFI_STATE,
-                Manifest.permission.CHANGE_WIFI_STATE)
-                .observe(iObserver);
-        requestLocationPermission2(mFragment);
-        requestLocationPermission3(mFragment);
+            requestLocationPermission2(activity);
+            requestLocationPermission3(activity);
+        } catch (Exception e) {
+            e.printStackTrace();
+            XLogger.e(TAG + "->requestAppPermission->" + ExceptionUtils.getErrorInfo(e));
+        }
     }
 
     private static void requestLocationPermission2(FragmentActivity activity) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
             RxPermissionUtils.with(activity).requestPermission(
-                    Manifest.permission.FOREGROUND_SERVICE)
+                            Manifest.permission.FOREGROUND_SERVICE)
                     .observe(new IObserver<Boolean>() {
                         @Override
                         public void onNext(@NotNull @NonNull Boolean aBoolean) {
@@ -260,60 +173,13 @@ public class RxPermissionUtils {
     private static void requestLocationPermission3(FragmentActivity activity) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
             RxPermissionUtils.with(activity).requestPermission(
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                            Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                     .observe(new IObserver<Boolean>() {
                         @Override
                         public void onNext(@NotNull @NonNull Boolean aBoolean) {
 
                         }
                     });
-        }
-    }
-
-    private static void requestLocationPermission2(Fragment fragment) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-            RxPermissionUtils.with(fragment).requestPermission(
-                    Manifest.permission.FOREGROUND_SERVICE)
-                    .observe(new IObserver<Boolean>() {
-                        @Override
-                        public void onNext(@NotNull @NonNull Boolean aBoolean) {
-                            requestLocationPermission3(fragment);
-                        }
-                    });
-        }
-    }
-
-    private static void requestLocationPermission3(Fragment fragment) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-            RxPermissionUtils.with(fragment).requestPermission(
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-                    .observe(new IObserver<Boolean>() {
-                        @Override
-                        public void onNext(@NotNull @NonNull Boolean aBoolean) {
-
-                        }
-                    });
-        }
-    }
-
-    private static void requestLocationPermission2(FragmentActivity activity, IObserver<Boolean> iObserver) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-            RxPermissionUtils.with(activity).requestPermission(
-                    Manifest.permission.FOREGROUND_SERVICE)
-                    .observe(new IObserver<Boolean>() {
-                        @Override
-                        public void onNext(@NotNull @NonNull Boolean aBoolean) {
-                            requestLocationPermission3(activity, iObserver);
-                        }
-                    });
-        }
-    }
-
-    private static void requestLocationPermission3(FragmentActivity activity, IObserver<Boolean> iObserver) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-            RxPermissionUtils.with(activity).requestPermission(
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-                    .observe(iObserver);
         }
     }
 
@@ -324,11 +190,75 @@ public class RxPermissionUtils {
      */
     public static void requestOverLayPermission(FragmentActivity activity, OverLayPermissionDialog.PermissionCallBack listener) {
         if (!hasOverLayPermission(activity)) {
-            OverLayPermissionDialog.getInstance(activity)
+            OverLayPermissionDialog
+                    .getInstance()
                     .setOnOverLayPermissionListener(listener)
                     .show();
         } else {
             listener.invoke(true);
         }
     }
+
+    /**
+     * 请求管理分区存储的权限
+     *
+     * @return
+     */
+    public static boolean checkManageStoragePermission() {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Environment.isExternalStorageManager();
+    }
+
+    /**
+     * 检查小米手机自动录音功能是否开启，true已开启  false未开启
+     *
+     * @return
+     */
+    public static boolean checkXiaomiRecord() {
+        try {
+            int key = Settings.System.getInt(AppContext.getAppContext().getContentResolver(), "button_auto_record_call");
+            XLog.d(TAG, "Xiaomi key:" + key);
+            //0是未开启,1是开启
+            return key != 0;
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+
+    /**
+     * 检查华为手机自动录音功能是否开启，true已开启  false未开启
+     *
+     * @return
+     */
+    public static boolean checkHuaweiRecord() {
+        try {
+            int key = Settings.Secure.getInt(AppContext.getAppContext().getContentResolver(), "enable_record_auto_key");
+            //0代表华为自动录音未开启,1代表华为自动录音已开启
+            return key != 0;
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+
+    /**
+     * 检查OPPO手机自动录音功能是否开启，true已开启  false未开启
+     *
+     * @return
+     */
+    public static boolean checkOppoRecord() {
+        try {
+            int key = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1 ?
+                    Settings.Global.getInt(AppContext.getAppContext().getContentResolver(), "oppo_all_call_audio_record") : 0;
+            XLog.d(TAG, "Oppo key:" + key);
+            //0代表OPPO自动录音未开启,1代表OPPO自动录音已开启
+            return key != 0;
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
 }

@@ -18,12 +18,18 @@ import com.ipusoft.context.AppContext;
 public class IScrollView extends ScrollView implements View.OnTouchListener {
     public IScrollView(Context context) {
         super(context);
+        initView();
         setOnTouchListener(this);
     }
 
     public IScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initView();
         setOnTouchListener(this);
+    }
+
+    private void initView() {
+        setOverScrollMode(OVER_SCROLL_NEVER);
     }
 
     @Override

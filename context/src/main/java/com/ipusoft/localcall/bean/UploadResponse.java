@@ -1,6 +1,6 @@
 package com.ipusoft.localcall.bean;
 
-import com.ipusoft.context.bean.base.BaseHttpResponse;
+import com.ipusoft.context.bean.base.HttpResponse;
 
 /**
  * author : GWFan
@@ -8,7 +8,7 @@ import com.ipusoft.context.bean.base.BaseHttpResponse;
  * desc   :
  */
 
-public class UploadResponse extends BaseHttpResponse {
+public class UploadResponse extends HttpResponse {
     private String type;
 
     public String getType() {

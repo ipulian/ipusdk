@@ -64,7 +64,6 @@ public class SysRecording implements Serializable {
     private String fileMD5;
     //callID
     @ColumnInfo(name = "call_id")
-    //@Ignore
     private long callId;
 
     /**
@@ -76,6 +75,12 @@ public class SysRecording implements Serializable {
     private boolean isChecked;
     @Ignore
     private String callTimeServer;
+    @Ignore
+    private String callTimeStr;
+    @Ignore
+    private String lastRetryTimeStr;
+    @Ignore
+    String fileGenerateTimeStr;
 
     public long getId() {
         return id;
@@ -227,6 +232,30 @@ public class SysRecording implements Serializable {
 
     public void setCallTimeServer(String callTimeServer) {
         this.callTimeServer = callTimeServer;
+    }
+
+    public String getCallTimeStr() {
+        return callTimeStr;
+    }
+
+    public void setCallTimeStr(String callTimeStr) {
+        this.callTimeStr = callTimeStr;
+    }
+
+    public String getLastRetryTimeStr() {
+        return lastRetryTimeStr;
+    }
+
+    public void setLastRetryTimeStr(String lastRetryTimeStr) {
+        this.lastRetryTimeStr = lastRetryTimeStr;
+    }
+
+    public String getFileGenerateTimeStr() {
+        return fileGenerateTimeStr;
+    }
+
+    public void setFileGenerateTimeStr(String fileGenerateTimeStr) {
+        this.fileGenerateTimeStr = fileGenerateTimeStr;
     }
 
     @Override

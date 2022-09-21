@@ -1,6 +1,7 @@
 package com.ipusoft.localcall.bean;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * author : GWFan
@@ -47,5 +48,24 @@ public class SIMCallOutBean implements Serializable {
 
     public void setCallTime(String callTime) {
         this.callTime = callTime;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (this.getClass() != obj.getClass())
+            return false;
+        SIMCallOutBean other = (SIMCallOutBean) obj;
+        if (timestamp == null || timestamp == 0) {
+            return other.getTimestamp() == null || other.getTimestamp() == 0;
+        } else return timestamp.equals(other.getTimestamp());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(timestamp);
     }
 }

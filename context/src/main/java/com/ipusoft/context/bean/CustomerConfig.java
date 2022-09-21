@@ -1,17 +1,17 @@
 package com.ipusoft.context.bean;
 
 import com.google.gson.annotations.SerializedName;
-import com.ipusoft.context.bean.base.BaseHttpResponse;
+import com.ipusoft.context.bean.base.HttpResponse;
 
 import java.util.List;
 
 /**
  * author : GWFan
  * time   : 7/9/20 8:00 PM
- * desc   :
+ * desc   : 客户配置
  */
 
-public class CustomerConfig extends BaseHttpResponse {
+public class CustomerConfig extends HttpResponse {
 
     private static final long serialVersionUID = 842952689574401686L;
     private int isAdmin;
@@ -207,7 +207,7 @@ public class CustomerConfig extends BaseHttpResponse {
         private String phoneShow;
 
         private String type;//2：可选；3：扩展；
-        private String fieldType;//字段类型：1：单行文本；2：多行文本；3：日期；4：单选框；5：多选框；6：单选按钮；7：多选按钮；
+        private String fieldType;//字段类型：1：单行文本；2：多行文本；3：日期；4：单选框；5：多选框；6：单选按钮；7：多选按钮；8：日期时间
         private String useInSearch;//在搜索中使用 0：不使用；1：使用；
         private String displayArea;//显示位置 1：扩展资料；2：基本资料；3：详细资料；
 

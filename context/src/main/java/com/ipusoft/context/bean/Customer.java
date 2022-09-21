@@ -4,17 +4,19 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.ipusoft.context.bean.adapter.String2LongAdapter;
 
+import java.util.List;
+
 /**
  * author : GWFan
  * time   : 7/13/20 1:41 PM
  * desc   : 客户
  */
 
-public class Customer extends BaseCustomerBean {
+public class Customer extends BaseCustomerBean implements Comparable<Customer> {
     //客户Id
     @JsonAdapter(String2LongAdapter.class)
-    @SerializedName(value = "id")
-    private Long customerId;
+    @SerializedName(value = "id", alternate = "customerId")
+    private Long customerId = 0L;
     //紧急电话
     private String urgentPhone;
     //收藏
@@ -25,6 +27,9 @@ public class Customer extends BaseCustomerBean {
     private String transferTime;
     //归属
     private String owner;
+
+    private String coachName;
+
     //行业
     private String mIndustry;
     //是否贡献客户
@@ -57,6 +62,11 @@ public class Customer extends BaseCustomerBean {
     private String idCard;
     //公司
     private String corporation;
+
+    //生日
+    private String birthDay;
+
+    private List<MemberCoach> coachList;
 
     //扩展字段
     private String extend1;
@@ -189,6 +199,14 @@ public class Customer extends BaseCustomerBean {
         this.owner = owner;
     }
 
+    public String getCoachName() {
+        return coachName;
+    }
+
+    public void setCoachName(String coachName) {
+        this.coachName = coachName;
+    }
+
     public String getIndustry() {
         return industry;
     }
@@ -260,6 +278,67 @@ public class Customer extends BaseCustomerBean {
 
     public void setmPoolName(String mPoolName) {
         this.mPoolName = mPoolName;
+    }
+
+    public String getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(String birthDay) {
+        this.birthDay = birthDay;
+    }
+
+    public List<MemberCoach> getCoachList() {
+        return coachList;
+    }
+
+    public void setCoachList(List<MemberCoach> coachList) {
+        this.coachList = coachList;
+    }
+
+    /**
+     * 拼音首字母排序
+     *
+     * @param another
+     * @return
+     */
+    @Override
+    public int compareTo(Customer another) {
+        try {
+            return this.getPyName().compareTo(another.getPyName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * 用户唯一性判定 username的值是否相同
+     *
+     * @param obj
+     * @return
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (this.getClass() != obj.getClass())
+            return false;
+        Customer other = (Customer) obj;
+        if (customerId == null || customerId == 0) {
+            return other.customerId == null || other.customerId == 0;
+        }
+        return customerId.equals(other.customerId);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (customerId == null || customerId == 0 ? 0 : customerId.hashCode());
+        return result;
     }
 }
 

@@ -21,12 +21,14 @@ public class ViewUtils {
      */
     public static List<View> getAllChildViews(View view) {
         List<View> allChildViews = new ArrayList<>();
-        if (view instanceof ViewGroup) {
-            ViewGroup vp = (ViewGroup) view;
-            for (int i = 0; i < vp.getChildCount(); i++) {
-                View viewChild = vp.getChildAt(i);
-                allChildViews.add(viewChild);
-                allChildViews.addAll(getAllChildViews(viewChild));
+        if (view != null) {
+            if (view instanceof ViewGroup) {
+                ViewGroup vp = (ViewGroup) view;
+                for (int i = 0; i < vp.getChildCount(); i++) {
+                    View viewChild = vp.getChildAt(i);
+                    allChildViews.add(viewChild);
+                    allChildViews.addAll(getAllChildViews(viewChild));
+                }
             }
         }
         return allChildViews;

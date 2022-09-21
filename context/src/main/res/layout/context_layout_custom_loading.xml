@@ -1,28 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:background="@drawable/context_bg_custom_loading"
-    android:gravity="center"
-    android:minWidth="125dp"
-    android:minHeight="80dp"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.ipusoft.context.component.LoadingView
-        android:id="@+id/loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:color="@color/white" />
+    <data>
 
-    <TextView
-        android:id="@+id/tv_msg"
+        <import type="com.ipusoft.context.viewmodel.BaseViewModel" />
+
+        <variable
+            name="vm"
+            type="BaseViewModel" />
+    </data>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dp_5"
+        android:background="@color/transparent"
         android:gravity="center"
-        android:text="正在加载"
-        android:textColor="@color/white" />
+        android:orientation="vertical">
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="125dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:background="@drawable/context_bg_custom_loading"
+            android:gravity="center"
+            android:minWidth="125dp"
+            android:minHeight="80dp"
+            android:orientation="vertical">
+
+            <com.ipusoft.context.component.LoadingView
+                android:id="@+id/loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:color="@color/white" />
+
+            <TextView
+                android:id="@+id/tv_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dp_5"
+                android:gravity="center"
+                android:text="正在加载"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>

@@ -1,62 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <ScrollView
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginHorizontal="15dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="140dp"
-        android:background="@drawable/context_bg_dialog_how_to_open_recording"
-        android:scrollbars="none">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:gravity="center"
-                android:text="提示"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_16"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="40dp"
+                android:layout_marginTop="80dp"
+                android:layout_marginBottom="180dp"
+                android:background="@drawable/context_bg_dialog_how_to_open_recording"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dp_20"
-                android:layout_marginTop="20dp"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp_14" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:gravity="center"
+                    android:text="提示"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/sp_16"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/dp_20"
+                    android:layout_marginTop="10dp"
+                    android:text="我们无法检测到通话录音文件，请检查通话录音权限是否打开"
+                    android:textColor="@color/black75"
+                    android:textSize="@dimen/sp_14" />
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/dp_10">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/dp_20"
+                            android:layout_marginVertical="@dimen/dp_10"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/context_ic_how_to_open_recording_dialog" />
+
+                        <TextView
+                            android:id="@+id/tv_to_open"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center"
+                            android:layout_marginHorizontal="32dp"
+                            android:layout_marginTop="@dimen/dp_16"
+                            android:layout_marginBottom="@dimen/dp_16"
+                            android:background="@drawable/context_bg_super_button_positive"
+                            android:gravity="center"
+                            android:text="去打开"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_16" />
+
+                    </LinearLayout>
+
+                </ScrollView>
+            </LinearLayout>
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dp_20"
-                android:layout_marginVertical="@dimen/dp_10"
-                android:adjustViewBounds="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/context_ic_how_to_open_recording_dialog" />
-        </LinearLayout>
+                android:id="@+id/iv_close"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="120dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/context_ic_close" />
 
-    </ScrollView>
-
-    <ImageView
-        android:id="@+id/iv_close"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="50dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/context_ic_close" />
-
-</FrameLayout>
+        </FrameLayout>
+    </LinearLayout>
+</layout>

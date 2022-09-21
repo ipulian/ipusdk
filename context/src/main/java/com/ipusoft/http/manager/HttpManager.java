@@ -2,6 +2,7 @@ package com.ipusoft.http.manager;
 
 import com.ipusoft.http.interceptors.BaseUrlInterceptor;
 import com.ipusoft.http.interceptors.LoggingInterceptor;
+import com.ipusoft.http.interceptors.TimeoutInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,8 +32,9 @@ public class HttpManager {
                 .readTimeout(READ_TIMEOUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
                 .dispatcher(getDispatcher())
-                .addInterceptor(new LoggingInterceptor())
-                .addInterceptor(new BaseUrlInterceptor());
+                .addInterceptor(new TimeoutInterceptor())
+                .addInterceptor(new BaseUrlInterceptor())
+                .addInterceptor(new LoggingInterceptor());
 
         return builder.build();
     }

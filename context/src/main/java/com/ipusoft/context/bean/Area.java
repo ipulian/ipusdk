@@ -1,7 +1,7 @@
 package com.ipusoft.context.bean;
 
 import com.google.gson.annotations.SerializedName;
-import com.ipusoft.context.bean.base.BaseHttpResponse;
+import com.ipusoft.context.bean.base.HttpResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
  * desc   : 省份-城市
  */
 
-public class Area extends BaseHttpResponse {
+public class Area extends HttpResponse {
 
     private static final long serialVersionUID = 7673020358510790460L;
 

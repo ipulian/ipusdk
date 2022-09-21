@@ -23,8 +23,14 @@ import io.reactivex.rxjava3.core.Observable;
 @Dao
 public interface SysRecordingDao {
 
+    @Query("SELECT * FROM sys_recording WHERE upload_status in (:uploadStatus) ORDER BY call_time ")
+    Observable<List<SysRecording>> queryAll(List<Integer> uploadStatus);
+
     @Query("SELECT * FROM sys_recording WHERE upload_status in (:uploadStatus) AND duration != 0 ORDER BY call_time DESC LIMIT :limit")
     Observable<List<SysRecording>> queryLimitRecordingByStatus(List<Integer> uploadStatus, int limit);
+
+    @Query("SELECT count(*) as count FROM sys_recording WHERE upload_status in (:uploadStatus) AND duration != 0")
+    Observable<Integer> queryCountByStatus(List<Integer> uploadStatus);
 
     @Delete
     void deleteRecording(SysRecording... recording);
@@ -39,7 +45,7 @@ public interface SysRecordingDao {
     void insert(List<SysRecording> recordList);
 
     @Query("SELECT * FROM sys_recording WHERE upload_status in (:uploadStatus) "
-            + "AND retry_count < :retryCount AND :currentTime - last_retry_time > 10*60*1000 "
+            + "AND retry_count <= :retryCount AND :currentTime - last_retry_time > 10*60*1000 "
             + "ORDER BY id DESC LIMIT :limit")
     Observable<List<SysRecording>> queryLimitRecordingByStatus(List<Integer> uploadStatus, int retryCount,
                                                                long currentTime, int limit);

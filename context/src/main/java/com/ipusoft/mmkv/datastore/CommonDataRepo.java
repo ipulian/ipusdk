@@ -6,16 +6,17 @@ import com.ipusoft.context.bean.IAuthInfo;
 import com.ipusoft.context.bean.LocalRecordPath;
 import com.ipusoft.context.bean.SeatInfo;
 import com.ipusoft.context.constant.CallTypeConfig;
+import com.ipusoft.logger.XLogger;
+import com.ipusoft.mmkv.AccountMMKV;
+import com.ipusoft.mmkv.AppMMKV;
+import com.ipusoft.mmkv.CommonMMKV;
+import com.ipusoft.mmkv.constant.StorageConstant;
 import com.ipusoft.utils.ArrayUtils;
 import com.ipusoft.utils.GsonUtils;
 import com.ipusoft.utils.MapUtils;
 import com.ipusoft.utils.StringUtils;
-import com.ipusoft.mmkv.AccountMMKV;
-import com.ipusoft.mmkv.CommonMMKV;
-import com.ipusoft.mmkv.constant.StorageConstant;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -90,6 +91,7 @@ public class CommonDataRepo {
      * @param str
      */
     public static void setLocalCallType(String str) {
+        XLogger.d(TAG + "---修改本地通话方式--->" + str);
         CommonMMKV.set(StorageConstant.LOCAL_CALL_TYPE, str);
     }
 
@@ -98,7 +100,7 @@ public class CommonDataRepo {
     }
 
     /**
-     * 是否上传本地通话记录及录音文件
+     * 是否上传录音文件
      */
     public static void setUploadLocalRecord(boolean isUpload) {
         CommonMMKV.set(StorageConstant.UPLOAD_LOCAL_RECORD, isUpload);
@@ -118,45 +120,49 @@ public class CommonDataRepo {
     }
 
     public static void setLocalRecordPath(String path) {
-        if (StringUtils.isEmpty(path)) {
-            return;
-        }
-        List<LocalRecordPath> result = new LinkedList<>();
-        List<LocalRecordPath> list = getLocalRecordPath();
-        if (ArrayUtils.isNotEmpty(list)) {
-            Map<String, Integer> map = new HashMap<>();
-            for (LocalRecordPath localRecordPath : list) {
-                map.put(localRecordPath.getPath(), localRecordPath.getWeight());
+        try {
+            if (StringUtils.isEmpty(path)) {
+                return;
             }
-            if (map.containsKey(path)) {
-                Integer integer = map.get(path);
-                integer += 1;
-                map.put(path, integer);
-            } else {
-                map.put(path, 1);
-            }
-            LinkedHashMap<String, Integer> sortedMap = MapUtils.sortByValue(map);
-            LocalRecordPath localRecordPath;
-            for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
-                localRecordPath = new LocalRecordPath();
-                localRecordPath.setPath(entry.getKey());
-                localRecordPath.setWeight(entry.getValue());
-                if (result.size() < 5) {
-                    result.add(localRecordPath);
+            List<LocalRecordPath> result = new LinkedList<>();
+            List<LocalRecordPath> list = getLocalRecordPath();
+            if (ArrayUtils.isNotEmpty(list)) {
+                LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+                for (LocalRecordPath localRecordPath : list) {
+                    map.put(localRecordPath.getPath(), localRecordPath.getWeight());
+                }
+                if (map.containsKey(path)) {
+                    Integer integer = map.get(path);
+                    integer += 1;
+                    map.put(path, integer);
                 } else {
-                    int weight = result.get(result.size() - 1).getWeight();
-                    if (weight <= entry.getValue()) {
+                    map.put(path, 1);
+                }
+                LinkedHashMap<String, Integer> sortedMap = MapUtils.sortByValue(map);
+                LocalRecordPath localRecordPath;
+                for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
+                    localRecordPath = new LocalRecordPath();
+                    localRecordPath.setPath(entry.getKey());
+                    localRecordPath.setWeight(entry.getValue());
+                    if (result.size() < 5) {
                         result.add(localRecordPath);
+                    } else {
+                        int weight = result.get(result.size() - 1).getWeight();
+                        if (weight <= entry.getValue()) {
+                            result.add(localRecordPath);
+                        }
                     }
                 }
+            } else {
+                LocalRecordPath localRecordPath = new LocalRecordPath();
+                localRecordPath.setPath(path);
+                localRecordPath.setWeight(1);
+                result.add(localRecordPath);
             }
-        } else {
-            LocalRecordPath localRecordPath = new LocalRecordPath();
-            localRecordPath.setPath(path);
-            localRecordPath.setWeight(1);
-            result.add(localRecordPath);
+            CommonMMKV.set(StorageConstant.RECORDING_FILE_PATH, GsonUtils.toJson(result));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        CommonMMKV.set(StorageConstant.RECORDING_FILE_PATH, GsonUtils.toJson(result));
     }
 
     public static List<LocalRecordPath> getLocalRecordPath() {
@@ -207,5 +213,27 @@ public class CommonDataRepo {
 
     public static long getGetAreaJsonTime() {
         return AccountMMKV.getLong(StorageConstant.GET_AREA_DATA_TIME);
+    }
+
+    /**
+     * App是否第一次安装
+     *
+     * @param flag
+     */
+    public static void setAppIsFirstInstall(boolean flag) {
+        AppMMKV.set(StorageConstant.APP_IS_FIRST_INSTALL, flag);
+    }
+
+    public static boolean getAppIsFirstInstall() {
+        return AppMMKV.getBoolean(StorageConstant.APP_IS_FIRST_INSTALL, true);
+    }
+
+
+    public static void setShowHungUpPop(boolean showHungUpPop) {
+        CommonMMKV.set(StorageConstant.SHOW_HUNG_UP_POP, showHungUpPop);
+    }
+
+    public static boolean getShowHungUpPop() {
+        return CommonMMKV.getBoolean(StorageConstant.SHOW_HUNG_UP_POP, true);
     }
 }

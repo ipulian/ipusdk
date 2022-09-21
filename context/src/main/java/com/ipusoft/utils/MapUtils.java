@@ -1,7 +1,6 @@
 package com.ipusoft.utils;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -53,24 +52,26 @@ public class MapUtils {
      * @param map 源HashMap
      * @return 排序后的HashMap
      */
-    public static LinkedHashMap<String, Integer> sortByValue(Map<String, Integer> map) {
-        // HashMap的entry放到List中
-        List<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
-        //  对List按entry的value排序
-        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-            @Override
-            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+    public static LinkedHashMap<String, Integer> sortByValue(LinkedHashMap<String, Integer> map) {
+        try {
+            // HashMap的entry放到List中
+            List<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
+            //  对List按entry的value排序
+            Collections.sort(list, (o1, o2) -> {
                 if (o1.getValue() < o2.getValue()) {
                     return 1;
                 }
                 return -1;
+            });
+            // 将排序后的元素放到LinkedHashMap中
+            LinkedHashMap<String, Integer> temp = new LinkedHashMap<>();
+            for (Map.Entry<String, Integer> aa : list) {
+                temp.put(aa.getKey(), aa.getValue());
             }
-        });
-        // 将排序后的元素放到LinkedHashMap中
-        LinkedHashMap<String, Integer> temp = new LinkedHashMap<>();
-        for (Map.Entry<String, Integer> aa : list) {
-            temp.put(aa.getKey(), aa.getValue());
+            return temp;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return temp;
+        return map;
     }
 }

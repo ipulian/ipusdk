@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="WarpLinearLayoutDefault">
-        <item name="grivate">left</item>
+    <style name="FlowLinearLayoutDefault">
+        <item name="gravity">left</item>
         <item name="horizontal_Space">20dp</item>
         <item name="vertical_Space">20dp</item>
         <item name="isFull">false</item>
@@ -22,5 +22,29 @@
         <!--dialog的背景透明-->
         <item name="android:windowBackground">@color/black1</item>
 
+    </style>
+
+    <style name="IDialogFragmentStyle" parent="Theme.AppCompat.Dialog">
+        <!-- 背景透明 -->
+        <item name="android:windowBackground">@color/black60</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- 浮于Activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- Dialog以外的区域模糊效果，这里我们设为false,是为了防止dialog出现导致页面变暗 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!-- 无标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- Dialog进入及退出动画 -->
+        <!--        <item name="android:windowAnimationStyle">@style/ActionSheetDialogAnimation</item>-->
+    </style>
+
+    <!-- ActionSheet进出动画 -->
+    <style name="ActionSheetDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/activity_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/activity_bottom_out</item>
     </style>
 </resources>

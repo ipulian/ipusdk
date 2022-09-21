@@ -115,4 +115,18 @@ dependencies {
     implementation 'com.squareup:javapoet:1.13.0'
 
     api 'com.elvishew:xlog:1.11.0'
+
+    /**
+     *  沉浸式状态栏
+     *  https://github.com/gyf-dev/ImmersionBar
+     */
+    api 'com.gyf.immersionbar:immersionbar:3.0.0'
+    api 'com.gyf.immersionbar:immersionbar-components:3.0.0'
+    api 'com.gyf.immersionbar:immersionbar-ktx:3.0.0'
+
+    /**
+     * 阿里云OSS
+     * https://github.com/aliyun/aliyun-oss-android-sdk?spm=a2c4g.11186623.2.10.502e4de3lAPo50
+     */
+    api 'com.aliyun.dpa:oss-android-sdk:2.9.5'
 }

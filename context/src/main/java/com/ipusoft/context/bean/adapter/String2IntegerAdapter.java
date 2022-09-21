@@ -5,6 +5,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import com.ipusoft.utils.StringUtils;
 
 import java.io.IOException;
 
@@ -33,7 +34,7 @@ public class String2IntegerAdapter extends TypeAdapter<Integer> {
         switch (peek) {
             case STRING:
                 String s = in.nextString();
-                if (s != null && !"".equals(s)) {
+                if (StringUtils.isNotEmpty(s)) {
                     try {
                         result = Integer.parseInt(s);
                     } catch (NumberFormatException e) {

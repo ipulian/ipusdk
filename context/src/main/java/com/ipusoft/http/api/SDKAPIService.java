@@ -3,7 +3,7 @@ package com.ipusoft.http.api;
 import com.ipusoft.context.bean.IAuthCode;
 import com.ipusoft.context.bean.IToken;
 import com.ipusoft.context.bean.SeatInfo;
-import com.ipusoft.context.bean.base.BaseHttpResponse;
+import com.ipusoft.context.bean.base.HttpResponse;
 import com.ipusoft.http.HttpConstant;
 
 import java.util.Map;
@@ -61,5 +61,5 @@ public interface SDKAPIService {
      */
     @Headers({HttpConstant.CONTENT_TYPE})
     @POST("/app/user/status")
-    Observable<BaseHttpResponse> updateCallType(@Body RequestBody requestBody);
+    Observable<HttpResponse> updateCallType(@Body RequestBody requestBody);
 }

@@ -34,7 +34,7 @@ public class CountDownTimerUtils extends CountDownTimer {
     @Override
     public void onTick(long millisUntilFinished) {
         if (mTextView != null) {
-            String str = millisUntilFinished / 1000 + "秒后重发";
+            String str = "重新发送(" + millisUntilFinished / 1000 + "s)";
             mTextView.setText(str);
             mTextView.setTextColor(ResourceUtils.getColor(R.color.textColor8));
             mTextView.setEnabled(false);

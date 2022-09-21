@@ -47,4 +47,14 @@ public class StorageConstant {
      */
     public static final String CUSTOMER_CONFIG = "c_config";
 
+    /**
+     * app是否是第一次安装
+     */
+    public static final String APP_IS_FIRST_INSTALL = "app_is_first_install";
+
+    /**
+     * 是否展示挂机弹屏
+     */
+    public static final String SHOW_HUNG_UP_POP = "show_hung_up_pop";
+
 }

@@ -24,7 +24,7 @@ public class LocationManager {
 
     private static String key;
 
-    private static long timestamp = 0;
+    private static boolean flag = true;
 
     private LocationManager() {
     }
@@ -39,10 +39,9 @@ public class LocationManager {
     }
 
     private static void setLocation(AMapLocation aMapLocation) {
-        long l = System.currentTimeMillis();
-        if (l - timestamp > 2 * 60) {
+        if (flag) {
             XLogger.d("AMapLocation：" + aMapLocation);
-            timestamp = l;
+            flag = false;
         }
         location = aMapLocation;
     }
@@ -59,6 +58,7 @@ public class LocationManager {
             AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
             mLocationOption.setInterval(60 * 1000);
             mLocationOption.setNeedAddress(true);
+            mLocationOption.setOnceLocation(true);
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
             /*
              * 设置定位场景，目前支持三种场景（签到、出行、运动，默认无场景）

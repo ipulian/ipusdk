@@ -1,8 +1,6 @@
 package com.ipusoft.context.bean;
 
-import com.ipusoft.context.constant.HttpStatus;
-
-import java.io.Serializable;
+import com.ipusoft.context.bean.base.HttpResponse;
 
 /**
  * author : GWFan
@@ -10,34 +8,9 @@ import java.io.Serializable;
  * desc   :
  */
 
-public class VirtualNumber implements Serializable {
+public class VirtualNumber extends HttpResponse {
 
     private static final long serialVersionUID = 64764129134858215L;
-
-    /**
-     * 状态码
-     */
-    private String status = HttpStatus.SUCCESS;
-    /**
-     * 状态消息
-     */
-    private String msg;
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 
     private String callId;
     private BindInfo bindInfo;

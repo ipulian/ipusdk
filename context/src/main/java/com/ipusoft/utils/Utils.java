@@ -23,4 +23,19 @@ public class Utils {
         }
         return result;
     }
+
+    /**
+     * 两数相除取百分数 66.7%
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    public static String toPercent(int a, int b) {
+        if (a % b == 0) {
+            return a / b * 100 + "%";
+        } else {
+            return (double) Math.round(a / (double) b * 1000) / 10 + "%";
+        }
+    }
 }

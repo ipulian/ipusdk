@@ -13,7 +13,7 @@ import com.ipusoft.context.bean.base.BaseCustomerClueBean;
 
 public class Clue extends BaseCustomerClueBean {
     //线索Id
-    private Long id;
+    private Long id = 0L;
     //线索池Id
     private Long cluePoolId;
     //线索池名称

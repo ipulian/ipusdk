@@ -14,7 +14,8 @@ public enum CallTypeConfig {
 
     SIM("SIM", "SIM卡呼叫"),
     SIP("SIP", "线路呼叫"),
-    X("X", "小号呼叫");
+    X("X", "小号呼叫"),
+    TYC("TYC", "双向呼");
 
     private final String type;
     private final String val;

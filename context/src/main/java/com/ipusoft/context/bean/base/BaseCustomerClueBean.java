@@ -1,6 +1,7 @@
 package com.ipusoft.context.bean.base;
 
 import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
 import com.ipusoft.context.bean.adapter.String2IntegerAdapter;
 
 import java.io.Serializable;
@@ -17,9 +18,14 @@ public class BaseCustomerClueBean implements Serializable {
     //城市
     private String city;
     //头像地址
+    @SerializedName(value = "avatarUrl", alternate = "picUrl")
     private String picUrl;
     //姓名
+    @SerializedName(value = "customerName", alternate = {"name"})
     private String name;
+    //姓名拼音
+    private String pyName;
+
     //性别
     @JsonAdapter(String2IntegerAdapter.class)
     private Integer sex;
@@ -38,6 +44,7 @@ public class BaseCustomerClueBean implements Serializable {
     //标签
     private String label;
     //上次呼叫状态
+    @JsonAdapter(String2IntegerAdapter.class)
     private Integer lastCallStatus;
     //上次联系时间
     private String lastCallTime;
@@ -74,6 +81,14 @@ public class BaseCustomerClueBean implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPyName() {
+        return pyName;
+    }
+
+    public void setPyName(String pyName) {
+        this.pyName = pyName;
     }
 
     public Integer getSex() {

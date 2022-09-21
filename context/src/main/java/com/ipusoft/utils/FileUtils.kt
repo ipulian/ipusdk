@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import com.ipusoft.context.AppContext
 import com.ipusoft.context.IpuSoftSDK
 import java.io.File
 import java.io.FileInputStream
@@ -155,7 +156,7 @@ private fun isFileExistsApi29(filePath: String): Boolean {
     if (Build.VERSION.SDK_INT >= 29) {
         try {
             val uri = Uri.parse(filePath)
-            val cr = IpuSoftSDK.getAppContext().contentResolver
+            val cr = AppContext.getAppContext().contentResolver
             val afd = cr.openAssetFileDescriptor(uri, "r") ?: return false
             try {
                 afd.close()

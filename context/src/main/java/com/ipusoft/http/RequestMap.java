@@ -1,12 +1,13 @@
 package com.ipusoft.http;
 
-import android.util.Log;
-
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.ipusoft.context.AppContext;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * author : GWFan
@@ -14,6 +15,7 @@ import java.util.HashMap;
  * desc   :Http请求参数
  */
 
+@Keep
 public class RequestMap extends HashMap<String, Object> {
     private static final String TAG = "RequestMap";
     private static final String TOKEN = "token";
@@ -28,7 +30,6 @@ public class RequestMap extends HashMap<String, Object> {
      */
     public static RequestMap getRequestMap() {
         RequestMap map = new RequestMap();
-        Log.d(TAG, "getRequestMap: ---》" + AppContext.getToken());
         map.put(TOKEN, AppContext.getToken());
         return map;
     }
@@ -47,5 +48,24 @@ public class RequestMap extends HashMap<String, Object> {
             value = "";
         }
         return super.put(key, value);
+    }
+
+    /**
+     * 重写putAll方法，当value为null时，重写成""
+     *
+     * @param m
+     * @return
+     */
+    @Override
+    public void putAll(@NonNull Map<? extends String, ?> m) {
+        Map<String, Object> mm = new HashMap<>();
+        for (Entry<? extends String, ?> entry : m.entrySet()) {
+            Object value = entry.getValue();
+            if (value == null) {
+                value = "";
+            }
+            mm.put(entry.getKey(), value);
+        }
+        super.putAll(mm);
     }
 }

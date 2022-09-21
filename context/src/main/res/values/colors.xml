@@ -48,4 +48,22 @@
     <color name="white10">#1AFFFFFF</color>
     <color name="white5">#0DFFFFFF</color>
     <color name="white0">#00FFFFFF</color>
+
+    <color name="bg_color3">#FAFAFA</color>
+    <color name="textColor6">#4D4D4D</color>
+
+    <!--新UI规范-->
+    <color name="bgColorF3F4F6">#F3F4F6</color>
+    <color name="bgColorF6F7F9">#F6F7F9</color>
+    <color name="textColor">#222834</color>
+    <color name="textColor5F646F">#5F646F</color>
+    <color name="textColor707784">#707784</color>
+    <color name="textColor929BAB">#929BAB</color>
+    <color name="lineColor">#D2D7E1</color>
+    <color name="textColorError">#F41717</color>
+    <color name="successColor">#11C52C</color>
+    <color name="tipColor">#FA6400</color>
+
+    <color name="navigationBarColor">#F3F4F6</color>
+
 </resources>

@@ -2,15 +2,17 @@ package com.ipusoft.localcall.datastore;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.ipusoft.utils.GsonUtils;
-import com.ipusoft.utils.StringUtils;
 import com.ipusoft.localcall.bean.SIMCallOutBean;
 import com.ipusoft.localcall.bean.UploadSysRecordingBean;
 import com.ipusoft.localcall.constant.StorageConstant;
 import com.ipusoft.mmkv.AccountMMKV;
 import com.ipusoft.mmkv.CommonMMKV;
+import com.ipusoft.utils.ArrayUtils;
+import com.ipusoft.utils.GsonUtils;
+import com.ipusoft.utils.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -40,7 +42,7 @@ public class SimDataRepo {
         String json = CommonMMKV.getString(StorageConstant.UPLOAD_SYS_CALL_LOG);
         UploadSysRecordingBean uploadSysRecordingBean;
         if (StringUtils.isEmpty(json)) {
-            uploadSysRecordingBean = new UploadSysRecordingBean(true, System.currentTimeMillis());
+            uploadSysRecordingBean = new UploadSysRecordingBean(true, System.currentTimeMillis() - 24 * 60 * 60 * 1000);
             CommonMMKV.set(StorageConstant.UPLOAD_SYS_CALL_LOG, GsonUtils.toJson(uploadSysRecordingBean));
         } else {
             uploadSysRecordingBean = GsonUtils.fromJson(json, UploadSysRecordingBean.class);
@@ -88,12 +90,23 @@ public class SimDataRepo {
 
     public static List<SIMCallOutBean> getSIMCallOutBean() {
         String json = CommonMMKV.getString(StorageConstant.SIM_OUT_CALL_BEAN);
-        ArrayList<SIMCallOutBean> simCallOutBeans = new ArrayList<>();
+        ArrayList<SIMCallOutBean> list = new ArrayList<>();
         if (StringUtils.isNotEmpty(json)) {
-            simCallOutBeans = new Gson().fromJson(json, new TypeToken<List<SIMCallOutBean>>() {
+            list = new Gson().fromJson(json, new TypeToken<List<SIMCallOutBean>>() {
             }.getType());
         }
-        return simCallOutBeans;
+        if (ArrayUtils.isNotEmpty(list)) {
+            Iterator<SIMCallOutBean> iterator = list.iterator();
+            long currentTimeMillis = System.currentTimeMillis();
+            while (iterator.hasNext()) {
+                SIMCallOutBean next = iterator.next();
+                Long timestamp = next.getTimestamp();
+                if (timestamp == null || currentTimeMillis - timestamp > 24 * 60 * 60 * 1000) {
+                    iterator.remove();
+                }
+            }
+        }
+        return list;
     }
 
     /**

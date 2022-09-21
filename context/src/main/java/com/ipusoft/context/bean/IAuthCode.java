@@ -1,7 +1,7 @@
 package com.ipusoft.context.bean;
 
 
-import com.ipusoft.context.bean.base.BaseHttpResponse;
+import com.ipusoft.context.bean.base.HttpResponse;
 
 /**
  * author : GWFan
@@ -9,7 +9,7 @@ import com.ipusoft.context.bean.base.BaseHttpResponse;
  * desc   :
  */
 
-public class IAuthCode extends BaseHttpResponse {
+public class IAuthCode extends HttpResponse {
     private String authCode;
 
     public String getAuthCode() {

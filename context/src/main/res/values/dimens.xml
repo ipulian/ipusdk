@@ -47,4 +47,6 @@
     <dimen name="dp_18">18dp</dimen>
     <dimen name="dp_19">19dp</dimen>
     <dimen name="dp_20">20dp</dimen>
+
+    <dimen name="screen_horizontal_space">15dp</dimen>
 </resources>

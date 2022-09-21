@@ -12,7 +12,7 @@ import java.util.List;
  * desc   :
  */
 
-public class BaseListResponse<T> extends BaseHttpResponse {
+public class ListResponse<T> extends HttpResponse {
     private static final long serialVersionUID = -3081347999549719830L;
 
     /**
@@ -24,7 +24,17 @@ public class BaseListResponse<T> extends BaseHttpResponse {
     /**
      * 列表数据List
      */
-    @SerializedName(value = "rows", alternate = "list")
+    @SerializedName(value = "rows", alternate = {
+            "list",
+            "smsTpls",
+            "rowDatas",
+            "data",
+            "date",
+            "datas",
+            "tops",
+            "result",
+            "storeList"//门店列表
+    })
     private List<T> rows;
 
     public int getTotal() {

@@ -2,6 +2,7 @@ package com.ipusoft.utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -160,5 +161,14 @@ public class AppUtils {
         Intent intent = getLaunchAppDetailsSettingsIntent(pkgName, false);
         if (!isIntentAvailable(intent)) return;
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    public static boolean isApkInDebug() {
+        try {
+            ApplicationInfo info = AppContext.getAppContext().getApplicationInfo();
+            return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

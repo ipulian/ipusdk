@@ -1,7 +1,7 @@
 package com.ipusoft.context.bean;
 
 
-import com.ipusoft.context.bean.base.BaseHttpResponse;
+import com.ipusoft.context.bean.base.HttpResponse;
 
 /**
  * author : GWFan
@@ -9,7 +9,7 @@ import com.ipusoft.context.bean.base.BaseHttpResponse;
  * desc   : 坐席信息
  */
 
-public class SeatInfo extends BaseHttpResponse {
+public class SeatInfo extends HttpResponse {
     private static final long serialVersionUID = -20455796439021343L;
     private String password;
     private String apiKey;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="WarpLinearLayout">
-        <attr name="grivate" format="enum"><!--对齐方式 !-->
+    <declare-styleable name="FlowLinearLayout">
+        <attr name="gravity" format="enum">
             <enum name="right" value="0" />
             <enum name="left" value="1" />
             <enum name="center" value="2" />
@@ -17,4 +17,9 @@
     </declare-styleable>
 
     <attr name="LoadingStyle" format="reference" />
+
+    <declare-styleable name="BaseDialogLinearLayout">
+        <attr name="android:background" />
+    </declare-styleable>
+
 </resources>

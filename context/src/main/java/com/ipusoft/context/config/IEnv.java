@@ -15,6 +15,8 @@ public class IEnv extends Env {
      * 正式环境
      */
     public static final String PRO = "PRO";
+    public static final String LX_PRO = "LX_PRO";
+    public static final String LX_DEV = "LX_DEV";
     /**
      * 环信 OEM
      */

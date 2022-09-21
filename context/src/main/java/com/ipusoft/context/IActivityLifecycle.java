@@ -21,6 +21,7 @@ import java.util.List;
 
 public class IActivityLifecycle implements Application.ActivityLifecycleCallbacks {
     private static final String TAG = "IActivityLifecycle";
+    public static int activityCount = 0;
 
     private static final List<Activity> list = Collections.synchronizedList(new LinkedList<>());
 
@@ -29,11 +30,12 @@ public class IActivityLifecycle implements Application.ActivityLifecycleCallback
     @Override
     public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
         addActivity(activity);
+        setCurrentActivity(activity);
     }
 
     @Override
     public void onActivityStarted(@NonNull Activity activity) {
-
+        activityCount++;
     }
 
     @Override
@@ -48,6 +50,7 @@ public class IActivityLifecycle implements Application.ActivityLifecycleCallback
 
     @Override
     public void onActivityStopped(@NonNull Activity activity) {
+        activityCount--;
     }
 
     @Override

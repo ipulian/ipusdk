@@ -1,5 +1,7 @@
 package com.ipusoft.localcall.upload;
 
+import android.util.Log;
+
 import com.amap.api.location.AMapLocation;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.bean.SysRecording;
@@ -8,6 +10,8 @@ import com.ipusoft.localcall.UploadFileObserve;
 import com.ipusoft.localcall.bean.UploadResponse;
 import com.ipusoft.logger.XLogger;
 import com.ipusoft.map.LocationManager;
+import com.ipusoft.mmkv.datastore.CommonDataRepo;
+import com.ipusoft.oss.AliYunManager;
 import com.ipusoft.utils.DateTimeUtils;
 import com.ipusoft.utils.NetWorkUtils;
 import com.ipusoft.utils.StringUtils;
@@ -24,8 +28,8 @@ import okhttp3.MultipartBody;
  * desc   :
  */
 
-public class MultipartBuilder {
-    private static final String TAG = "MultipartBuilder";
+public class UploadRecordMultipartBuilder {
+    private static final String TAG = "UploadRecordMultipartBu";
 
     /**
      * 单文件上传
@@ -33,12 +37,12 @@ public class MultipartBuilder {
      * @param sysRecording
      * @return fileUploadObserver
      */
-    public static MultipartBody file2MultipartBody(SysRecording sysRecording, UploadFileObserve<UploadResponse> fileUploadObserver) {
+    public static MultipartBody file2MultipartBody(SysRecording sysRecording, UploadFileObserve<UploadResponse> fileUploadObserver, String ossFile) {
         ArrayList<SysRecording> list = new ArrayList<>();
         if (sysRecording != null) {
             list.add(sysRecording);
         }
-        return files2MultipartBody(list, fileUploadObserver);
+        return files2MultipartBody(list, fileUploadObserver, ossFile);
     }
 
     /**
@@ -48,14 +52,14 @@ public class MultipartBuilder {
      * @param fileUploadObserver 文件上传回调
      */
     public static MultipartBody files2MultipartBody(List<SysRecording> recordingFiles,
-                                                    UploadFileObserve<UploadResponse> fileUploadObserver) {
+                                                    UploadFileObserve<UploadResponse> fileUploadObserver, String ossFile) {
         MultipartBody.Builder builder = new MultipartBody.Builder();
         UploadFileRequestBody uploadFileRequestBody;
         for (SysRecording recording : recordingFiles) {
             String absolutePath = recording.getAbsolutePath();
             if (StringUtils.isNotEmpty(absolutePath)) {
-                uploadFileRequestBody = new UploadFileRequestBody(recording, fileUploadObserver);
-                builder.addFormDataPart("record", recording.getFileName(), uploadFileRequestBody);
+                // uploadFileRequestBody = new UploadFileRequestBody(recording.getAbsolutePath(), fileUploadObserver);
+                builder.addFormDataPart("record", recording.getFileName());
                 builder.addFormDataPart("fileMD5", recording.getFileMD5());
             }
             XLogger.d("MultipartBuilder->absolutePath：" + absolutePath);
@@ -68,6 +72,16 @@ public class MultipartBuilder {
             builder.addFormDataPart("callResult", recording.getCallResult() + "");
             builder.addFormDataPart("callType", callType == 1 ? "2" : callType == 2 ? "1" : callType + "");
             builder.addFormDataPart("token", AppContext.getToken());
+            if (StringUtils.isNotEmpty(recording.getFileName())) {
+                builder.addFormDataPart("recordUrl", "https://" + AliYunManager.BUCKET_NAME + "." + AliYunManager.OSS_END_POINT + ".aliyuncs.com/"
+                        + ossFile);
+            } else {
+                builder.addFormDataPart("recordUrl", "");
+            }
+
+            Log.d(TAG, "files2MultipartBody: ---------->" + "https://" + AliYunManager.BUCKET_NAME + "." + AliYunManager.OSS_END_POINT + ".aliyuncs.com/"
+                    + ossFile);
+
             AMapLocation location = LocationManager.getLocation();
             if (location != null) {
                 builder.addFormDataPart("location", location.getLongitude() + "," + location.getLatitude());
@@ -90,10 +104,13 @@ public class MultipartBuilder {
                 builder.addFormDataPart("areaCode", "");
                 XLogger.d("未获取到定位信息");
             }
-            builder.addFormDataPart("callIP", StringUtils.null2Empty(NetWorkUtils.getIPAddress()));
             builder.addFormDataPart("callTime", StringUtils.null2Empty(recording.getCallTimeServer()));
-            XLogger.d("callIP：" + StringUtils.null2Empty(NetWorkUtils.getIPAddress())
-                    + "\ncallTime" + StringUtils.null2Empty(recording.getCallTimeServer()));
+            if (!CommonDataRepo.getAppIsFirstInstall()) {
+                //已经同意隐私政策的情况下才会去获取ip地址
+                builder.addFormDataPart("callIP", StringUtils.null2Empty(NetWorkUtils.getIPAddress()));
+                XLogger.d("callIP：" + StringUtils.null2Empty(NetWorkUtils.getIPAddress())
+                        + "\ncallTime" + StringUtils.null2Empty(recording.getCallTimeServer()));
+            }
 
             String imei = "0";
             try {

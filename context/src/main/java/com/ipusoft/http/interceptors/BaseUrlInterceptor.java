@@ -1,8 +1,8 @@
 package com.ipusoft.http.interceptors;
 
 import com.ipusoft.context.AppRuntimeContext;
-import com.ipusoft.utils.StringUtils;
 import com.ipusoft.http.HttpConstant;
+import com.ipusoft.utils.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +32,7 @@ public class BaseUrlInterceptor implements Interceptor {
         List<String> headerValues = request.headers(HttpConstant.HOST_NAME);
         if (headerValues.size() > 0) {
             builder.removeHeader(HttpConstant.HOST_NAME);
+            //for (String headerValue : headerValues) {
             String headerValue = headerValues.get(0);
             HttpUrl newBaseUrl;
             if (StringUtils.isNotEmpty(headerValue)) {
@@ -49,6 +50,14 @@ public class BaseUrlInterceptor implements Interceptor {
                 } else if (StringUtils.equals(HttpConstant.GATEWAY, headerValue)) {
                     baseUrl = AppRuntimeContext.GATE_WAY_URL;
                 }
+                /**
+                 * 给特定接口单独定义请求的baseUrl(供调试用)
+                 */
+                for (int i = 0; i < headerValues.size(); i++) {
+                    if (headerValues.get(i).startsWith(HttpConstant.TEST)) {
+                        baseUrl = headerValues.get(i).split("-")[1];
+                    }
+                }
                 newBaseUrl = HttpUrl.parse(baseUrl + "/" + requestPath);
             } else {
                 newBaseUrl = oldHttpUrl;
@@ -62,6 +71,7 @@ public class BaseUrlInterceptor implements Interceptor {
                         .build();
                 return chain.proceed(builder.url(newFullUrl).build());
             }
+            // }
         }
         return chain.proceed(request);
     }

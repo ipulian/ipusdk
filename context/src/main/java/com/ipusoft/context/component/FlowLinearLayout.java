@@ -15,26 +15,34 @@ import java.util.List;
  * author : GWFan
  * time   : 2020/5/10 20:32
  * desc   : 自动换行LinearLayout
+ * url    : https://blog.csdn.net/sun_leilei/article/details/49740575
  */
 
-public class WrapLinearLayout extends ViewGroup {
+public class FlowLinearLayout extends ViewGroup {
+    private static final String TAG = "FlowLinearLayout";
 
     private final Type mType;
     private List<WarpLine> mWarpLineGroup;
 
-    public WrapLinearLayout(Context context) {
+    public FlowLinearLayout(Context context) {
         this(context, null);
     }
 
-    public WrapLinearLayout(Context context, AttributeSet attrs) {
-        this(context, attrs, R.style.WarpLinearLayoutDefault);
+    public FlowLinearLayout(Context context, AttributeSet attrs) {
+        this(context, attrs, R.style.FlowLinearLayoutDefault);
     }
 
-    public WrapLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FlowLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mType = new Type(context, attrs);
     }
 
+    /**
+     * 计算子控件与父控件在屏幕中所占长宽大小
+     *
+     * @param widthMeasureSpec
+     * @param heightMeasureSpec
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int withMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -45,11 +53,12 @@ public class WrapLinearLayout extends ViewGroup {
         int height = 0;
         int childCount = getChildCount();
         /**
-         * 在调用childView。getMeasre之前必须先调用该行代码，用于对子View大小的测量
+         * 在调用childView.getMeasre之前必须先调用该行代码，用于对子View大小的测量
          */
         measureChildren(widthMeasureSpec, heightMeasureSpec);
         /**
          * 计算宽度
+         *
          */
         switch (withMode) {
             case MeasureSpec.EXACTLY:
@@ -63,6 +72,9 @@ public class WrapLinearLayout extends ViewGroup {
                     with += getChildAt(i).getMeasuredWidth();
                 }
                 with += getPaddingLeft() + getPaddingRight();
+                /*
+                 * 子控件会在onMeasure方法中判断它的所需尺寸，当所需尺寸 < 屏幕尺寸时，就使用所需尺寸；当所需尺寸 >= 屏幕尺寸时，则使用屏幕尺寸
+                 */
                 with = Math.min(with, withSize);
                 break;
             case MeasureSpec.UNSPECIFIED:
@@ -86,7 +98,7 @@ public class WrapLinearLayout extends ViewGroup {
         /**
          * 不能够在定义属性时初始化，因为onMeasure方法会多次调用
          */
-        mWarpLineGroup = new ArrayList<WarpLine>();
+        mWarpLineGroup = new ArrayList<>();
         for (int i = 0; i < childCount; i++) {
             if (warpLine.lineWidth + getChildAt(i).getMeasuredWidth() + mType.horizontal_Space > with) {
                 if (warpLine.lineView.size() == 0) {
@@ -109,7 +121,7 @@ public class WrapLinearLayout extends ViewGroup {
             mWarpLineGroup.add(warpLine);
         }
         /**
-         * 计算宽度
+         * 计算高度
          */
         height = getPaddingTop() + getPaddingBottom();
         for (int i = 0; i < mWarpLineGroup.size(); i++) {
@@ -146,7 +158,7 @@ public class WrapLinearLayout extends ViewGroup {
                     view.layout(left, t, left + view.getMeasuredWidth() + lastWidth / warpLine.lineView.size(), t + view.getMeasuredHeight());
                     left += view.getMeasuredWidth() + mType.horizontal_Space + lastWidth / warpLine.lineView.size();
                 } else {
-                    switch (getGrivate()) {
+                    switch (getGravity()) {
                         case 0://右对齐
                             view.layout(left + lastWidth, t, left + lastWidth + view.getMeasuredWidth(), t + view.getMeasuredHeight());
                             break;
@@ -168,7 +180,7 @@ public class WrapLinearLayout extends ViewGroup {
      * 用于存放一行子View
      */
     private final class WarpLine {
-        private List<View> lineView = new ArrayList<View>();
+        private final List<View> lineView = new ArrayList<>();
         /**
          * 当前行中所需要占用的宽度
          */
@@ -195,7 +207,7 @@ public class WrapLinearLayout extends ViewGroup {
         /*
          *对齐方式 right 0，left 1，center 2
          */
-        private int grivate;
+        private int gravity;
         /**
          * 水平间距,单位px
          */
@@ -213,17 +225,17 @@ public class WrapLinearLayout extends ViewGroup {
             if (attrs == null) {
                 return;
             }
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.WarpLinearLayout);
-            grivate = typedArray.getInt(R.styleable.WarpLinearLayout_grivate, grivate);
-            horizontal_Space = typedArray.getDimension(R.styleable.WarpLinearLayout_horizontal_Space, horizontal_Space);
-            vertical_Space = typedArray.getDimension(R.styleable.WarpLinearLayout_vertical_Space, vertical_Space);
-            isFull = typedArray.getBoolean(R.styleable.WarpLinearLayout_isFull, isFull);
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.FlowLinearLayout);
+            gravity = typedArray.getInt(R.styleable.FlowLinearLayout_gravity, gravity);
+            horizontal_Space = typedArray.getDimension(R.styleable.FlowLinearLayout_horizontal_Space, horizontal_Space);
+            vertical_Space = typedArray.getDimension(R.styleable.FlowLinearLayout_vertical_Space, vertical_Space);
+            isFull = typedArray.getBoolean(R.styleable.FlowLinearLayout_isFull, isFull);
             typedArray.recycle();
         }
     }
 
-    public int getGrivate() {
-        return mType.grivate;
+    public int getGravity() {
+        return mType.gravity;
     }
 
     public float getHorizontal_Space() {
@@ -238,8 +250,8 @@ public class WrapLinearLayout extends ViewGroup {
         return mType.isFull;
     }
 
-    public void setGrivate(int grivate) {
-        mType.grivate = grivate;
+    public void setGravity(int gravity) {
+        mType.gravity = gravity;
     }
 
     public void setHorizontal_Space(float horizontal_Space) {
@@ -257,7 +269,7 @@ public class WrapLinearLayout extends ViewGroup {
     /**
      * 每行子View的对齐方式
      */
-    public final static class Gravite {
+    public final static class Gravity {
         public final static int RIGHT = 0;
         public final static int LEFT = 1;
         public final static int CENTER = 2;

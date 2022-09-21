@@ -7,6 +7,7 @@ import android.util.Base64;
 
 import com.ipusoft.context.AppContext;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
@@ -56,6 +57,33 @@ public final class EncodeUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String getMD5ofStr(String srcStr) {
+        if (StringUtils.isEmpty(srcStr)) {
+            return "";
+        }
+        return getMD5ofByte(srcStr.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static String getMD5ofByte(byte[] strByte) {
+        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'a', 'b', 'c', 'd', 'e', 'f'};
+        char[] str = new char[32];
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            byte[] bs = md5.digest(strByte);
+
+            int k = 0;
+            for (int i = 0; i < 16; ++i) {
+                byte byte0 = bs[i];
+                str[(k++)] = hexDigits[(byte0 >>> 4 & 0xF)];
+                str[(k++)] = hexDigits[(byte0 & 0xF)];
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return new String(str);
     }
 }
 

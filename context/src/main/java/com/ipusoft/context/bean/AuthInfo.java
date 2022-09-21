@@ -3,6 +3,7 @@ package com.ipusoft.context.bean;
 import com.ipusoft.utils.StringUtils;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * author : GWFan
@@ -67,11 +68,6 @@ public class AuthInfo implements Serializable {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((StringUtils.isEmpty(username)) ? 0 : username.hashCode());
-        result = result * 31 + key.hashCode();
-        result = result * 31 + secret.hashCode();
-        return result;
+        return Objects.hash(username, key, secret);
     }
 }

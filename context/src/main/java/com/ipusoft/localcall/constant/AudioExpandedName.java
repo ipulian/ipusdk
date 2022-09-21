@@ -23,6 +23,10 @@ public enum AudioExpandedName {
     FLAC("FLAC"),
     RM("RM"),
     RA("RA"),
+    AMR("AMR"),
+    AWB("AWB"),
+    OGG("OGG"),
+    MKA("MKA"),
     AAC("AAC");
 
     private final String name;

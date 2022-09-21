@@ -20,7 +20,7 @@ public class HttpStatus {
      */
     public static final String EXPIRED = "2";
     /**
-     * 请求出错
+     * 请求出错(客户端自定义)
      */
     public static final String ERROR = "3";
 }

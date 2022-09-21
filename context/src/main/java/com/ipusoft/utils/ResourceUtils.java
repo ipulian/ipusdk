@@ -1,7 +1,10 @@
 package com.ipusoft.utils;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
@@ -10,7 +13,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.ipusoft.context.AppContext;
-import com.ipusoft.context.IpuSoftSDK;
 
 import java.util.IllegalFormatException;
 
@@ -30,8 +32,13 @@ public class ResourceUtils {
         return ContextCompat.getDrawable(AppContext.getAppContext(), id);
     }
 
+    public static Bitmap getBitmap(@DrawableRes int id) {
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) ResourceUtils.getDrawable(id);
+        return bitmapDrawable.getBitmap();
+    }
+
     public static int getColor(@ColorRes int id) {
-        return ContextCompat.getColor(IpuSoftSDK.getAppContext(), id);
+        return ContextCompat.getColor(AppContext.getAppContext(), id);
     }
 
     /**
@@ -74,5 +81,25 @@ public class ResourceUtils {
         final Drawable wrappedDrawable = DrawableCompat.wrap(drawable);
         wrappedDrawable.mutate();
         DrawableCompat.setTint(wrappedDrawable, color);
+    }
+
+    /**
+     * 创建一个shape
+     *
+     * @param color
+     * @param radius
+     * @return
+     */
+    public static GradientDrawable createShape(int color, int radius) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setCornerRadius(radius);//设置4个角的弧度
+        drawable.setColor(color);// 设置颜色
+        return drawable;
+    }
+
+    public static GradientDrawable createShape(int radius) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setCornerRadius(radius);//设置4个角的弧度
+        return drawable;
     }
 }

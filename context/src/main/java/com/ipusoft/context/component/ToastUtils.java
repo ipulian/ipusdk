@@ -1,6 +1,7 @@
 package com.ipusoft.context.component;
 
 import android.app.Application;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.R;
+import com.ipusoft.logger.XLogger;
+import com.ipusoft.utils.ExceptionUtils;
+import com.ipusoft.utils.StringUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -34,12 +38,45 @@ public class ToastUtils {
     }
 
     public static synchronized void showLoading(String msg) {
-        dismiss();
-        AppCompatActivity activityContext = AppContext.getActivityContext();
-        if (activityContext != null) {
-            LoadingDialog dialog = LoadingDialog.get().setText(msg);
-            dialog.show();
-            dialogWeakReference = new WeakReference<>(dialog);
+        if (StringUtils.isNotEmpty(msg)) {
+            try {
+                AppCompatActivity activityContext = AppContext.getActivityContext();
+                if (activityContext != null) {
+                    LoadingDialog dialog = LoadingDialog.getInstance();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(LoadingDialog.MSG, msg);
+                    dialog.setArguments(bundle);
+                    dialog.show();
+                    dialogWeakReference = new WeakReference<>(dialog);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                XLogger.e(TAG + "->showLoading->" + ExceptionUtils.getErrorInfo(e));
+            }
+        }
+    }
+
+    public static synchronized void showLoading(boolean statusBarDarkFont) {
+        showLoading("正在加载", statusBarDarkFont);
+    }
+
+    public static synchronized void showLoading(String msg, boolean statusBarDarkFont) {
+        if (StringUtils.isNotEmpty(msg)) {
+            try {
+                AppCompatActivity activityContext = AppContext.getActivityContext();
+                if (activityContext != null) {
+                    LoadingDialog dialog = LoadingDialog.getInstance();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(LoadingDialog.MSG, msg);
+                    bundle.putBoolean(LoadingDialog.STATUS_BAR_DARK_FONT, statusBarDarkFont);
+                    dialog.setArguments(bundle);
+                    dialog.show();
+                    dialogWeakReference = new WeakReference<>(dialog);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                XLogger.e(TAG + "->showLoading->" + ExceptionUtils.getErrorInfo(e));
+            }
         }
     }
 
@@ -49,24 +86,31 @@ public class ToastUtils {
      * @param msg 提示内容
      */
     public static void showMessage(String msg) {
-        dismiss();
-        Toast toast;
-        if (toastWeakReference != null) {
-            toast = toastWeakReference.get();
-            if (toast != null) {
-                toast.cancel();
+        if (StringUtils.isNotEmpty(msg)) {
+            try {
+                dismiss();
+                Toast toast;
+                if (toastWeakReference != null) {
+                    toast = toastWeakReference.get();
+                    if (toast != null) {
+                        toast.cancel();
+                    }
+                }
+                Application appContext = AppContext.getAppContext();
+                toast = new Toast(appContext);
+                View view = LayoutInflater.from(appContext).inflate(R.layout.context_layout_custom_toast, null, false);
+                TextView textView = view.findViewById(R.id.tv_msg);
+                textView.setText(msg);
+                toast.setView(view);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                toastWeakReference = new WeakReference<>(toast);
+            } catch (Exception e) {
+                e.printStackTrace();
+                XLogger.e(TAG + "->showMessage->" + ExceptionUtils.getErrorInfo(e));
             }
         }
-        Application appContext = AppContext.getAppContext();
-        toast = new Toast(appContext);
-        View view = LayoutInflater.from(appContext).inflate(R.layout.context_layout_custom_toast, null, false);
-        TextView textView = view.findViewById(R.id.tv_msg);
-        textView.setText(msg);
-        toast.setView(view);
-        toast.setDuration(Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-        toastWeakReference = new WeakReference<>(toast);
     }
 
     public static synchronized void dismiss() {
@@ -74,10 +118,12 @@ public class ToastUtils {
             if (dialogWeakReference != null) {
                 LoadingDialog dialog = dialogWeakReference.get();
                 if (dialog != null) {
-                    if (!dialog.isHidden()) {
-                        dialog.dismissAllowingStateLoss();
-                        dialogWeakReference = null;
-                    }
+                    dialog.dismissAllowingStateLoss();
+                    dialogWeakReference = null;
+//                    if (dialog.isAdded() || dialog.isVisible()) {
+//                        dialog.dismissAllowingStateLoss();
+//                        dialogWeakReference = null;
+//                    }
                 }
             }
         } catch (Exception e) {

@@ -230,5 +230,22 @@ public class StringUtils {
         }
         return str;
     }
+
+    /**
+     * 如果字符串以某个字符结尾，则去掉它
+     *
+     * @param str 原字符串
+     * @param c   某字符
+     * @return 将移除某字符之后的字符串返回
+     */
+    public static String removeEndRegex(String str, String c) {
+        if (StringUtils.isEmpty(str)) {
+            return "";
+        }
+        if (isNotEmpty(str) && str.endsWith(c)) {
+            str = str.substring(0, str.length() - c.length());
+        }
+        return str;
+    }
 }
 

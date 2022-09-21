@@ -1,5 +1,7 @@
 package com.ipusoft.mmkv.datastore;
 
+import android.util.Log;
+
 import com.ipusoft.context.bean.CustomerConfig;
 import com.ipusoft.mmkv.AccountMMKV;
 import com.ipusoft.mmkv.constant.StorageConstant;
@@ -37,6 +39,7 @@ public class CustomerConfigRepo {
         if (StringUtils.isNotEmpty(json)) {
             try {
                 config = GsonUtils.fromJson(json, CustomerConfig.class);
+                Log.d(TAG, "getCustomerConfig: -------->" + GsonUtils.toJson(config.getUserAuth()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -66,7 +69,7 @@ public class CustomerConfigRepo {
      * @return 阶段列表
      */
     public static List<String> getStageList() {
-        return getStageList(CustomerDataStore.getCustomerConfig());
+        return getStageList(getCustomerConfig());
     }
 
     public static List<String> getStageList(CustomerConfig customerConfig) {
@@ -99,7 +102,7 @@ public class CustomerConfigRepo {
     }
 
     public static List<String> getConnectList() {
-        CustomerConfig customerConfig = CustomerDataStore.getCustomerConfig();
+        CustomerConfig customerConfig = getCustomerConfig();
         List<String> list = new ArrayList<>();
         if (customerConfig != null) {
             List<CustomerConfig.ConfigItem> connect = customerConfig.getConnect();
@@ -131,7 +134,7 @@ public class CustomerConfigRepo {
      * @return 分类列表
      */
     public static List<String> getSortList() {
-        return getSortList(CustomerDataStore.getCustomerConfig());
+        return getSortList(getCustomerConfig());
     }
 
     public static List<String> getSortList(CustomerConfig customerConfig) {
@@ -151,7 +154,7 @@ public class CustomerConfigRepo {
      * @return 标签列表
      */
     public static List<String> getLabelList() {
-        return getLabelList(CustomerDataStore.getCustomerConfig());
+        return getLabelList(getCustomerConfig());
     }
 
     public static List<String> getLabelList(CustomerConfig customerConfig) {
@@ -171,7 +174,7 @@ public class CustomerConfigRepo {
      * @return 来源列表
      */
     public static List<String> getSourceList() {
-        return getSourceList(CustomerDataStore.getCustomerConfig());
+        return getSourceList(getCustomerConfig());
     }
 
     public static List<String> getSourceList(CustomerConfig customerConfig) {
@@ -191,7 +194,7 @@ public class CustomerConfigRepo {
      * @return 客户池列表
      */
     public static List<String> getCustomerPoolList() {
-        return getCustomerPoolList(CustomerDataStore.getCustomerConfig());
+        return getCustomerPoolList(getCustomerConfig());
     }
 
     public static List<String> getCustomerPoolList(CustomerConfig customerConfig) {
@@ -207,12 +210,24 @@ public class CustomerConfigRepo {
         return list;
     }
 
+    public static List<CustomerConfig.ConfigItem> getCustomerPoolItemList() {
+        return getCustomerPoolItemList(getCustomerConfig());
+    }
+
+    public static List<CustomerConfig.ConfigItem> getCustomerPoolItemList(CustomerConfig customerConfig) {
+        List<CustomerConfig.ConfigItem> list = new ArrayList<>();
+        if (customerConfig != null) {
+            list = customerConfig.getCustomerPool();
+        }
+        return list;
+    }
+
     /**
      * @return 线索池列表
      */
 
     public static List<String> getCluePoolList() {
-        CustomerConfig customerConfig = CustomerDataStore.getCustomerConfig();
+        CustomerConfig customerConfig = getCustomerConfig();
         return getCluePoolList(customerConfig);
     }
 
@@ -230,15 +245,29 @@ public class CustomerConfigRepo {
     }
 
     /**
-     * 标签
+     * 标记
      *
      * @return
      */
     public static List<String> getTagList() {
-        CustomerConfig customerConfig = CustomerDataStore.getCustomerConfig();
+        CustomerConfig customerConfig = getCustomerConfig();
         List<String> list = new ArrayList<>();
         if (customerConfig != null) {
             List<CustomerConfig.ConfigItem> tag = customerConfig.getTag();
+            if (ArrayUtils.isNotEmpty(tag)) {
+                for (CustomerConfig.ConfigItem item : tag) {
+                    list.add(item.getItemName());
+                }
+            }
+        }
+        return list;
+    }
+
+    public static List<String> getTagList(CustomerConfig customerConfig) {
+        List<String> list = new ArrayList<>();
+        if (customerConfig != null) {
+            List<CustomerConfig.ConfigItem> tag = customerConfig.getTag();
+            Log.d(TAG, "getTagList: ------>" + GsonUtils.toJson(tag));
             if (ArrayUtils.isNotEmpty(tag)) {
                 for (CustomerConfig.ConfigItem item : tag) {
                     list.add(item.getItemName());
@@ -254,7 +283,7 @@ public class CustomerConfigRepo {
      * @return
      */
     public static List<String> getLevelList() {
-        return getLevelList(CustomerDataStore.getCustomerConfig());
+        return getLevelList(getCustomerConfig());
     }
 
     public static List<String> getLevelList(CustomerConfig customerConfig) {
@@ -271,7 +300,7 @@ public class CustomerConfigRepo {
     }
 
     public static Map<String, String> getIndustryMap() {
-        CustomerConfig customerConfig = CustomerDataStore.getCustomerConfig();
+        CustomerConfig customerConfig = getCustomerConfig();
         Map<String, String> map = new HashMap<>();
         if (customerConfig != null) {
             List<CustomerConfig.ConfigItem> industry = customerConfig.getIndustry();
@@ -321,7 +350,7 @@ public class CustomerConfigRepo {
     }
 
     public static Map<String, String> getSexMap() {
-        CustomerConfig customerConfig = CustomerDataStore.getCustomerConfig();
+        CustomerConfig customerConfig = getCustomerConfig();
         Map<String, String> map = new HashMap<>();
         if (customerConfig != null) {
             List<CustomerConfig.ConfigItem> sex = customerConfig.getSex();
@@ -336,7 +365,7 @@ public class CustomerConfigRepo {
 
 
     public static Map<String, String> getReverseSexMap() {
-        CustomerConfig customerConfig = CustomerDataStore.getCustomerConfig();
+        CustomerConfig customerConfig = getCustomerConfig();
         Map<String, String> map = new HashMap<>();
         if (customerConfig != null) {
             List<CustomerConfig.ConfigItem> sex = customerConfig.getSex();
@@ -350,7 +379,7 @@ public class CustomerConfigRepo {
     }
 
     public static Map<String, String> getPoolMap() {
-        CustomerConfig customerConfig = CustomerDataStore.getCustomerConfig();
+        CustomerConfig customerConfig = getCustomerConfig();
         Map<String, String> map = new HashMap<>();
         if (customerConfig != null) {
             List<CustomerConfig.ConfigItem> customerPool = customerConfig.getCustomerPool();
@@ -364,11 +393,14 @@ public class CustomerConfigRepo {
     }
 
     public static String getPoolId(String poolName) {
-        Map<String, String> poolMap = getPoolMap();
         String id = "";
         if (StringUtils.isEmpty(poolName)) {
             return id;
         }
+        if (StringUtils.equals("全部", poolName)) {
+            return "ALL";
+        }
+        Map<String, String> poolMap = getPoolMap();
         for (Map.Entry<String, String> entry : poolMap.entrySet()) {
             if (poolName.equals(entry.getValue())) {
                 id = entry.getKey();
@@ -379,7 +411,7 @@ public class CustomerConfigRepo {
     }
 
     public static Map<String, String> getCluePoolMap() {
-        CustomerConfig customerConfig = CustomerDataStore.getCustomerConfig();
+        CustomerConfig customerConfig = getCustomerConfig();
         Map<String, String> map = new HashMap<>();
         if (customerConfig != null) {
             List<CustomerConfig.ConfigItem> cluePool = customerConfig.getCluePool();

@@ -1,6 +1,5 @@
 package com.ipusoft.localcall.upload;
 
-import com.ipusoft.context.bean.SysRecording;
 import com.ipusoft.localcall.UploadFileObserve;
 import com.ipusoft.localcall.bean.UploadResponse;
 
@@ -29,9 +28,8 @@ public class UploadFileRequestBody extends RequestBody {
     private final RequestBody mRequestBody;
     private final UploadFileObserve<UploadResponse> uploadFileObserve;
 
-    public UploadFileRequestBody(SysRecording sysRecording, UploadFileObserve<UploadResponse> uploadFileObserve) {
-        this.mRequestBody = RequestBody.create(MediaType.parse("application/octet-stream"),
-                new File(sysRecording.getAbsolutePath()));
+    public UploadFileRequestBody(String absolutePath, UploadFileObserve<UploadResponse> uploadFileObserve) {
+        this.mRequestBody = RequestBody.create(MediaType.parse("application/octet-stream"), new File(absolutePath));
         this.uploadFileObserve = uploadFileObserve;
     }
 

@@ -1,5 +1,7 @@
 package com.ipusoft.context.bean.base;
 
+import com.google.gson.annotations.JsonAdapter;
+import com.ipusoft.context.bean.adapter.Integer2StringAdapter;
 import com.ipusoft.context.constant.HttpStatus;
 
 import java.io.Serializable;
@@ -10,12 +12,16 @@ import java.io.Serializable;
  * desc   : 接口返回数据的基类
  */
 
-public class BaseHttpResponse implements Serializable {
+public class HttpResponse implements Serializable {
 
     private static final long serialVersionUID = -6342197338772826935L;
     /**
      * 状态码
+     * <p>
+     * since 连犀健身4.1 @JsonAdapter(Integer2StringAdapter.class)
+     * 老版本的接口中的 status 仍然是 String
      */
+    @JsonAdapter(Integer2StringAdapter.class)
     private String status = HttpStatus.SUCCESS;
     /**
      * 状态消息

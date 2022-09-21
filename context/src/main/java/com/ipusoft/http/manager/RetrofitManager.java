@@ -65,4 +65,8 @@ public class RetrofitManager {
     public RequestBody getRequestBody(Map<String, Object> params) {
         return RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), GsonUtils.toJson(params));
     }
+
+    public RequestBody getRequestBody(String params) {
+        return RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), params);
+    }
 }
