@@ -40,7 +40,7 @@ public class AliYunManager {
     /**
      * OSSSecret
      */
-    public static final String OSS_ACCESS_KEY_SECRET = "Q7uOZz5iVO6uZNNRjjB1GvfewtVWQc";
+    public static final String OSS_ACCESS_KEY_SECRET = "%C\u0001;.\u000EA\u001D\";B\u0001.::&\u001E\u001E6E3\u0002\u0012\u0011\u0003\u0000\"#%\u0017";
 
     /**
      * 指定Bucket所在的数据中心(节点)
@@ -75,7 +75,7 @@ public class AliYunManager {
      */
     public AliYunManager initAliOSS() {
         if (mOSS == null) {
-            OSSCredentialProvider credentialProvider = new OSSPlainTextAKSKCredentialProvider(MD5Utils.convertMD5(OSS_ACCESS_KEY_ID), OSS_ACCESS_KEY_SECRET);
+            OSSCredentialProvider credentialProvider = new OSSPlainTextAKSKCredentialProvider(MD5Utils.convertMD5(OSS_ACCESS_KEY_ID), MD5Utils.convertMD5(OSS_ACCESS_KEY_SECRET));
             mOSS = new OSSClient(AppContext.getAppContext(), "http://" + AliYunManager.OSS_END_POINT + ".aliyuncs.com",
                     credentialProvider);
         }
