@@ -9,7 +9,8 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.ipulian:ipusdk:latest-version'//使用时把 latest-version 替换成最新release版本
+    //使用时把 latest-version 替换成最新release版本
+    implementation 'com.github.ipulian:ipusdk:latest-version'
 }
 ```
 ```xml
