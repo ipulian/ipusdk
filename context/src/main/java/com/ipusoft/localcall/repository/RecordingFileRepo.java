@@ -12,7 +12,6 @@ import com.ipusoft.localcall.constant.AudioExpandedName;
 import com.ipusoft.localcall.datastore.SimDataRepo;
 import com.ipusoft.logger.XLogger;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
-import com.ipusoft.permission.RxPermissionUtils;
 import com.ipusoft.utils.ArrayUtils;
 import com.ipusoft.utils.FileUtilsKt;
 import com.ipusoft.utils.GsonUtils;
@@ -71,7 +70,7 @@ public class RecordingFileRepo {
         XLogger.d(TAG + "->isSDCardEnableByEnvironment？" + SDCardUtils.isSDCardEnableByEnvironment());
         XLogger.d(TAG + "->isExternalStorageRemovable？" + Environment.isExternalStorageRemovable());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {//系统版本 >= Android 11
-            XLogger.d(TAG + "->checkManageStoragePermission？" + RxPermissionUtils.checkManageStoragePermission());
+            XLogger.d(TAG + "->checkManageStoragePermission？" + Environment.isExternalStorageManager());
         }
         if (PlatformManager.isMIUI()) {
             tempFile = new File(Environment.getExternalStorageDirectory() + "/MIUI/sound_recorder/call_rec");

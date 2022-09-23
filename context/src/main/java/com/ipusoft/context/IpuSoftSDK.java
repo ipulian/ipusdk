@@ -42,7 +42,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         setAppContext(mApp);
 
         /*
-         * 注册Activity声明周期
+         * 注册Activity生命周期
          */
         mApp.registerActivityLifecycleCallbacks(new IActivityLifecycle());
 

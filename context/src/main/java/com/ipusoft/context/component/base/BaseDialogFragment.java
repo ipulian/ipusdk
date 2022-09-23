@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.ipusoft.context.AppContext;
+import com.ipusoft.context.BaseFragmentViewModelFactory;
 import com.ipusoft.context.R;
 import com.ipusoft.context.viewmodel.BaseViewModel;
 import com.ipusoft.logger.XLogger;
@@ -129,7 +130,7 @@ public abstract class BaseDialogFragment<VB extends ViewDataBinding, VM extends 
             Method method = vbClazz.getMethod("inflate", LayoutInflater.class);
             binding = (VB) method.invoke(null, inflater);
             if (vmClazz != null) {
-                vm = new ViewModelProvider(this).get(vmClazz);
+                vm = new ViewModelProvider(this, new BaseFragmentViewModelFactory(getArguments())).get(vmClazz);
                 Method initMethod = null;
                 try {
                     initMethod = vbClazz.getDeclaredMethod("setVm", vmClazz);
@@ -243,7 +244,7 @@ public abstract class BaseDialogFragment<VB extends ViewDataBinding, VM extends 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-     //   ImmersionBar.destroy(this);
+        //   ImmersionBar.destroy(this);
     }
 
     protected void initData() {
