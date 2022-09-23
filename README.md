@@ -31,6 +31,8 @@ public class MyApplication extends Application {
         IpuSoftSDK.init(this,env);//之后通过IpuSoftSDK.updateAuthInfo()更新 AuthInfo
         //OR
         IpuSoftSDK.init(this,env,new AuthInfo("key","secret","username"));
+        //OR 如果是SIP外呼，用这种方式
+        IpuSoftSDK.init(this,env,new AuthInfo("key","secret","username","password"));
     }
 }
 ```
