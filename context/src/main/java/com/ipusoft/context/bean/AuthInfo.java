@@ -19,6 +19,8 @@ public class AuthInfo implements Serializable {
 
     private String username;
 
+    private String password;
+
     private AuthInfo() {
     }
 
@@ -26,6 +28,13 @@ public class AuthInfo implements Serializable {
         this.key = key;
         this.secret = secret;
         this.username = username;
+    }
+
+    public AuthInfo(String key, String secret, String username, String password) {
+        this.key = key;
+        this.secret = secret;
+        this.username = username;
+        this.password = password;
     }
 
     public String getKey() {
@@ -50,6 +59,14 @@ public class AuthInfo implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

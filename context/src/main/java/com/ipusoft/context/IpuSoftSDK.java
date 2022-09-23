@@ -104,11 +104,25 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
                 init(mApp, env);
             }
             Log.d(TAG, "updateAuthInfo: -------->" + GsonUtils.toJson(authInfo));
-            SDKCommonInit.initSDKToken(authInfo, status -> {
-                if (OnSDKLoginListener.LoginStatus.SUCCESS == status) {
-                    querySeatInfoAndRegisterSIP();
-                }
-            });
+
+            String password = authInfo.getPassword();
+            if (StringUtils.isNotEmpty(password)) {//SIP SDK的单独拿出来处理
+                SeatInfo seatInfo = new SeatInfo(authInfo.getUsername(), authInfo.getKey(), authInfo.getSecret(), authInfo.getPassword());
+                CommonDataRepo.setSeatInfo(seatInfo);
+
+                CommonDataRepo.setLocalCallType(CallTypeConfig.SIP.getType());
+
+                registerSip(seatInfo);
+                registerSipListener();
+
+            } else {
+
+                SDKCommonInit.initSDKToken(authInfo, status -> {
+                    if (OnSDKLoginListener.LoginStatus.SUCCESS == status) {
+                        querySeatInfoAndRegisterSIP();
+                    }
+                });
+            }
         } else {
             Log.d(TAG, "updateAuthInfo: 更新认证信息失败,IAuthInfo = null");
             throw new RuntimeException("更新认证信息失败,IAuthInfo = null");
