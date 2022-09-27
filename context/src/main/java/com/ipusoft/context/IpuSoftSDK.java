@@ -271,7 +271,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
      * 初始化SIP状态listener
      */
     private static void registerSipListener() {
-        if (StringUtils.isNotEmpty(getToken()) && ArrayUtils.isNotEmpty(sipStatusChangedListenerList)) {
+        if (ArrayUtils.isNotEmpty(sipStatusChangedListenerList)) {
             try {
                 Class<?> clazz = Class.forName(ModuleRegister.SIP_MODULE);
                 Method initMethod = clazz.getDeclaredMethod("registerSipListener", List.class);
