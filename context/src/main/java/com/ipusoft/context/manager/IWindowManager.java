@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.WindowManager;
 
 import com.ipusoft.context.AppContext;
+import com.ipusoft.context.IpuSoftSDK;
 
 /**
  * author : GWFan
@@ -18,8 +19,11 @@ public class IWindowManager {
 
     private static WindowManager.LayoutParams layoutParams;
 
-    public static WindowManager getWindowManager() {
-        return (WindowManager) AppContext.getAppContext().getSystemService(Context.WINDOW_SERVICE);
+    public  WindowManager getWindowManager() {
+        if (AppContext.getAppContext() != null){
+            return (WindowManager) AppContext.getAppContext().getSystemService(Context.WINDOW_SERVICE);
+        }
+        return (WindowManager) AppContext.getInstance().getSystemService(Context.WINDOW_SERVICE);
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.ipusoft.context;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,12 +15,14 @@ import com.ipusoft.mmkv.datastore.CommonDataRepo;
  * desc   : 保存身份信息和环境信息
  */
 
-public abstract class AppContext extends Application {
+public class AppContext extends Application {
     private static final String TAG = "AppContext";
     /**
      * Application
      */
     protected static Application mApp;
+
+    private static AppContext appContext;
 
     /**
      * @param mApp Application
@@ -38,6 +39,16 @@ public abstract class AppContext extends Application {
     }
 
     private static final Object object = new Object();
+
+    public static AppContext getInstance() {
+        return appContext;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        appContext = this;
+    }
 
     /**
      * @return 返回当前Activity
