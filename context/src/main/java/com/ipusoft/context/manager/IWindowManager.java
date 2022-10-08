@@ -19,7 +19,7 @@ public class IWindowManager {
 
     private static WindowManager.LayoutParams layoutParams;
 
-    public  WindowManager getWindowManager() {
+    public static WindowManager getWindowManager() {
         if (AppContext.getAppContext() != null){
             return (WindowManager) AppContext.getAppContext().getSystemService(Context.WINDOW_SERVICE);
         }
