@@ -87,6 +87,13 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
     }
 
     /**
+     * SIP SDK退出登录
+     */
+    public static void signOut() {
+        CommonDataRepo.setSipSDKSignOut(true);
+    }
+
+    /**
      * 更新外部认证信息
      *
      * @param authInfo
@@ -111,6 +118,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
                 CommonDataRepo.setSeatInfo(seatInfo);
 
                 CommonDataRepo.setLocalCallType(CallTypeConfig.SIP.getType());
+                CommonDataRepo.setSipSDKSignOut(false);
 
                 registerSip(seatInfo);
                 registerSipListener();

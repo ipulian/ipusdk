@@ -236,4 +236,12 @@ public class CommonDataRepo {
     public static boolean getShowHungUpPop() {
         return CommonMMKV.getBoolean(StorageConstant.SHOW_HUNG_UP_POP, true);
     }
+
+    public static void setSipSDKSignOut(boolean flag) {
+        CommonMMKV.set(StorageConstant.SIP_SDK_SIGN_OUT, flag);
+    }
+
+    public static boolean getSipSDKSignOut() {
+        return CommonMMKV.getBoolean(StorageConstant.SIP_SDK_SIGN_OUT, false);
+    }
 }
