@@ -26,6 +26,7 @@ public class IActivityLifecycle implements Application.ActivityLifecycleCallback
     private static final List<Activity> list = Collections.synchronizedList(new LinkedList<>());
 
     private static WeakReference<AppCompatActivity> sCurrentActivityWeakRef;
+    private static WeakReference<Activity> sCurrentActivityWeakRef2;
 
     @Override
     public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
@@ -104,7 +105,12 @@ public class IActivityLifecycle implements Application.ActivityLifecycleCallback
      * @param activity
      */
     private static void setCurrentActivity(Activity activity) {
-        sCurrentActivityWeakRef = new WeakReference<>((AppCompatActivity) activity);
+        try {
+            sCurrentActivityWeakRef = new WeakReference<>((AppCompatActivity) activity);
+        } catch (Exception e) {
+            e.printStackTrace();
+            sCurrentActivityWeakRef2 = new WeakReference<>(activity);
+        }
     }
 
     /**

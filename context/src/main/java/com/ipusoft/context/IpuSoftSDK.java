@@ -14,12 +14,12 @@ import com.ipusoft.context.init.SDKCommonInit;
 import com.ipusoft.context.listener.IPhoneStateListener;
 import com.ipusoft.context.listener.OnPhoneStateChangedListener;
 import com.ipusoft.context.registers.ModuleRegister;
-import com.ipusoft.utils.ArrayUtils;
-import com.ipusoft.utils.GsonUtils;
-import com.ipusoft.utils.StringUtils;
 import com.ipusoft.http.QuerySeatInfoHttp;
 import com.ipusoft.logger.XLogger;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
+import com.ipusoft.utils.ArrayUtils;
+import com.ipusoft.utils.GsonUtils;
+import com.ipusoft.utils.StringUtils;
 import com.tencent.mmkv.MMKV;
 
 import java.lang.reflect.InvocationTargetException;

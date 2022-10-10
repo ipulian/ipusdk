@@ -25,6 +25,7 @@ public abstract class LianLianApp extends IpuSoftSDK {
 
     public static void init(Application mApp, Class<?> clazz) {
         getAppConfig(clazz);
+
         init(mApp, env);
     }
 
