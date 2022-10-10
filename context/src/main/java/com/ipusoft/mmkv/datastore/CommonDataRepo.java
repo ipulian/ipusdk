@@ -1,5 +1,7 @@
 package com.ipusoft.mmkv.datastore;
 
+import android.util.Pair;
+
 import com.google.gson.reflect.TypeToken;
 import com.ipusoft.context.bean.AuthInfo;
 import com.ipusoft.context.bean.IAuthInfo;
