@@ -182,11 +182,19 @@ public class CallLogRepo {
                     int duration = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.DURATION));
                     //通话类型
                     int type = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE));
+
+                    //TODO
+                    //本机号码可能获取不到（华为、oppo获取不到）
+                    String hostNumber = cursor.getString(cursor.getColumnIndex("phone_account_address"));
+
+                    Log.d(TAG, "getDataFormCursor: ----------------------->" + hostNumber);
+
                     sysCallLog = new SysCallLog();
                     sysCallLog.setName(name);
                     sysCallLog.setPhoneNumber(number);
                     sysCallLog.setBeginTime(beginTime);
                     sysCallLog.setDuration(duration);
+                    sysCallLog.setHostNumber(StringUtils.null2Empty(hostNumber));
                     sysCallLog.setCallResult(0);//成功
                     if (type == CallLogType.REJECTED_TYPE.getType() || type == CallLogType.VOICEMAIL_TYPE.getType()) {
                         sysCallLog.setCallResult(1);//未接

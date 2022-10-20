@@ -21,6 +21,8 @@ public class SysCallLog implements Serializable {
     private long callId;//callId
     //联动/调接口时，返回的callTime
     private String callTime;
+    //主机号码
+    private String hostNumber;
 
     public String getName() {
         return name;
@@ -92,5 +94,13 @@ public class SysCallLog implements Serializable {
 
     public void setCallTime(String callTime) {
         this.callTime = callTime;
+    }
+
+    public String getHostNumber() {
+        return hostNumber;
+    }
+
+    public void setHostNumber(String hostNumber) {
+        this.hostNumber = hostNumber;
     }
 }
