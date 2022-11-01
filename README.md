@@ -82,11 +82,12 @@ public class MyApplication extends Application {
   startActivity(new Intent(this, IpuWebViewActivity.class));
 ```
 ## Change Log
-#### v1.6.38
-* 支持SIP通话的回电
 
 #### v1.6.39
 * 优化使用体验
+
+#### v1.6.38
+* 支持SIP通话的回电
 
 ## ProGuard rules
 ```pro
