@@ -1,7 +1,5 @@
 package com.ipusoft.mmkv.datastore;
 
-import android.util.Pair;
-
 import com.google.gson.reflect.TypeToken;
 import com.ipusoft.context.bean.AuthInfo;
 import com.ipusoft.context.bean.IAuthInfo;
@@ -245,5 +243,13 @@ public class CommonDataRepo {
 
     public static boolean getSipSDKSignOut() {
         return CommonMMKV.getBoolean(StorageConstant.SIP_SDK_SIGN_OUT, false);
+    }
+
+    public static void setNeverAnswerPermission(boolean flag) {
+        CommonMMKV.set(StorageConstant.NEVER_ANSWER_PERMISSION, flag);
+    }
+
+    public static boolean getNeverAnswerPermission() {
+        return CommonMMKV.getBoolean(StorageConstant.NEVER_ANSWER_PERMISSION, false);
     }
 }

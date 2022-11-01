@@ -160,6 +160,13 @@ public class XLogger {
         XLog.d(msg);
     }
 
+    public static void d(String tag, String msg) {
+        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
+            return;
+        }
+        XLog.d(tag + msg);
+    }
+
     public static void d(String msg, Throwable tr) {
         if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
             return;

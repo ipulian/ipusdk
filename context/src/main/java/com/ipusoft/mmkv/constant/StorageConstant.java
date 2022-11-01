@@ -58,6 +58,6 @@ public class StorageConstant {
     public static final String SHOW_HUNG_UP_POP = "show_hung_up_pop";
 
     public static final String SIP_SDK_SIGN_OUT = "sip_sdk_sign_out";
-    public static final String SIP_MINI_VIEW_POSITION = "sip_mini_view_position";
+    public static final String NEVER_ANSWER_PERMISSION = "never_answer_permission";
 
 }

@@ -12,10 +12,13 @@ public class HttpConstant {
     public static final String HOST_NAME = "host_name";
     public static final String OPEN = "open";
     public static final String GATEWAY = "gateway";
+    public static final String SEANUM = "seanum";
     public static final String TEST = "test";
 
     public static final String OPEN_URL = HOST_NAME + ":" + OPEN;
     public static final String GATEWAY_URL = HOST_NAME + ":" + GATEWAY;
+    //海马安通达
+    public static final String SEANUM_URL = HOST_NAME + ":" + SEANUM;
     /**
      * 给特定接口单独定义请求的baseUrl(供调试用)
      */

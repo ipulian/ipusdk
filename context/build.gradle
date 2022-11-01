@@ -120,9 +120,9 @@ dependencies {
      *  沉浸式状态栏
      *  https://github.com/gyf-dev/ImmersionBar
      */
-//    api 'com.gyf.immersionbar:immersionbar:3.0.0'
-//    api 'com.gyf.immersionbar:immersionbar-components:3.0.0'
-//    api 'com.gyf.immersionbar:immersionbar-ktx:3.0.0'
+    implementation 'com.gyf.immersionbar:immersionbar:3.0.0'
+    implementation 'com.gyf.immersionbar:immersionbar-components:3.0.0'
+    implementation 'com.gyf.immersionbar:immersionbar-ktx:3.0.0'
 
     /**
      * 阿里云OSS

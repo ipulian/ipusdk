@@ -13,6 +13,7 @@ import com.ipusoft.context.databinding.ContextPermissionDialogOverlayPermissionB
 import com.ipusoft.context.manager.PlatformManager;
 import com.ipusoft.context.platform.OPPO;
 import com.ipusoft.context.viewmodel.BaseViewModel;
+import com.ipusoft.mmkv.datastore.CommonDataRepo;
 
 /**
  * author : GWFan
@@ -45,6 +46,18 @@ public class OverLayPermissionDialog extends BaseDialogFragment<ContextPermissio
         binding.tvMsg.setText(tip);
         binding.llAgree.setOnClickListener(this);
         binding.tvNotToUse.setOnClickListener(this);
+        binding.tvNeverAnswer.setOnClickListener(this);
+    }
+
+    @Override
+    public void show() {
+        if (!CommonDataRepo.getNeverAnswerPermission()) {
+            super.show();
+        } else {
+            if (layPermissionListener != null) {
+                layPermissionListener.invoke(true);
+            }
+        }
     }
 
     @Override
@@ -54,10 +67,12 @@ public class OverLayPermissionDialog extends BaseDialogFragment<ContextPermissio
             try {
                 if (PlatformManager.isOPPO()) {
                     OPPO.settingOverlayPermission(mActivity);
+                    dismiss();
                 } else {
                     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                         startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                                 Uri.parse("package:" + AppContext.getAppContext().getPackageName())));
+                        dismiss();
                     }
                 }
             } catch (Exception e) {
@@ -66,6 +81,12 @@ public class OverLayPermissionDialog extends BaseDialogFragment<ContextPermissio
             }
             dismissAllowingStateLoss();
         } else if (v.getId() == binding.tvNotToUse.getId()) {
+            if (layPermissionListener != null) {
+                layPermissionListener.invoke(true);
+            }
+            dismissAllowingStateLoss();
+        } else if (v.getId() == binding.tvNeverAnswer.getId()) {
+            CommonDataRepo.setNeverAnswerPermission(true);
             if (layPermissionListener != null) {
                 layPermissionListener.invoke(true);
             }

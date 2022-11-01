@@ -1,8 +1,16 @@
 package com.ipusoft.localcall.repository;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.provider.CallLog;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
 
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.manager.PlatformManager;
@@ -169,9 +177,7 @@ public class CallLogRepo {
         try {
             SysCallLog sysCallLog;
             if (cursor != null) {
-                Log.d(TAG, "getDataFormCursor: -------1》");
                 while (cursor.moveToNext()) {
-                    Log.d(TAG, "getDataFormCursor: ------2-》");
                     //联系人姓名
                     String name = cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME));
                     //联系人号码
@@ -186,15 +192,26 @@ public class CallLogRepo {
                     //TODO
                     //本机号码可能获取不到（华为、oppo获取不到）
                     String hostNumber = cursor.getString(cursor.getColumnIndex("phone_account_address"));
-
-                    Log.d(TAG, "getDataFormCursor: ----------------------->" + hostNumber);
+                    try {
+                        if (StringUtils.isEmpty(hostNumber)) {
+                            /*
+                             * TODO
+                             * */
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     sysCallLog = new SysCallLog();
                     sysCallLog.setName(name);
                     sysCallLog.setPhoneNumber(number);
                     sysCallLog.setBeginTime(beginTime);
                     sysCallLog.setDuration(duration);
-                    sysCallLog.setHostNumber(StringUtils.null2Empty(hostNumber));
+
+                    hostNumber = StringUtils.null2Empty(hostNumber);
+                    hostNumber = hostNumber.replace("+86", "");
+                    hostNumber = hostNumber.replace("+", "");
+                    sysCallLog.setHostNumber(hostNumber);
                     sysCallLog.setCallResult(0);//成功
                     if (type == CallLogType.REJECTED_TYPE.getType() || type == CallLogType.VOICEMAIL_TYPE.getType()) {
                         sysCallLog.setCallResult(1);//未接
@@ -228,4 +245,43 @@ public class CallLogRepo {
         }
         return list;
     }
+
+    private static String getPhoneNumber(int callLogSimId) {
+        SubscriptionManager sManager = null;
+        String userPhone = "";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+            TelephonyManager tm = (TelephonyManager) AppContext.getActivityContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+            sManager = (SubscriptionManager) AppContext.getAppContext().getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
+            if (ActivityCompat.checkSelfPermission(AppContext.getActivityContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                //没有授权
+                return userPhone;
+            }
+            Log.d(TAG, "getPhoneNumber: -------1=------------>" + tm.getLine1Number());
+            Log.d(TAG, "getPhoneNumber: -------2=------------>" + tm.getLine1Number());
+
+            List<SubscriptionInfo> mList = sManager.getActiveSubscriptionInfoList();//获取当前插入卡槽的卡信息
+            try {
+                for (SubscriptionInfo info : mList) {
+                    Log.d(TAG, "getPhoneNumber: .p-0-0-0-00--------->" + GsonUtils.toJson(info));
+                    int simId = info.getSubscriptionId();//获取simid 与通话记录表的simId一致
+                    if (simId == callLogSimId) {
+                        int slot_id = info.getSimSlotIndex();//获取卡槽位置
+                        if (slot_id == 0) {
+                            userPhone = tm.getLine1Number();
+                        } else {
+                            userPhone = tm.getLine1Number();
+                        }
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                XLogger.e("getPhoneNumber-------->", e);
+            }
+        }
+        return userPhone;
+    }
+
+
 }

@@ -66,6 +66,10 @@ public class SysRecording implements Serializable {
     @ColumnInfo(name = "call_id")
     private long callId;
 
+    //员工手机号码
+    @ColumnInfo(name = "caller")
+    private String caller;
+
     /**
      * 上传进度
      */
@@ -224,6 +228,14 @@ public class SysRecording implements Serializable {
 
     public void setCallId(long callId) {
         this.callId = callId;
+    }
+
+    public String getCaller() {
+        return caller;
+    }
+
+    public void setCaller(String caller) {
+        this.caller = caller;
     }
 
     public String getCallTimeServer() {

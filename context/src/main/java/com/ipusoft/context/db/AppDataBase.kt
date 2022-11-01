@@ -11,7 +11,7 @@ import com.ipusoft.context.db.dao.SysRecordingDao
  * desc   :
  */
 
-@Database(entities = [SysRecording::class], version = 1)
+@Database(entities = [SysRecording::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun sysRecordingDao(): SysRecordingDao
 }

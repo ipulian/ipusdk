@@ -166,6 +166,7 @@ public class CallLogManager {
                                                 recording.setCallTime(callLog.getBeginTime());
                                                 recording.setPhoneName(callLog.getName());
                                                 recording.setPhoneNumber(phoneNumber);
+                                                recording.setCaller(callLog.getHostNumber());
                                                 recording.setCallType(callLog.getCallType());
                                                 recording.setCallResult(callResult);
                                                 recording.setCallTimeServer(callLog.getCallTime());

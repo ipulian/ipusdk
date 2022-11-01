@@ -4,6 +4,7 @@ import androidx.room.Room;
 
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.db.dao.SysRecordingDao;
+import com.ipusoft.context.db.update.Migration1To2;
 
 /**
  * author : GWFan
@@ -17,8 +18,9 @@ public class AppDBManager {
 
     public static void initDataBase() {
         appDB = Room.databaseBuilder(AppContext.getAppContext(), AppDatabase.class,
-                "ipusdk.db")
-                .addMigrations()
+                        "ipusdk.db")
+                .fallbackToDestructiveMigration()
+                .addMigrations(new Migration1To2(1, 2))
                 .build();
     }
 

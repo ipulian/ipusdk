@@ -67,6 +67,7 @@ public class UploadRecordMultipartBuilder {
             builder.addFormDataPart("callId", recording.getCallId() + "");
             builder.addFormDataPart("name", StringUtils.null2Empty(recording.getPhoneName()));
             builder.addFormDataPart("phone", recording.getPhoneNumber());
+            builder.addFormDataPart("userPhone", StringUtils.null2Empty(recording.getCaller()));
             builder.addFormDataPart("startTime", DateTimeUtils.millis2String(recording.getCallTime()));
             builder.addFormDataPart("duration", recording.getDuration() + "");
             builder.addFormDataPart("callResult", recording.getCallResult() + "");

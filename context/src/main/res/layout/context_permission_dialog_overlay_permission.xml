@@ -71,10 +71,26 @@
                         android:layout_marginHorizontal="45dp"
                         android:layout_marginTop="@dimen/dp_10"
                         android:background="@drawable/context_permission_btn_not_open"
+                        android:backgroundTint="@color/navigationBarColor"
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center"
                         android:text="暂不打开"
+                        android:textColor="@color/black45"
+                        android:textSize="@dimen/sp_15" />
+
+                    <TextView
+                        android:id="@+id/tv_never_answer"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="45dp"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:background="@drawable/context_permission_btn_not_open"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="不再提示"
                         android:textColor="@color/black45"
                         android:textSize="@dimen/sp_15" />
 
