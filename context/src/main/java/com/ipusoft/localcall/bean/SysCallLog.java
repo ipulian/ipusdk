@@ -1,5 +1,7 @@
 package com.ipusoft.localcall.bean;
 
+import com.ipusoft.utils.StringUtils;
+
 import java.io.Serializable;
 
 /**
@@ -22,7 +24,7 @@ public class SysCallLog implements Serializable {
     //联动/调接口时，返回的callTime
     private String callTime;
     //主机号码
-    private String hostNumber;
+    private String hostNumber = "";
 
     public String getName() {
         return name;
@@ -97,7 +99,7 @@ public class SysCallLog implements Serializable {
     }
 
     public String getHostNumber() {
-        return hostNumber;
+        return StringUtils.null2Empty(hostNumber);
     }
 
     public void setHostNumber(String hostNumber) {

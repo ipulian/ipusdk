@@ -26,7 +26,6 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import io.reactivex.rxjava3.core.Observer;
@@ -54,7 +53,7 @@ public class RecordingFileRepo {
         Observable.create((ObservableOnSubscribe<List<File>>) emitter
                         -> emitter.onNext(queryRecordingFile(0, 0, namePhoneMap)))
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(observer);
     }
 
@@ -192,9 +191,9 @@ public class RecordingFileRepo {
         }
         if (ArrayUtils.isNotEmpty(list)) {
             try {
-                for (File file : list) {
-                    XLogger.d(TAG + "->queryRecordingFile->" + file.getAbsolutePath() + "->" + file.getName());
-                }
+//                for (File file : list) {
+                //  XLogger.d(TAG + "->queryRecordingFile->" + file.getAbsolutePath() );
+                //     }
             } catch (Exception e) {
                 e.printStackTrace();
             }

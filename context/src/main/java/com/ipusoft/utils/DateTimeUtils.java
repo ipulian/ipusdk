@@ -996,6 +996,10 @@ public class DateTimeUtils {
         return DateTimeUtils.millis2String(System.currentTimeMillis(), dateFormat);
     }
 
+    public static Date getCurrentTime2(DateFormat dateFormat) {
+        return string2Date(DateTimeUtils.millis2String(System.currentTimeMillis(), dateFormat), dateFormat);
+    }
+
     public static Date getCurrentTime() {
         return DateTimeUtils.millis2Date(System.currentTimeMillis());
     }

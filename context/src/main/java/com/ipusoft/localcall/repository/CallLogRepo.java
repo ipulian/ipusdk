@@ -29,7 +29,6 @@ import com.ipusoft.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import io.reactivex.rxjava3.core.Observer;
@@ -58,7 +57,7 @@ public class CallLogRepo {
                     emitter.onNext(querySysCallLog());
                 })
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(observer);
     }
 
@@ -85,10 +84,11 @@ public class CallLogRepo {
      */
     public static List<SysCallLog> querySysCallLog(int page) {
         Log.d(TAG, "querySysCallLog: ------" + page);
-        //" date DESC limit " + 50 + " offset " + page * 50
+        String paging = "date DESC";
         Cursor cursor = AppContext.getAppContext()
                 .getContentResolver()
-                .query(CallLog.Calls.CONTENT_URI, null, null, null, CallLog.Calls.DEFAULT_SORT_ORDER);
+//                .query(CallLog.Calls.CONTENT_URI, null, null, null, CallLog.Calls.DEFAULT_SORT_ORDER);
+                .query(CallLog.Calls.CONTENT_URI, null, null, null, paging);
         return getDataFormCursor(cursor);
     }
 
@@ -115,7 +115,7 @@ public class CallLogRepo {
                 }
                 if (callLog.getCallType() == CallLogType.OUTGOING_TYPE.getType()) {
                     if (ArrayUtils.isNotEmpty(simCallOutBeanList)) {
-                        XLogger.d(TAG + "->simCallOutBeanList1：" + GsonUtils.toJson(simCallOutBeanList));
+                        //XLogger.d(TAG + "->simCallOutBeanList1：" + GsonUtils.toJson(simCallOutBeanList));
                         SIMCallOutBean bean;
 
                         List<SIMCallOutBean> listCopy = GsonUtils.fromJson(GsonUtils.toJson(simCallOutBeanList), GsonUtils.getListType(SIMCallOutBean.class));
@@ -154,7 +154,7 @@ public class CallLogRepo {
                                 }
                             }
                         }
-                        XLogger.d(TAG + "->simCallOutBeanList2：" + GsonUtils.toJson(listCopy));
+                        //XLogger.d(TAG + "->simCallOutBeanList2：" + GsonUtils.toJson(listCopy));
                         SimDataRepo.setSIMCallOutBean(listCopy);
                     }
                 } else if (callLog.getCallType() == CallLogType.INCOMING_TYPE.getType() ||
@@ -177,22 +177,46 @@ public class CallLogRepo {
         try {
             SysCallLog sysCallLog;
             if (cursor != null) {
+                /**
+                 * 根据机型和Android版本不同，cursor.getColumnIndex(xxx)有可能返回-1
+                 */
                 while (cursor.moveToNext()) {
                     //联系人姓名
-                    String name = cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME));
+                    String name = "";
+                    if (cursor.getColumnIndex(CallLog.Calls.CACHED_NAME) != -1) {
+                        name = cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME));
+                    }
                     //联系人号码
-                    String number = cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER));
+                    String number = "";
+                    if (cursor.getColumnIndex(CallLog.Calls.NUMBER) != -1) {
+                        number = cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER));
+                    }
                     //外呼开始时间
-                    long beginTime = cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DATE));
+                    long beginTime = 0;
+                    if (cursor.getColumnIndex(CallLog.Calls.DATE) != -1) {
+                        beginTime = cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DATE));
+                    } else {
+                        Log.d(TAG, "getDataFormCursor: :---------------------->");
+                    }
                     //通话时长
-                    int duration = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.DURATION));
+                    int duration = 0;
+                    if (cursor.getColumnIndex(CallLog.Calls.DURATION) != -1) {
+                        duration = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.DURATION));
+                    }
+
                     //通话类型
-                    int type = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE));
+                    int type = 0;
+                    if (cursor.getColumnIndex(CallLog.Calls.TYPE) != -1) {
+                        type = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE));
+                    }
 
                     //TODO
                     //本机号码可能获取不到（华为、oppo获取不到）
-                    String hostNumber = cursor.getString(cursor.getColumnIndex("phone_account_address"));
+                    String hostNumber = "";
                     try {
+                        if (cursor.getColumnIndex("phone_account_address") != -1) {
+                            hostNumber = cursor.getString(cursor.getColumnIndex("phone_account_address"));
+                        }
                         if (StringUtils.isEmpty(hostNumber)) {
                             /*
                              * TODO
@@ -258,7 +282,6 @@ public class CallLogRepo {
                 return userPhone;
             }
             Log.d(TAG, "getPhoneNumber: -------1=------------>" + tm.getLine1Number());
-            Log.d(TAG, "getPhoneNumber: -------2=------------>" + tm.getLine1Number());
 
             List<SubscriptionInfo> mList = sManager.getActiveSubscriptionInfoList();//获取当前插入卡槽的卡信息
             try {

@@ -51,6 +51,8 @@ public class BaseUrlInterceptor implements Interceptor {
                     baseUrl = AppRuntimeContext.GATE_WAY_URL;
                 } else if (StringUtils.equals(HttpConstant.SEANUM, headerValue)) {
                     baseUrl = "http://api.seanum.com/";
+                } else if (StringUtils.equals(HttpConstant.DEV_API, headerValue)) {
+                    baseUrl = "https://preapi.51lianlian.cn/";
                 }
                 /**
                  * 给特定接口单独定义请求的baseUrl(供调试用)

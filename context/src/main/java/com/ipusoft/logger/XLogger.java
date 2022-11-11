@@ -43,7 +43,7 @@ public class XLogger {
                 .logLevel(LogLevel.ALL)           // 指定日志级别，低于该级别的日志将不会被打印，默认为 LogLevel.ALL
 //                .tag("MY_TAG")                                         // 指定 TAG，默认为 "X-LOG"
                 .enableThreadInfo()                                    // 允许打印线程信息，默认禁止
-                .enableStackTrace(4)                                   // 允许打印深度为 2 的调用栈信息，默认禁止
+                .enableStackTrace(1)                                   // 允许打印深度为 2 的调用栈信息，默认禁止
                 // .enableBorder()                                        // 允许打印日志边框，默认禁止
                 .jsonFormatter(new DefaultJsonFormatter())                  // 指定 JSON 格式化器，默认为 DefaultJsonFormatter
                 .xmlFormatter(new DefaultXmlFormatter())                    // 指定 XML 格式化器，默认为 DefaultXmlFormatter
