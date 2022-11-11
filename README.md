@@ -13,8 +13,8 @@ dependencies {
     //使用时把 latest-version 替换成最新release版本
     implementation 'com.github.ipulian:ipusdk:latest-version'
 }
-### maven
 ```
+### maven
 ```maven
 <repositories>
     <repository>
