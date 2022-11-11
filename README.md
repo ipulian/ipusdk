@@ -14,6 +14,7 @@ dependencies {
     implementation 'com.github.ipulian:ipusdk:latest-version'
 }
 ### maven
+```
 ```maven
 <repositories>
     <repository>
