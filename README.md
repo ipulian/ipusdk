@@ -1,6 +1,7 @@
 # Common
 SDK的基础库，集成功能模块的SDK之前需要先集成该基础模块。
 ## Setup
+### gradle
 ```gradle
 allprojects {
     repositories {
@@ -12,6 +13,20 @@ dependencies {
     //使用时把 latest-version 替换成最新release版本
     implementation 'com.github.ipulian:ipusdk:latest-version'
 }
+### maven
+```maven
+<repositories>
+    <repository>
+		<id>jitpack.io</id>
+		<url>https://jitpack.io</url>
+	</repository>
+</repositories>
+
+<dependency>
+	 <groupId>com.github.ipulian</groupId>
+	 <artifactId>ipusdk</artifactId>
+	 <version>Tag</version>
+</dependency>
 ```
 ```xml
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
