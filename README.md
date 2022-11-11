@@ -26,7 +26,7 @@ dependencies {
 <dependency>
 	<groupId>com.github.ipulian</groupId>
 	<artifactId>ipusdk</artifactId>
-	<version>Tag</version>
+	<version>latest-version</version>
 </dependency>
 ```
 ```xml
