@@ -18,15 +18,15 @@ dependencies {
 ```maven
 <repositories>
     <repository>
-		<id>jitpack.io</id>
-		<url>https://jitpack.io</url>
-	</repository>
+	<id>jitpack.io</id>
+	<url>https://jitpack.io</url>
+    </repository>
 </repositories>
 
 <dependency>
-	 <groupId>com.github.ipulian</groupId>
-	 <artifactId>ipusdk</artifactId>
-	 <version>Tag</version>
+	<groupId>com.github.ipulian</groupId>
+	<artifactId>ipusdk</artifactId>
+	<version>Tag</version>
 </dependency>
 ```
 ```xml
