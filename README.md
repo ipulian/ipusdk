@@ -29,6 +29,7 @@ dependencies {
 	<version>latest-version</version>
 </dependency>
 ```
+在AndroidManifest.xml中注册需要的权限
 ```xml
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
