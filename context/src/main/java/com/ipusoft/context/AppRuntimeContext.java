@@ -18,7 +18,7 @@ public class AppRuntimeContext extends AppContext {
      */
     protected static String env;
 
-    protected static String isDebug = "false";
+    protected static String isDebug = "true";
 
     public static String BASE_URL = "";
 
