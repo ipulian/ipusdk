@@ -21,7 +21,7 @@ import com.ipusoft.localcall.bean.UploadSysRecordingBean;
 import com.ipusoft.localcall.constant.CallLogCallsType;
 import com.ipusoft.localcall.constant.CallLogType;
 import com.ipusoft.localcall.datastore.SimDataRepo;
-import com.ipusoft.logger.XLogger;
+import com.elvishew.xlog.XLog;
 import com.ipusoft.utils.ArrayUtils;
 import com.ipusoft.utils.ExceptionUtils;
 import com.ipusoft.utils.GsonUtils;
@@ -96,17 +96,17 @@ public class CallLogRepo {
     public List<SysCallLog> querySysCallLog() {
         ArrayList<SysCallLog> list = new ArrayList<>();
         UploadSysRecordingBean uploadSysCallLog = SimDataRepo.getUploadSysCallLog();
-        XLogger.d(TAG + "->querySysCallLog：开始查数据");
+        XLog.d(TAG + "->querySysCallLog：开始查数据");
         long maxTime = uploadSysCallLog.getTimestamp();
-        XLogger.d(TAG + "->querySysCallLog----maxTime--->" + maxTime);
+        XLog.d(TAG + "->querySysCallLog----maxTime--->" + maxTime);
         String selectionClause = CallLog.Calls.DATE + " > ? ";
         String[] selectionArgs = {Math.max(maxTime, System.currentTimeMillis() - 5 * 24 * 60 * 60 * 1000) + ""};
-        XLogger.d(TAG + "->查询条件：CallLog.Calls.DATE > " + Math.max(maxTime, System.currentTimeMillis() - 5 * 24 * 60 * 60 * 1000) + "");
+        XLog.d(TAG + "->查询条件：CallLog.Calls.DATE > " + Math.max(maxTime, System.currentTimeMillis() - 5 * 24 * 60 * 60 * 1000) + "");
         Cursor cursor = AppContext.getAppContext().getContentResolver().query(CallLog.Calls.CONTENT_URI,
                 null, selectionClause, selectionArgs, CallLog.Calls.DEFAULT_SORT_ORDER);
         List<SysCallLog> sysCallLogs = getDataFormCursor(cursor);
         if (ArrayUtils.isNotEmpty(sysCallLogs)) {
-            XLogger.d(TAG + "->querySysCallLog1：" + GsonUtils.toJson(sysCallLogs));
+            XLog.d(TAG + "->querySysCallLog1：" + GsonUtils.toJson(sysCallLogs));
             List<SIMCallOutBean> simCallOutBeanList = SimDataRepo.getSIMCallOutBean();
             long beginTime;
             for (SysCallLog callLog : sysCallLogs) {
@@ -116,7 +116,7 @@ public class CallLogRepo {
                 }
                 if (callLog.getCallType() == CallLogType.OUTGOING_TYPE.getType()) {
                     if (ArrayUtils.isNotEmpty(simCallOutBeanList)) {
-                        //XLogger.d(TAG + "->simCallOutBeanList1：" + GsonUtils.toJson(simCallOutBeanList));
+                        //XLog.d(TAG + "->simCallOutBeanList1：" + GsonUtils.toJson(simCallOutBeanList));
                         SIMCallOutBean bean;
 
                         List<SIMCallOutBean> listCopy = GsonUtils.fromJson(GsonUtils.toJson(simCallOutBeanList), GsonUtils.getListType(SIMCallOutBean.class));
@@ -155,7 +155,7 @@ public class CallLogRepo {
                                 }
                             }
                         }
-                        //XLogger.d(TAG + "->simCallOutBeanList2：" + GsonUtils.toJson(listCopy));
+                        //XLog.d(TAG + "->simCallOutBeanList2：" + GsonUtils.toJson(listCopy));
                         SimDataRepo.setSIMCallOutBean(listCopy);
                     }
                 } else if (callLog.getCallType() == CallLogType.INCOMING_TYPE.getType() ||
@@ -167,9 +167,9 @@ public class CallLogRepo {
                 }
             }
         } else {
-            XLogger.d(TAG + "->querySysCallLog1：sysCallLogs 不存在");
+            XLog.d(TAG + "->querySysCallLog1：sysCallLogs 不存在");
         }
-        XLogger.d(TAG + "->callLogList：" + GsonUtils.toJson(list));
+        XLog.d(TAG + "->callLogList：" + GsonUtils.toJson(list));
         return list;
     }
 
@@ -266,7 +266,7 @@ public class CallLogRepo {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            XLogger.e(TAG + "---->" + ExceptionUtils.getErrorInfo(e));
+            XLog.e(TAG + "---->" + ExceptionUtils.getErrorInfo(e));
         }
         return list;
     }
@@ -301,7 +301,7 @@ public class CallLogRepo {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                XLogger.e("getPhoneNumber-------->", e);
+                XLog.e("getPhoneNumber-------->", e);
             }
         }
         return userPhone;

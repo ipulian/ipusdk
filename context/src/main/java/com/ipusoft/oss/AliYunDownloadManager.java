@@ -7,7 +7,7 @@ import com.alibaba.sdk.android.oss.model.GetObjectRequest;
 import com.alibaba.sdk.android.oss.model.GetObjectResult;
 import com.alibaba.sdk.android.oss.model.OSSRequest;
 import com.alibaba.sdk.android.oss.model.ObjectMetadata;
-import com.ipusoft.logger.XLogger;
+import com.elvishew.xlog.XLog;
 import com.ipusoft.utils.FileUtilsKt;
 import com.ipusoft.utils.StringUtils;
 
@@ -138,10 +138,10 @@ public class AliYunDownloadManager extends AliYunManager {
             public void onFailure(GetObjectRequest request, ClientException clientException, ServiceException serviceException) {
                 if (clientException != null) {
                     clientException.printStackTrace();
-                    XLogger.d(clientException);
+                    XLog.e("asyncGetObject--->", clientException);
                 }
                 if (serviceException != null) {
-                    XLogger.d(serviceException);
+                    XLog.e("asyncGetObject--->", serviceException);
                 }
             }
         });

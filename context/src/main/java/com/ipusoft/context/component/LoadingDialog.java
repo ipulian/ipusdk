@@ -10,7 +10,7 @@ import com.ipusoft.context.R;
 import com.ipusoft.context.component.base.BaseDialogFragment;
 import com.ipusoft.context.databinding.ContextLayoutCustomLoadingBinding;
 import com.ipusoft.context.viewmodel.BaseViewModel;
-import com.ipusoft.logger.XLogger;
+import com.elvishew.xlog.XLog;
 import com.ipusoft.utils.ExceptionUtils;
 
 /**
@@ -65,7 +65,7 @@ public class LoadingDialog extends BaseDialogFragment<ContextLayoutCustomLoading
             iCountDownTimer.start();
         } catch (Exception exception) {
             exception.printStackTrace();
-            XLogger.e(TAG + "->show->" + ExceptionUtils.getErrorInfo(exception));
+            XLog.e(TAG + "->show->" + ExceptionUtils.getErrorInfo(exception));
         }
     }
 
@@ -94,7 +94,7 @@ public class LoadingDialog extends BaseDialogFragment<ContextLayoutCustomLoading
             }
         } catch (Exception e) {
             e.printStackTrace();
-            XLogger.e(TAG + "->dismiss：" + ExceptionUtils.getErrorInfo(e));
+            XLog.e(TAG + "->dismiss：" + ExceptionUtils.getErrorInfo(e));
         }
     }
 
@@ -107,7 +107,7 @@ public class LoadingDialog extends BaseDialogFragment<ContextLayoutCustomLoading
             }
         } catch (Exception e) {
             e.printStackTrace();
-            XLogger.e(TAG + "->dismiss：" + ExceptionUtils.getErrorInfo(e));
+            XLog.e(TAG + "->dismiss：" + ExceptionUtils.getErrorInfo(e));
         }
     }
 
@@ -137,7 +137,7 @@ public class LoadingDialog extends BaseDialogFragment<ContextLayoutCustomLoading
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                XLogger.e(TAG + "->onFinish：" + ExceptionUtils.getErrorInfo(e));
+                XLog.e(TAG + "->onFinish：" + ExceptionUtils.getErrorInfo(e));
             }
         }
     }

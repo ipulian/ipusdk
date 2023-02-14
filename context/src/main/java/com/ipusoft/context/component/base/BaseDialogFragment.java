@@ -27,7 +27,7 @@ import com.ipusoft.context.AppContext;
 import com.ipusoft.context.BaseFragmentViewModelFactory;
 import com.ipusoft.context.R;
 import com.ipusoft.context.viewmodel.BaseViewModel;
-import com.ipusoft.logger.XLogger;
+import com.elvishew.xlog.XLog;
 import com.ipusoft.utils.ExceptionUtils;
 import com.ipusoft.utils.ThreadUtils;
 
@@ -81,7 +81,7 @@ public abstract class BaseDialogFragment<VB extends ViewDataBinding, VM extends 
                     fm.beginTransaction().add(this, tag).commitAllowingStateLoss();
                     isShowing = true;
                 } catch (Exception e) {
-                    XLogger.e(TAG + "->show：" + ExceptionUtils.getErrorInfo(e));
+                    XLog.e(TAG + "->show：" + ExceptionUtils.getErrorInfo(e));
                 }
             });
         }

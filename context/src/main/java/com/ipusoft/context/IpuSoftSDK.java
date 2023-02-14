@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.elvishew.xlog.XLog;
 import com.ipusoft.context.bean.AuthInfo;
 import com.ipusoft.context.bean.SeatInfo;
 import com.ipusoft.context.cache.AppCacheContext;
@@ -110,7 +111,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
                 AppContext.setAuthInfo(authInfo);
                 init(mApp, env);
             }
-            Log.d(TAG, "updateAuthInfo: -------->" + GsonUtils.toJson(authInfo));
+            XLog.d(TAG, "updateAuthInfo: -------->" + GsonUtils.toJson(authInfo));
 
             String password = authInfo.getPassword();
             if (StringUtils.isNotEmpty(password)) {//SIP SDK的单独拿出来处理
@@ -132,7 +133,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
                 });
             }
         } else {
-            Log.d(TAG, "updateAuthInfo: 更新认证信息失败,IAuthInfo = null");
+            XLog.d(TAG, "updateAuthInfo: 更新认证信息失败,IAuthInfo = null");
             throw new RuntimeException("更新认证信息失败,IAuthInfo = null");
         }
     }
@@ -150,7 +151,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         timestamp = l;
         QuerySeatInfoHttp.querySeatInfo((seatInfo, localCallType) -> {
             CommonDataRepo.setSeatInfo(seatInfo);
-            Log.d(TAG, "querySeatInfoAndRegisterSIP: ---------->" + GsonUtils.toJson(localCallType));
+            //Log.d(TAG, "querySeatInfoAndRegisterSIP: ---------->" + GsonUtils.toJson(localCallType));
 //            if (StringUtils.equals(CallTypeConfig.SIP.getType(), localCallType)) {
             String callType = seatInfo.getCallType();
             Log.d(TAG, "querySeatInfoAndRegisterSIP: _---------->" + callType);
@@ -192,7 +193,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         if (mApp != null) {
             IPhoneStateListener.getInstance().registerPhoneListener(mApp, listener);
         } else {
-            Log.d(TAG, "setOnPhoneStatusChangedListener: 注册通话状态listener失败,未初始化SDk");
+            XLog.d(TAG, "setOnPhoneStatusChangedListener: 注册通话状态listener失败,未初始化SDk");
         }
     }
 
@@ -227,7 +228,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         AuthInfo authInfo = getAuthInfo();
         if (authInfo == null) {
             Toast.makeText(mApp, "登陆失败，认证信息为空", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "reLogin: ->" + "登陆失败，认证信息为空：" + GsonUtils.toJson(authInfo));
+            Log.d(TAG, "reLogin: ->" + "登陆失败，认证信息为空：");
             return;
         }
         SDKCommonInit.initSDKToken(authInfo, loginListener);

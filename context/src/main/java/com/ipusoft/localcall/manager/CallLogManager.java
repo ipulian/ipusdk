@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.elvishew.xlog.XLog;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.base.IObserver;
 import com.ipusoft.context.bean.SysRecording;
@@ -17,7 +18,6 @@ import com.ipusoft.localcall.repository.FileRepository;
 import com.ipusoft.localcall.repository.RecordingFileRepo;
 import com.ipusoft.localcall.repository.SysRecordingRepo;
 import com.ipusoft.localcall.view.dialog.HowToOpenRecordingDialog;
-import com.ipusoft.logger.XLogger;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
 import com.ipusoft.utils.ArrayUtils;
 import com.ipusoft.utils.FileUtilsKt;
@@ -71,23 +71,23 @@ public class CallLogManager {
             @Override
             public void onNext(@NonNull Map<String, String> namePhoneMap) {
                 if (MapUtils.isNotEmpty(namePhoneMap)) {
-                    XLogger.d("namePhoneMap-------->" + namePhoneMap.size());
+                    XLog.d("namePhoneMap-------->" + namePhoneMap.size());
                 } else {
-                    XLogger.d("namePhoneMap-------->0");
+                    XLog.d("namePhoneMap-------->0");
                 }
                 Observable.create((ObservableOnSubscribe<Boolean>) emitter -> {
                             List<SysRecording> list = new ArrayList<>();
                             UploadSysRecordingBean uploadSysCallLog = SimDataRepo.getUploadSysCallLog();
                             //上传通话记录和录音
                             if (uploadSysCallLog.isFlag() && CommonDataRepo.getUploadLocalRecord()) {
-                                XLogger.d(TAG + "->5s后系统数据库中查数据");
+                                XLog.d(TAG + "->5s后系统数据库中查数据");
                                 CallLogRepo.getInstance().querySysCallLog(new IObserver<List<SysCallLog>>() {
                                     @Override
                                     public void onNext(@NotNull @NonNull List<SysCallLog> sysCallLogs) {
                                         boolean flag = false;
                                         List<String> phoneList = new ArrayList<>();
                                         long maxTimestamp = uploadSysCallLog.getTimestamp();
-                                        XLogger.d(TAG + "->maxTimestamp1：" + maxTimestamp);
+                                        XLog.d(TAG + "->maxTimestamp1：" + maxTimestamp);
                                         if (ArrayUtils.isNotEmpty(sysCallLogs)) {
                                             for (SysCallLog callLog : sysCallLogs) {
                                                 if (callLog.getBeginTime() > maxTimestamp) {
@@ -102,15 +102,15 @@ public class CallLogManager {
                                             }
                                         }
                                         if (flag && ArrayUtils.isNotEmpty(phoneList)) {
-                                            XLogger.d(TAG + "->phoneList：" + GsonUtils.toJson(phoneList));
-                                            XLogger.d(TAG + "->maxTimestamp2：" + maxTimestamp);
+                                            XLog.d(TAG + "->phoneList：" + GsonUtils.toJson(phoneList));
+                                            XLog.d(TAG + "->maxTimestamp2：" + maxTimestamp);
                                             long finalMaxTimestamp = maxTimestamp;
                                             RecordingFileRepo.getInstance().queryRecordingFile(namePhoneMap, new IObserver<List<File>>() {
                                                 @Override
                                                 public void onNext(@NotNull @NonNull List<File> files) {
                                                     Map<String, File> fileMap = new HashMap<>();// 联系人号码+时间和录音文件的map
                                                     Log.d(TAG, "onNext: -----------------1");
-                                                    XLogger.i(TAG + "->录音文件->files：" + GsonUtils.toJson(files));
+                                                    XLog.i(TAG + "->录音文件->files：" + GsonUtils.toJson(files));
                                                     for (File file : files) {
                                                         if (file != null) {
                                                             CommonDataRepo.setLocalRecordPath(file.getParent());
@@ -138,7 +138,7 @@ public class CallLogManager {
                                                         }
                                                     }
                                                     Log.d(TAG, "onNext: -----------------2");
-                                                    XLogger.i(TAG + "->联系人号码+时间和录音文件的map：" + GsonUtils.toJson(fileMap));
+                                                    XLog.i(TAG + "->联系人号码+时间和录音文件的map：" + GsonUtils.toJson(fileMap));
                                                     SysRecording recording;
                                                     String phoneNumber;
                                                     long beginTime;
@@ -197,8 +197,8 @@ public class CallLogManager {
                                                             recording.setFileMD5(FileUtilsKt.getFileMD5ToString(file));
                                                             fileWaitToCopy.put(file, nFile);
                                                         } else {
-                                                            XLogger.d(TAG + "->duration：" + duration + "\tcallResult：" + callResult + "\n");
-                                                            XLogger.d(TAG + "->已接通，但是未找到录音文件，或者用户没有打开录音功能");
+                                                            XLog.d(TAG + "->duration：" + duration + "\tcallResult：" + callResult + "\n");
+                                                            XLog.d(TAG + "->已接通，但是未找到录音文件，或者用户没有打开录音功能");
                                                             //已接通，但是未找到录音文件，或者用户没有打开录音功能
                                                             if (!isShow && (duration != 0 || callResult == 0)) {
                                                                 isShow = true;
@@ -218,7 +218,7 @@ public class CallLogManager {
                                                     /*
                                                      * 加入任务队列
                                                      */
-                                                    XLogger.d(TAG + "->加入上传队列1：" + GsonUtils.toJson(list));
+                                                    XLog.d(TAG + "->加入上传队列1：" + GsonUtils.toJson(list));
                                                     UploadManager.getInstance().addRecordingList2Task(list);
 
                                                     emitter.onNext(true);
@@ -227,12 +227,12 @@ public class CallLogManager {
                                                 }
                                             });
                                         } else {
-                                            XLogger.d(TAG + "->phoneList is empty ? " + ArrayUtils.isEmpty(phoneList));
+                                            XLog.d(TAG + "->phoneList is empty ? " + ArrayUtils.isEmpty(phoneList));
                                             if (ArrayUtils.isEmpty(sysCallLogs)) {
-                                                XLogger.d("->没有通话记录");
+                                                XLog.d("->没有通话记录");
                                             }
                                             if (flag) {
-                                                XLogger.d(TAG + "->录音时长都为0");
+                                                XLog.d(TAG + "->录音时长都为0");
                                             }
 
                                             SysRecording recording;
@@ -267,7 +267,7 @@ public class CallLogManager {
                                             /**
                                              * 加入任务队列
                                              */
-                                            XLogger.d(TAG + "->加入上传队列2：" + GsonUtils.toJson(list));
+                                            XLog.d(TAG + "->加入上传队列2：" + GsonUtils.toJson(list));
                                             UploadManager.getInstance().addRecordingList2Task(list);
 
                                             emitter.onNext(true);
@@ -277,7 +277,7 @@ public class CallLogManager {
                                     }
                                 });
                             } else {
-                                XLogger.d(TAG + "->不需要上传相关记录");
+                                XLog.d(TAG + "->不需要上传相关记录");
                             }
                         }).subscribeOn(Schedulers.io())
                         .observeOn(Schedulers.io())

@@ -1,10 +1,10 @@
 package com.ipusoft.context.bean.adapter;
 
+import com.elvishew.xlog.XLog;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import com.ipusoft.logger.XLogger;
 import com.ipusoft.utils.StringUtils;
 import com.ipusoft.utils.Utils;
 
@@ -51,7 +51,7 @@ public class String2LongAdapter extends TypeAdapter<Long> {
                 }
                 break;
             default:
-                XLogger.e("Json 类型转换错误：Expected STRING or NUMBER but was " + peek);
+                XLog.e("Json 类型转换错误：Expected STRING or NUMBER but was " + peek);
                 //  throw new JsonParseException("Json 类型转换错误：Expected STRING or NUMBER but was " + peek);
         }
         return result;

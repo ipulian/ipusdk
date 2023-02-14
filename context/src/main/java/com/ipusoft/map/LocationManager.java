@@ -9,7 +9,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.ipusoft.context.AppContext;
-import com.ipusoft.logger.XLogger;
+import com.elvishew.xlog.XLog;
 
 /**
  * author : GWFan
@@ -40,7 +40,7 @@ public class LocationManager {
 
     private static void setLocation(AMapLocation aMapLocation) {
         if (flag) {
-            XLogger.d("AMapLocation：" + aMapLocation);
+            XLog.d("AMapLocation：" + aMapLocation);
             flag = false;
         }
         location = aMapLocation;
@@ -72,7 +72,7 @@ public class LocationManager {
             //设置定位回调监听
             mLocationClient.setLocationListener(LocationManager::setLocation);
         } else {
-            XLogger.d("没有定位权限");
+            XLog.d("没有定位权限");
         }
     }
 }

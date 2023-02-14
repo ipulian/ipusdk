@@ -43,7 +43,7 @@ public class XLogger {
                 .logLevel(LogLevel.ALL)           // 指定日志级别，低于该级别的日志将不会被打印，默认为 LogLevel.ALL
                 .tag("")                                         // 指定 TAG，默认为 "X-LOG"
                 // .enableThreadInfo()                                    // 允许打印线程信息，默认禁止
-                .enableStackTrace(2)                                   // 允许打印深度为 2 的调用栈信息，默认禁止
+                .enableStackTrace(1)                                   // 允许打印深度为 2 的调用栈信息，默认禁止
                 // .enableBorder()                                        // 允许打印日志边框，默认禁止
                 .jsonFormatter(new DefaultJsonFormatter())                  // 指定 JSON 格式化器，默认为 DefaultJsonFormatter
                 .xmlFormatter(new DefaultXmlFormatter())                    // 指定 XML 格式化器，默认为 DefaultXmlFormatter
@@ -91,116 +91,12 @@ public class XLogger {
         }
     }
 
-    public static void e(String msg) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.e(msg);
-    }
-
-    public static void e(String msg, Throwable tr) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.e(msg, tr);
-    }
-
     /**
      * 支持所有的 Collection 和 Map 类型的数据。
      * 也可以直接打印 Intent 和 Bundle 对象。
      *
      * @param object
      */
-    public static void e(Object object) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.e(object);
-    }
-
-    public static void e(Object[] objects) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.e(objects);
-    }
-
-    public static void i(String msg) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.i(msg);
-    }
-
-    public static void i(String msg, Throwable tr) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.i(msg, tr);
-    }
-
-    public static void i(Object object) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.i(object);
-    }
-
-    public static void i(Object[] objects) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.i(objects);
-    }
-
-    public static void d(String msg) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.d(msg);
-    }
-
-    public static void d(String tag, String msg) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.d(tag + msg);
-    }
-
-    public static void d(String msg, Throwable tr) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.d(msg, tr);
-    }
-
-    public static void d(Object object) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.d(object);
-    }
-
-    public static void d(Object[] objects) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.d(objects);
-    }
-
-    public static void json(String json) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.json(json);
-    }
-
-    public static void xml(String xml) {
-        if (StringUtils.equals("false", AppRuntimeContext.isDebug())) {
-            return;
-        }
-        XLog.xml(xml);
-    }
 
     /**
      * 将未捕获异常单独输出

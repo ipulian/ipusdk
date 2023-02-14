@@ -9,7 +9,8 @@ import com.elvishew.xlog.flattener.PatternFlattener;
  */
 
 public class LogFormatFlattener extends PatternFlattener {
-    private static final String DEFAULT_PATTERN = "{d yyyy-MM-dd HH:mm:ss.SSS} {l}/{t}: {m}";
+    //private static final String DEFAULT_PATTERN = "{d yyyy-MM-dd HH:mm:ss.SSS} {l}/{t}: {m}";
+    private static final String DEFAULT_PATTERN = "{d yyyy-MM-dd HH:mm:ss.SSS} {l}: {m}";
 
     public LogFormatFlattener() {
         super(DEFAULT_PATTERN);

@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.ipusoft.context.component.ToastUtils;
 import com.ipusoft.context.viewmodel.BaseViewModel;
-import com.ipusoft.logger.XLogger;
+import com.elvishew.xlog.XLog;
 import com.ipusoft.utils.ExceptionUtils;
 
 /**
@@ -74,7 +74,7 @@ public abstract class BaseObserverDialogFragment<VB extends ViewDataBinding, VM 
                 vm.dismissLiveData.observe(getViewLifecycleOwner(), o -> dismissAllowingStateLoss());
             }
         } catch (Exception e) {
-            XLogger.e(TAG + "->" + ExceptionUtils.getErrorInfo(e));
+            XLog.e(TAG + "->" + ExceptionUtils.getErrorInfo(e));
         }
     }
 }

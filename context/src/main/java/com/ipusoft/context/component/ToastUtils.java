@@ -10,9 +10,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.elvishew.xlog.XLog;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.R;
-import com.ipusoft.logger.XLogger;
 import com.ipusoft.utils.ExceptionUtils;
 import com.ipusoft.utils.StringUtils;
 
@@ -51,7 +51,7 @@ public class ToastUtils {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                XLogger.e(TAG + "->showLoading->" + ExceptionUtils.getErrorInfo(e));
+                XLog.e(TAG + "->showLoading->" + ExceptionUtils.getErrorInfo(e));
             }
         }
     }
@@ -75,7 +75,7 @@ public class ToastUtils {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                XLogger.e(TAG + "->showLoading->" + ExceptionUtils.getErrorInfo(e));
+                XLog.e(TAG + "->showLoading->" + ExceptionUtils.getErrorInfo(e));
             }
         }
     }
@@ -108,7 +108,7 @@ public class ToastUtils {
                 toastWeakReference = new WeakReference<>(toast);
             } catch (Exception e) {
                 e.printStackTrace();
-                XLogger.e(TAG + "->showMessage->" + ExceptionUtils.getErrorInfo(e));
+                XLog.e(TAG + "->showMessage->" + ExceptionUtils.getErrorInfo(e));
             }
         }
     }

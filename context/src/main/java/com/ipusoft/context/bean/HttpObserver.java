@@ -1,12 +1,12 @@
 package com.ipusoft.context.bean;
 
 
+import com.elvishew.xlog.XLog;
 import com.ipusoft.context.base.IObserver;
 import com.ipusoft.context.bean.base.HttpResponse;
 import com.ipusoft.context.component.ToastUtils;
 import com.ipusoft.context.constant.HttpStatus;
 import com.ipusoft.context.manager.SessionManager;
-import com.ipusoft.logger.XLogger;
 import com.ipusoft.utils.ExceptionUtils;
 import com.ipusoft.utils.StringUtils;
 
@@ -48,6 +48,6 @@ public abstract class HttpObserver<T extends HttpResponse> extends IObserver<T> 
         e.printStackTrace();
         ToastUtils.dismiss();
         ToastUtils.showMessage("请求出错，请稍后重试");
-        XLogger.e("HttpObserver->onError：" + ExceptionUtils.getErrorInfo(e));
+        XLog.e("HttpObserver->onError：" + ExceptionUtils.getErrorInfo(e));
     }
 }

@@ -11,7 +11,7 @@ import com.ipusoft.context.manager.PlatformManager;
 import com.ipusoft.localcall.bean.UploadSysRecordingBean;
 import com.ipusoft.localcall.constant.AudioExpandedName;
 import com.ipusoft.localcall.datastore.SimDataRepo;
-import com.ipusoft.logger.XLogger;
+import com.elvishew.xlog.XLog;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
 import com.ipusoft.utils.ArrayUtils;
 import com.ipusoft.utils.FileUtilsKt;
@@ -50,7 +50,7 @@ public class RecordingFileRepo {
     }
 
     public void queryRecordingFile(Map<String, String> namePhoneMap, Observer<List<File>> observer) {
-        XLogger.d(TAG + "->queryRecordingFile开始查找录音文件");
+        XLog.d(TAG + "->queryRecordingFile开始查找录音文件");
         Observable.create((ObservableOnSubscribe<List<File>>) emitter
                         -> emitter.onNext(queryRecordingFile(0, 0, namePhoneMap)))
                 .subscribeOn(Schedulers.io())
@@ -108,7 +108,7 @@ public class RecordingFileRepo {
             String sysAudioPath = "";
             List<LocalRecordPath> recordPathList = CommonDataRepo.getLocalRecordPath();
             if (ArrayUtils.isNotEmpty(recordPathList)) {
-                XLogger.d(TAG + "->recordPathList--->" + GsonUtils.toJson(recordPathList));
+                XLog.d(TAG + "->recordPathList--->" + GsonUtils.toJson(recordPathList));
                 int maxWeight = 0;
                 for (LocalRecordPath localRecordPath : recordPathList) {
                     if (maxWeight < localRecordPath.getWeight()) {
@@ -119,7 +119,7 @@ public class RecordingFileRepo {
             }
 
             if (StringUtils.isNotEmpty(sysAudioPath)) {
-                XLogger.d(TAG + "->sysAudioPath--->" + sysAudioPath);
+                XLog.d(TAG + "->sysAudioPath--->" + sysAudioPath);
                 File temp = new File(sysAudioPath);
                 if (temp.exists() && temp.isDirectory()) {
                     File[] children = temp.listFiles();
@@ -144,7 +144,7 @@ public class RecordingFileRepo {
                 }
             }
         } else {
-            XLogger.d(TAG + "->list1->" + list.size());
+            XLog.d(TAG + "->list1->" + list.size());
         }
 
         if (ArrayUtils.isEmpty(list)) {
@@ -188,18 +188,18 @@ public class RecordingFileRepo {
                 }
             }
         } else {
-            XLogger.d(TAG + "->list2->" + list.size());
+            XLog.d(TAG + "->list2->" + list.size());
         }
         if (ArrayUtils.isNotEmpty(list)) {
             try {
 //                for (File file : list) {
-                //  XLogger.d(TAG + "->queryRecordingFile->" + file.getAbsolutePath() );
+                //  XLog.d(TAG + "->queryRecordingFile->" + file.getAbsolutePath() );
                 //     }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            XLogger.d(TAG + "->queryRecordingFile->null1");
+            XLog.d(TAG + "->queryRecordingFile->null1");
         }
         return list;
     }

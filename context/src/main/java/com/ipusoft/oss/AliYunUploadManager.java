@@ -5,7 +5,7 @@ import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
-import com.ipusoft.logger.XLogger;
+import com.elvishew.xlog.XLog;
 import com.ipusoft.utils.GsonUtils;
 
 /**
@@ -47,7 +47,7 @@ public class AliYunUploadManager extends AliYunManager {
         mOSS.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
             @Override
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-                XLogger.d("AliYunUploadManager：" + GsonUtils.toJson(result));
+                XLog.d("AliYunUploadManager：" + GsonUtils.toJson(result));
                 if (listener != null) {
                     listener.onSuccess();
                 }
@@ -59,11 +59,11 @@ public class AliYunUploadManager extends AliYunManager {
                 if (clientException != null) {
                     // 本地异常，如网络异常等。
                     clientException.printStackTrace();
-                    XLogger.e(TAG + "->clientThreadPoolExecutorException->" + clientException);
+                    XLog.e(TAG + "->clientThreadPoolExecutorException->" + clientException);
                 }
                 if (serviceException != null) {
                     // 服务异常。
-                    XLogger.e(TAG + "->serviceException->" + serviceException);
+                    XLog.e(TAG + "->serviceException->" + serviceException);
                 }
                 if (listener != null) {
                     listener.onFailure();

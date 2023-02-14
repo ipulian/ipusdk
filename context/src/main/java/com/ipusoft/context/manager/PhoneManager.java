@@ -9,7 +9,7 @@ import com.ipusoft.context.AppContext;
 import com.ipusoft.context.cache.AppCacheContext;
 import com.ipusoft.context.view.dialog.IDialog;
 import com.ipusoft.localcall.bean.SIMCallOutBean;
-import com.ipusoft.logger.XLogger;
+import com.elvishew.xlog.XLog;
 import com.ipusoft.permission.RxPermissionUtils;
 
 /**
@@ -66,7 +66,7 @@ public class PhoneManager {
      * @param phone
      */
     public static void callPhoneBySim(String phone, String callTime) {
-        XLogger.d("主卡外呼->开始，phone：" + phone);
+        XLog.d("主卡外呼->开始，phone：" + phone);
         boolean hasSimRecordPermission = true;
         try {
             if (PlatformManager.isHUAWEI()) {
@@ -79,7 +79,7 @@ public class PhoneManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        XLogger.d("主卡外呼->开始，检查主卡通话录音权限：" + hasSimRecordPermission);
+        XLog.d("主卡外呼->开始，检查主卡通话录音权限：" + hasSimRecordPermission);
         if (hasSimRecordPermission) {
             AppCacheContext.setSIMCallOutBean(new SIMCallOutBean(phone, callTime));
             callPhone(phone);

@@ -17,8 +17,8 @@ import com.alibaba.sdk.android.oss.model.DeleteBucketResult;
 import com.alibaba.sdk.android.oss.model.HeadObjectRequest;
 import com.alibaba.sdk.android.oss.model.HeadObjectResult;
 import com.alibaba.sdk.android.oss.model.ObjectMetadata;
+import com.elvishew.xlog.XLog;
 import com.ipusoft.context.AppContext;
-import com.ipusoft.logger.XLogger;
 import com.ipusoft.utils.MD5Utils;
 
 /**
@@ -97,10 +97,10 @@ public class AliYunManager {
             public void onFailure(HeadObjectRequest request, ClientException clientException, ServiceException serviceException) {
                 if (clientException != null) {
                     clientException.printStackTrace();
-                    XLogger.d(clientException);
+                    XLog.e(clientException);
                 }
                 if (serviceException != null) {
-                    XLogger.d(serviceException);
+                    XLog.e(serviceException);
                 }
             }
         });
@@ -119,7 +119,7 @@ public class AliYunManager {
         mOSS.asyncCreateBucket(createBucketRequest, new OSSCompletedCallback<CreateBucketRequest, CreateBucketResult>() {
             @Override
             public void onSuccess(CreateBucketRequest request, CreateBucketResult result) {
-                XLogger.e("createBucket Success");
+                XLog.e("createBucket Success");
             }
 
             @Override
@@ -128,11 +128,11 @@ public class AliYunManager {
                 if (clientException != null) {
                     // 本地异常，如网络异常等。
                     clientException.printStackTrace();
-                    XLogger.e(clientException);
+                    XLog.e(clientException);
                 }
                 if (serviceException != null) {
                     // 服务异常。
-                    XLogger.e(serviceException);
+                    XLog.e(serviceException);
                 }
             }
         });
@@ -149,7 +149,7 @@ public class AliYunManager {
         mOSS.asyncDeleteBucket(deleteBucketRequest, new OSSCompletedCallback<DeleteBucketRequest, DeleteBucketResult>() {
             @Override
             public void onSuccess(DeleteBucketRequest request, DeleteBucketResult result) {
-                XLogger.d("deleteBucket Success");
+                XLog.d("deleteBucket Success");
             }
 
             @Override
@@ -158,11 +158,11 @@ public class AliYunManager {
                 if (clientException != null) {
                     // 本地异常，如网络异常等。
                     clientException.printStackTrace();
-                    XLogger.e(clientException);
+                    XLog.e(clientException);
                 }
                 if (serviceException != null) {
                     // 服务异常。
-                    XLogger.e(serviceException);
+                    XLog.e(serviceException);
                 }
             }
         });
@@ -187,10 +187,10 @@ public class AliYunManager {
             e.printStackTrace();
         } catch (ServiceException e) {
             // 服务异常
-            XLogger.d("ErrorCode->" + e.getErrorCode());
-            XLogger.d("RequestId->" + e.getRequestId());
-            XLogger.d("HostId->" + e.getHostId());
-            XLogger.d("RawMessage->" + e.getRawMessage());
+            XLog.d("ErrorCode->" + e.getErrorCode());
+            XLog.d("RequestId->" + e.getRequestId());
+            XLog.d("HostId->" + e.getHostId());
+            XLog.d("RawMessage->" + e.getRawMessage());
         }
         return false;
     }

@@ -8,7 +8,7 @@ import com.ipusoft.context.bean.SysRecording;
 import com.ipusoft.context.manager.IMEIManager;
 import com.ipusoft.localcall.UploadFileObserve;
 import com.ipusoft.localcall.bean.UploadResponse;
-import com.ipusoft.logger.XLogger;
+import com.elvishew.xlog.XLog;
 import com.ipusoft.map.LocationManager;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
 import com.ipusoft.oss.AliYunManager;
@@ -62,7 +62,7 @@ public class UploadRecordMultipartBuilder {
                 builder.addFormDataPart("record", recording.getFileName());
                 builder.addFormDataPart("fileMD5", recording.getFileMD5());
             }
-            XLogger.d("MultipartBuilder->absolutePath：" + absolutePath);
+            XLog.d("MultipartBuilder->absolutePath：" + absolutePath);
             int callType = recording.getCallType();
             builder.addFormDataPart("callId", recording.getCallId() + "");
             builder.addFormDataPart("name", StringUtils.null2Empty(recording.getPhoneName()));
@@ -94,7 +94,7 @@ public class UploadRecordMultipartBuilder {
                 }
                 builder.addFormDataPart("addr", StringUtils.null2Empty(location.getAddress()));
                 builder.addFormDataPart("areaCode", StringUtils.null2Empty(location.getCityCode()));
-                XLogger.d("Longitude：" + location.getLongitude()
+                XLog.d("Longitude：" + location.getLongitude()
                         + "\nLatitude：" + location.getLatitude()
                         + "\nCityCode" + location.getCityCode()
                         + "\nAddress：" + location.getAddress());
@@ -103,13 +103,13 @@ public class UploadRecordMultipartBuilder {
                 builder.addFormDataPart("city", "");
                 builder.addFormDataPart("addr", "");
                 builder.addFormDataPart("areaCode", "");
-                XLogger.d("未获取到定位信息");
+                XLog.d("未获取到定位信息");
             }
             builder.addFormDataPart("callTime", StringUtils.null2Empty(recording.getCallTimeServer()));
             if (!CommonDataRepo.getAppIsFirstInstall()) {
                 //已经同意隐私政策的情况下才会去获取ip地址
                 builder.addFormDataPart("callIP", StringUtils.null2Empty(NetWorkUtils.getIPAddress()));
-                XLogger.d("callIP：" + StringUtils.null2Empty(NetWorkUtils.getIPAddress())
+                XLog.d("callIP：" + StringUtils.null2Empty(NetWorkUtils.getIPAddress())
                         + "\ncallTime" + StringUtils.null2Empty(recording.getCallTimeServer()));
             }
 
