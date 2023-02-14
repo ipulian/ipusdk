@@ -80,7 +80,7 @@ public class RxPermissionUtils {
                     .setOnOverLayPermissionListener(listener)
                     .show();
         } else {
-            listener.invoke(true);
+            listener.invoke(0);
         }
     }
 

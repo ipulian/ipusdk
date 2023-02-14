@@ -1,7 +1,11 @@
 package com.ipusoft.context;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.IBinder;
 
 import androidx.annotation.NonNull;
@@ -69,5 +73,35 @@ public abstract class BaseLifeCycleService extends Service implements LifecycleO
     @Override
     public Lifecycle getLifecycle() {
         return mLifecycleRegistry;
+    }
+
+    protected void startForeground(String channelName) {
+//        String CHANNEL_ONE_ID = "CHANNEL_ONE_ID";
+//        String CHANNEL_ONE_NAME = "CHANNEL_ONE_ID";
+        NotificationChannel notificationChannel;
+        //进行8.0的判断
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            notificationChannel = new NotificationChannel(channelName,
+                    channelName, NotificationManager.IMPORTANCE_HIGH);
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setShowBadge(true);
+            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            if (manager != null) {
+                manager.createNotificationChannel(notificationChannel);
+            }
+            //  Intent intent = new Intent(this, MainActivity.class);
+            // PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+            Notification notification = new Notification.Builder(this, channelName).setChannelId(channelName)
+                    //       .setTicker("Nature")
+                    //     .setSmallIcon(R.mipmap.ic_launcher)
+                    //  .setContentTitle("这是一个测试标题")
+                    //     .setContentIntent(pendingIntent)
+                    //   .setContentText("这是一个测试内容")
+                    .build();
+            notification.flags |= Notification.FLAG_NO_CLEAR;
+            startForeground(1, notification);
+        }
     }
 }

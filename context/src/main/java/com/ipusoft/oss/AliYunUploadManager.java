@@ -59,7 +59,7 @@ public class AliYunUploadManager extends AliYunManager {
                 if (clientException != null) {
                     // 本地异常，如网络异常等。
                     clientException.printStackTrace();
-                    XLogger.e(TAG + "->clientException->" + clientException);
+                    XLogger.e(TAG + "->clientThreadPoolExecutorException->" + clientException);
                 }
                 if (serviceException != null) {
                     // 服务异常。

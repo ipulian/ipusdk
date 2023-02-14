@@ -6,6 +6,7 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
+import com.elvishew.xlog.XLog;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.BaseLifeCycleService;
 import com.ipusoft.context.base.IObserver;
@@ -16,7 +17,6 @@ import com.ipusoft.localcall.datastore.SimDataRepo;
 import com.ipusoft.localcall.manager.CallLogManager;
 import com.ipusoft.localcall.manager.UploadManager;
 import com.ipusoft.localcall.repository.SysRecordingRepo;
-import com.ipusoft.logger.XLogger;
 import com.ipusoft.utils.ArrayUtils;
 import com.ipusoft.utils.GsonUtils;
 import com.ipusoft.utils.StringUtils;
@@ -54,7 +54,7 @@ public class AppCoreService extends BaseLifeCycleService {
 
     @Override
     protected void onICreate() {
-        XLogger.d("run: ------------>AppCoreService---->onICreate");
+        XLog.d("run: ------------>AppCoreService---->onICreate");
     }
 
     @Override
@@ -134,7 +134,7 @@ public class AppCoreService extends BaseLifeCycleService {
     private final TimerTask task = new TimerTask() {
         @Override
         public void run() {
-            XLogger.d("run: ------------>AppCoreService---->检查数据库待处理数据");
+            XLog.d("run: ------------>AppCoreService---->检查数据库待处理数据");
             CallLogManager.getInstance().queryCallLogAndRecording(new IObserver<Boolean>() {
                 @Override
                 public void onNext(@NotNull @NonNull Boolean aBoolean) {
@@ -150,11 +150,11 @@ public class AppCoreService extends BaseLifeCycleService {
                                 @Override
                                 public void onNext(@NotNull @NonNull List<SysRecording> list) {
                                     if (ArrayUtils.isNotEmpty(list)) {
-                                        XLogger.d("数据库中需要上传的任务：" + GsonUtils.toJson(list));
+                                        XLog.d("数据库中需要上传的任务：" + GsonUtils.toJson(list));
 
                                         UploadManager.getInstance().addRecordingList2Task(list);
                                     } else {
-                                        XLogger.d("数据库中没有需要上传的任务：");
+                                        XLog.d("数据库中没有需要上传的任务：");
                                     }
                                 }
                             });

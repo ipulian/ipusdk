@@ -17,9 +17,9 @@ import okhttp3.OkHttpClient;
 
 public class HttpManager {
 
-    private static final int CONNECT_TIMEOUT = 8 * 1000;
-    private static final int READ_TIMEOUT = 8 * 1000;
-    private static final int WRITE_TIMEOUT = 8 * 1000;
+    private static final int CONNECT_TIMEOUT = 18 * 1000;
+    private static final int READ_TIMEOUT = 18 * 1000;
+    private static final int WRITE_TIMEOUT = 18 * 1000;
 
     /**
      * 初始化httpClient

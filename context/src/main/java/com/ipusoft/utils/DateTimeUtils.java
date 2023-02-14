@@ -99,6 +99,17 @@ public class DateTimeUtils {
         return date2String(getEndDayOfYesterday(), pattern);
     }
 
+    public static Date getBeginOfLast3Day() {
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(getDayBegin());
+        cal.add(Calendar.DAY_OF_MONTH, -2);
+        return cal.getTime();
+    }
+
+    public static String getBeginOfLast3Day(String pattern) {
+        return date2String(getBeginOfLast3Day(), pattern);
+    }
+
     //获取最近7天的开始时间
     public static Date getBeginOfLast7Day() {
         Calendar cal = new GregorianCalendar();

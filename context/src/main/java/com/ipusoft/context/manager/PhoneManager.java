@@ -29,7 +29,7 @@ public class PhoneManager {
      * @param phone
      */
     public static void callPhone(String phone) {
-        AppCompatActivity currentActivity = AppContext.getActivityContext();
+        //   AppCompatActivity currentActivity = AppContext.getActivityContext();
         Intent intent = null;
         try {
             intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
@@ -38,12 +38,13 @@ public class PhoneManager {
             e.printStackTrace();
             Uri uri = Uri.parse("tel:" + phone);
             intent = new Intent(Intent.ACTION_DIAL, uri);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
-        if (currentActivity != null) {
-            currentActivity.startActivity(intent);
-        } else {
-            AppContext.getAppContext().startActivity(intent);
-        }
+//        if (currentActivity != null) {
+//            currentActivity.startActivity(intent);
+//        } else {
+        AppContext.getAppContext().startActivity(intent);
+//        }
     }
 
     public static void callPhoneBySIP() {

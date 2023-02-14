@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
+import com.elvishew.xlog.XLog;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.bean.LocalRecordPath;
 import com.ipusoft.context.manager.PlatformManager;
@@ -66,17 +67,17 @@ public class RecordingFileRepo {
         ArrayList<File> list = new ArrayList<>();
         File tempFile = null;
 
-        XLogger.d(TAG + "->isSDCardEnableByEnvironment？" + SDCardUtils.isSDCardEnableByEnvironment());
-        XLogger.d(TAG + "->isExternalStorageRemovable？" + Environment.isExternalStorageRemovable());
+        XLog.d(TAG + "->isSDCardEnableByEnvironment？" + SDCardUtils.isSDCardEnableByEnvironment());
+        XLog.d(TAG + "->isExternalStorageRemovable？" + Environment.isExternalStorageRemovable());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {//系统版本 >= Android 11
-            XLogger.d(TAG + "->checkManageStoragePermission？" + Environment.isExternalStorageManager());
+            XLog.d(TAG + "->checkManageStoragePermission？" + Environment.isExternalStorageManager());
         }
         if (PlatformManager.isMIUI()) {
             tempFile = new File(Environment.getExternalStorageDirectory() + "/MIUI/sound_recorder/call_rec");
-            XLogger.d(TAG + "->小米手机->默认路径是否存在？" + tempFile.exists());
+            XLog.d(TAG + "->小米手机->默认路径是否存在？" + tempFile.exists());
         } else if (PlatformManager.isHUAWEI()) {
             tempFile = new File(Environment.getExternalStorageDirectory() + "/sounds/callrecord");
-            XLogger.d(TAG + "->华为手机->默认路径是否存在？" + tempFile.exists());
+            XLog.d(TAG + "->华为手机->默认路径是否存在？" + tempFile.exists());
         }
 
         if (tempFile != null && tempFile.exists() && tempFile.isDirectory()) {

@@ -2,6 +2,7 @@ package com.ipusoft.localcall.manager;
 
 import android.util.Log;
 
+import com.elvishew.xlog.XLog;
 import com.ipusoft.context.LiveDataBus;
 import com.ipusoft.context.base.IObserver;
 import com.ipusoft.context.bean.SysRecording;
@@ -14,7 +15,6 @@ import com.ipusoft.localcall.cache.SimAppCache;
 import com.ipusoft.localcall.constant.UploadStatus;
 import com.ipusoft.localcall.module.UploadService;
 import com.ipusoft.localcall.repository.SysRecordingRepo;
-import com.ipusoft.logger.XLogger;
 import com.ipusoft.oss.AliYunManager;
 import com.ipusoft.oss.AliYunUploadManager;
 import com.ipusoft.utils.ArrayUtils;
@@ -59,6 +59,8 @@ public class UploadManager {
             if (SimAppCache.addFile2UploadTask(item)) {
                 item.setUploadStatus(UploadStatus.WAIT_UPLOAD.getStatus());
                 temp.add(item);
+            } else {
+                XLog.d(TAG, "addRecordingList2Task: ------------->上传队列中已经存在");
             }
         }
         addUploadTask(temp);
@@ -78,8 +80,7 @@ public class UploadManager {
                         if (StringUtils.isNotEmpty(absolutePath)) {
                             File file = new File(recording.getAbsolutePath());
                             if (!file.exists()) {
-                                XLogger.e("UploadManager：路径不为空，但是文件不存在");
-                                return;
+                                XLog.e("UploadManager：路径不为空，但是文件不存在");
                             }
                         }
                         uploadRecordingFileByOSS(recording);
@@ -151,7 +152,7 @@ public class UploadManager {
         if (StringUtils.isNotEmpty(timeMD5) && timeMD5.length() >= 6) {
             timeMD5 = timeMD5.substring(0, 5);
         }
-
+        //Log.d(TAG, "uploadRecordingFileByOSS: -------------->" + Thread.currentThread().getName());
         String ossFile = "sim_recording/" + currentTime + "/" + timeMD5 + "/" + StringUtils.trim(recording.getFileName());
         boolean fileExist = instance.checkFileExist(ossFile);
         Log.d(TAG, "uploadRecordingFileByOSS: .------>" + ossFile);
@@ -166,29 +167,29 @@ public class UploadManager {
 
                         @Override
                         public void onSuccess() {
-                            setUploadSucceed(recording);
-                            XLogger.d(TAG + "---onUploadSuccess：" + GsonUtils.toJson(recording));
+                            XLog.d(TAG + "---onUploadSuccess：OSS----" + GsonUtils.toJson(recording));
                         }
 
                         @Override
                         public void onFailure() {
-                            setUploadFailure(recording);
-                            XLogger.e(TAG + "---onUploadFail：" + GsonUtils.toJson(recording));
+                            XLog.e(TAG + "---onUploadFail：OSS----" + GsonUtils.toJson(recording));
                         }
                     });
-        } else {
-            setUploadSucceed(recording);
+//        } else {
+//            setUploadSucceed(recording);
         }
         UploadFileObserve<UploadResponse> uploadFileObserve = new UploadFileObserve<UploadResponse>() {
             @Override
             public void onUploadSuccess(UploadResponse responseBody) {
-                XLogger.d(TAG + "---onUploadSuccess：" + GsonUtils.toJson(recording) + "\n"
+                setUploadSucceed(recording);
+                XLog.d(TAG + "---onUploadSuccess：record----" + GsonUtils.toJson(recording) + "\n"
                         + GsonUtils.toJson(responseBody));
             }
 
             @Override
             public void onUploadFail(Throwable e) {
-                XLogger.e(TAG + "---onUploadFail：" + GsonUtils.toJson(recording) + "\n错误原因："
+                setUploadFailure(recording);
+                XLog.e(TAG + "---onUploadFail：record----" + GsonUtils.toJson(recording) + "\n错误原因："
                         + ExceptionUtils.getErrorInfo(e));
             }
 

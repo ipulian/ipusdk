@@ -6,17 +6,21 @@ import com.ipusoft.context.bean.IAuthInfo;
 import com.ipusoft.context.bean.LocalRecordPath;
 import com.ipusoft.context.bean.SeatInfo;
 import com.ipusoft.context.constant.CallTypeConfig;
-import com.ipusoft.logger.XLogger;
+import com.ipusoft.context.constant.DateTimePattern;
 import com.ipusoft.mmkv.AccountMMKV;
 import com.ipusoft.mmkv.AppMMKV;
 import com.ipusoft.mmkv.CommonMMKV;
 import com.ipusoft.mmkv.constant.StorageConstant;
 import com.ipusoft.utils.ArrayUtils;
+import com.ipusoft.utils.DateTimeUtils;
 import com.ipusoft.utils.GsonUtils;
 import com.ipusoft.utils.MapUtils;
 import com.ipusoft.utils.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -91,7 +95,6 @@ public class CommonDataRepo {
      * @param str
      */
     public static void setLocalCallType(String str) {
-        XLogger.d(TAG + "---修改本地通话方式--->" + str);
         CommonMMKV.set(StorageConstant.LOCAL_CALL_TYPE, str);
     }
 
@@ -251,5 +254,44 @@ public class CommonDataRepo {
 
     public static boolean getNeverAnswerPermission() {
         return CommonMMKV.getBoolean(StorageConstant.NEVER_ANSWER_PERMISSION, false);
+    }
+
+    //TODO
+    public static void addUploadRecord(Map<String, String> record) {
+        Map<String, String> uploadRecordMap = getUploadRecord();
+        if (MapUtils.isEmpty(uploadRecordMap)) {
+            uploadRecordMap = new HashMap<>();
+        }
+        uploadRecordMap.putAll(record);
+        CommonMMKV.set(com.ipusoft.localcall.constant.StorageConstant.UPLOAD_RECORD, GsonUtils.toJson(uploadRecordMap));
+    }
+
+    public static Map<String, String> getUploadRecord() {
+        Map<String, String> map = new HashMap<>();
+        try {
+            String json = CommonMMKV.getString(com.ipusoft.localcall.constant.StorageConstant.UPLOAD_RECORD);
+            if (StringUtils.isNotEmpty(json)) {
+                map = GsonUtils.fromJson(json, GsonUtils.getMapType(String.class, String.class));
+            }
+            if (MapUtils.isNotEmpty(map)) {
+                Iterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry<String, String> next = iterator.next();
+                    String uploadTimeStr = next.getValue();
+                    if (StringUtils.isNotEmpty(uploadTimeStr)) {
+                        Date uploadTime = DateTimeUtils.string2Date(uploadTimeStr, DateTimePattern.getDateTimeWithSecondFormat());
+                        Date currentTime = DateTimeUtils.getCurrentTime2(DateTimePattern.getDateTimeWithSecondFormat());
+                        if (uploadTime != null) {
+                            if (DateTimeUtils.dateDiff(uploadTime, currentTime) > 5 * 24 * 60 * 60 * 1000) {
+                                iterator.remove();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 }

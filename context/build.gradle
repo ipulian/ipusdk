@@ -114,7 +114,7 @@ dependencies {
     //通过类调用的方式来生成Java代码[JavaPoet]
     implementation 'com.squareup:javapoet:1.13.0'
 
-    implementation 'com.elvishew:xlog:1.11.0'
+    api 'com.elvishew:xlog:1.11.0'
 
     /**
      *  沉浸式状态栏

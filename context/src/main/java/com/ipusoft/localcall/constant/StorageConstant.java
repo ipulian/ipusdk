@@ -28,4 +28,7 @@ public class StorageConstant {
      */
     public static final String LAST_TIMESTAMP_FOR_CLEAR_OUT_OF_DATE_RECORDING = "last_clear_recording";
 
+    //本地话单上传记录，防止重复上传
+    public static final String UPLOAD_RECORD = "upload_record";
+
 }

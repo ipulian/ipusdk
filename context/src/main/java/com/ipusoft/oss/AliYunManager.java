@@ -173,12 +173,14 @@ public class AliYunManager {
      */
     public boolean checkFileExist(String objectKey) {
         try {
-            if (mOSS.doesObjectExist(AliYunManager.BUCKET_NAME, objectKey)) {
-                Log.d(TAG, "OSS文件 存在");
-                return true;
-            } else {
-                Log.d(TAG, "OSS文件 不存在");
-                return false;
+            if (mOSS != null) {
+                if (mOSS.doesObjectExist(AliYunManager.BUCKET_NAME, objectKey)) {
+                    Log.d(TAG, "OSS文件 存在");
+                    return true;
+                } else {
+                    Log.d(TAG, "OSS文件 不存在");
+                    return false;
+                }
             }
         } catch (ClientException e) {
             // 本地异常如网络异常等

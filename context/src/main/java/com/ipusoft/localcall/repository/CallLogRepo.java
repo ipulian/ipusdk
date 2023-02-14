@@ -12,6 +12,7 @@ import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
+import com.elvishew.xlog.XLog;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.manager.PlatformManager;
 import com.ipusoft.localcall.bean.SIMCallOutBean;
@@ -125,10 +126,10 @@ public class CallLogRepo {
                             int timeOffset = 5 * 1000;
                             if (PlatformManager.isHUAWEI()) {
                                 if (callLog.getDuration() != 0) {
-                                    timeOffset = 60 * 1000;
+                                    timeOffset = 65 * 1000;
                                 }
                             }
-
+                            XLog.d(TAG, "timeOffset---------->" + timeOffset);
                             /**
                              * 当有两通间隔时间非常短，但被叫相同的时候，会有bug,尤其在华为手机上，
                              * 所以这里取 timeOffset 最接近的一个。

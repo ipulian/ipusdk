@@ -151,10 +151,16 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         QuerySeatInfoHttp.querySeatInfo((seatInfo, localCallType) -> {
             CommonDataRepo.setSeatInfo(seatInfo);
             Log.d(TAG, "querySeatInfoAndRegisterSIP: ---------->" + GsonUtils.toJson(localCallType));
-            if (StringUtils.equals(CallTypeConfig.SIP.getType(), localCallType)) {
-                registerSip(seatInfo);
-                registerSipListener();
+//            if (StringUtils.equals(CallTypeConfig.SIP.getType(), localCallType)) {
+            String callType = seatInfo.getCallType();
+            Log.d(TAG, "querySeatInfoAndRegisterSIP: _---------->" + callType);
+            if (StringUtils.isNotEmpty(callType)) {//呼叫方式中只要有SIP就注册
+                if (callType.contains(CallTypeConfig.SIP.getType())) {
+                    registerSip(seatInfo);
+                    registerSipListener();
+                }
             }
+            // }
         });
     }
 

@@ -27,7 +27,8 @@ public class OverLayPermissionDialog extends BaseDialogFragment<ContextPermissio
     private PermissionCallBack layPermissionListener;
 
     public interface PermissionCallBack {
-        void invoke(boolean permission);
+        //0有权限，1暂不打开，2不再提示
+        void invoke(int code);
     }
 
     public static OverLayPermissionDialog getInstance() {
@@ -55,7 +56,7 @@ public class OverLayPermissionDialog extends BaseDialogFragment<ContextPermissio
             super.show();
         } else {
             if (layPermissionListener != null) {
-                layPermissionListener.invoke(true);
+                layPermissionListener.invoke(2);//不再提示
             }
         }
     }
@@ -82,13 +83,13 @@ public class OverLayPermissionDialog extends BaseDialogFragment<ContextPermissio
             dismissAllowingStateLoss();
         } else if (v.getId() == binding.tvNotToUse.getId()) {
             if (layPermissionListener != null) {
-                layPermissionListener.invoke(true);
+                layPermissionListener.invoke(1);
             }
             dismissAllowingStateLoss();
         } else if (v.getId() == binding.tvNeverAnswer.getId()) {
             CommonDataRepo.setNeverAnswerPermission(true);
             if (layPermissionListener != null) {
-                layPermissionListener.invoke(true);
+                layPermissionListener.invoke(2);
             }
             dismissAllowingStateLoss();
         }
