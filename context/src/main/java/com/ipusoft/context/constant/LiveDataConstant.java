@@ -48,4 +48,6 @@ public class LiveDataConstant {
     public static final String SEARCH_MEMBER = "search_member";
 
     public static final String REFRESH_SIP_WINDOW = "refresh_sip_window";
+
+    public static final String SIP_LOGIN_STATUS = "sip_login_status";
 }
