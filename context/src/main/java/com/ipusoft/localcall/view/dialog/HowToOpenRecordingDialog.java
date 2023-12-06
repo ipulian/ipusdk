@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.ipusoft.context.component.base.BaseDialogFragment;
 import com.ipusoft.context.databinding.ContextDialogHowToOpenRecordingBinding;
-import com.ipusoft.context.manager.PlatformManager;
+import com.ipusoft.utils.SysRecordingUtils;
 import com.ipusoft.context.viewmodel.BaseViewModel;
 import com.ipusoft.localcall.datastore.SimDataRepo;
 
@@ -33,7 +33,7 @@ public class HowToOpenRecordingDialog extends BaseDialogFragment<ContextDialogHo
     public void show() {
         long lastShowCheckRecordingPermissionDialog = SimDataRepo.getLastShowCheckRecordingPermissionDialog();
         long l = System.currentTimeMillis();
-        if (l - lastShowCheckRecordingPermissionDialog >= 24 * 60 * 60 * 1000) {
+        if (l - lastShowCheckRecordingPermissionDialog >= 30 * 60 * 1000) {
             SimDataRepo.setLastShowCheckRecordingPermissionDialog(l);
             super.show();
         }
@@ -43,12 +43,14 @@ public class HowToOpenRecordingDialog extends BaseDialogFragment<ContextDialogHo
     public void onClick(View v) {
         super.onClick(v);
         if (v.getId() == binding.tvToOpen.getId()) {
-            if (PlatformManager.isHUAWEI()) {
-                PlatformManager.startHuaweiRecord();
-            } else if (PlatformManager.isMIUI()) {
-                PlatformManager.startXiaomiRecord();
-            } else if (PlatformManager.isOPPO()) {
-                PlatformManager.startOppoRecord();
+            if (SysRecordingUtils.isHUAWEI()) {
+                SysRecordingUtils.startHuaweiRecord();
+            } else if (SysRecordingUtils.isMIUI()) {
+                SysRecordingUtils.startXiaomiRecord();
+            } else if (SysRecordingUtils.isOPPO()) {
+                SysRecordingUtils.startOppoRecord();
+            } else if (SysRecordingUtils.isVIVO()) {
+                SysRecordingUtils.startViVoRecord();
             } else {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 startActivity(intent);

@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import com.ipusoft.context.AppContext
-import com.ipusoft.context.IpuSoftSDK
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -28,10 +27,11 @@ private const val LOG_ERROR_DIRECTORY = "/logs/error"
 private const val JSON_DIRECTORY = "/json"
 private const val AUDIO_DIRECTORY = "/audio"
 private const val THUMBNAIL_DIRECTORY = "/thumbnails"
+private const val IMAGE_DIRECTORY = "/image"
 const val AREA_JSON_FILE = "area.json"
 
 
-private fun getFilePath(context: Context): String? {
+fun getFilePath(context: Context): String? {
     return if (SDCardUtils.isSDCardEnableByEnvironment() || !Environment.isExternalStorageRemovable()) {
         context.getExternalFilesDir(null)!!.path
     } else {
@@ -257,6 +257,16 @@ fun getAudioPath(context: Context): String {
     return audioPath
 }
 
+
+fun getImagePath(context: Context): String {
+    val audioPath: String = getFilePath(context) + IMAGE_DIRECTORY
+    val file = File(audioPath)
+    if (!file.exists()) {
+        file.mkdirs()
+    }
+    return audioPath
+}
+
 interface OnReplaceListener {
     fun onReplace(srcFile: File?, destFile: File?): Boolean
 }
@@ -288,7 +298,12 @@ private fun copyFile(srcFile: File, destFile: File, listener: OnReplaceListener?
     return copyOrMoveFile(srcFile, destFile, listener, false)
 }
 
-private fun copyOrMoveDir(srcDir: File, destDir: File, listener: OnReplaceListener?, isMove: Boolean): Boolean {
+private fun copyOrMoveDir(
+    srcDir: File,
+    destDir: File,
+    listener: OnReplaceListener?,
+    isMove: Boolean
+): Boolean {
     if (srcDir == null || destDir == null) return false
     // destDir's path locate in srcDir's path then return false
     val srcPath = srcDir.path + File.separator
@@ -311,14 +326,23 @@ private fun copyOrMoveDir(srcDir: File, destDir: File, listener: OnReplaceListen
 }
 
 
-private fun copyOrMoveFile(srcFile: File, destFile: File, listener: OnReplaceListener?, isMove: Boolean): Boolean {
+private fun copyOrMoveFile(
+    srcFile: File,
+    destFile: File,
+    listener: OnReplaceListener?,
+    isMove: Boolean
+): Boolean {
     if (srcFile == null || destFile == null) return false
     // srcFile equals destFile then return false
     if (srcFile == destFile) return false
     // srcFile doesn't exist or isn't a file then return false
     if (!srcFile.exists() || !srcFile.isFile) return false
     if (destFile.exists()) {
-        if (listener == null || listener.onReplace(srcFile, destFile)) { // require delete the old file
+        if (listener == null || listener.onReplace(
+                srcFile,
+                destFile
+            )
+        ) { // require delete the old file
             if (!destFile.delete()) { // unsuccessfully delete then return false
                 return false
             }

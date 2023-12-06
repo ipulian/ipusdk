@@ -24,6 +24,11 @@ public class AppContext extends Application {
 
     private static AppContext appContext;
 
+    public static int appType = 1;
+
+    //是否打开了录音开关
+    public static boolean appHasRecordingPermission = false;
+
     /**
      * @param mApp Application
      */
@@ -111,5 +116,14 @@ public class AppContext extends Application {
 
     public static String getUid() {
         return CommonDataRepo.getUid();
+    }
+
+
+    public static boolean getAppRecordingPermission() {
+        return appHasRecordingPermission;
+    }
+
+    public static void setAppRecordingPermission(boolean permission) {
+        appHasRecordingPermission = permission;
     }
 }

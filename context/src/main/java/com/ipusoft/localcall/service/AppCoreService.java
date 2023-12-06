@@ -3,6 +3,7 @@ package com.ipusoft.localcall.service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -10,7 +11,6 @@ import com.elvishew.xlog.XLog;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.BaseLifeCycleService;
 import com.ipusoft.context.base.IObserver;
-import com.ipusoft.context.bean.SysRecording;
 import com.ipusoft.localcall.bean.SIMCallOutBean;
 import com.ipusoft.localcall.constant.UploadStatus;
 import com.ipusoft.localcall.datastore.SimDataRepo;
@@ -135,30 +135,23 @@ public class AppCoreService extends BaseLifeCycleService {
         @Override
         public void run() {
             XLog.d("run: ------------>AppCoreService---->检查数据库待处理数据");
-            CallLogManager.getInstance().queryCallLogAndRecording(new IObserver<Boolean>() {
-                @Override
-                public void onNext(@NotNull @NonNull Boolean aBoolean) {
-                    /*
-                     * 检查数据库中是否有更多数据待上传
-                     */
-                    SysRecordingRepo.queryByStatus(
-                            ArrayUtils.createList(
-                                    UploadStatus.WAIT_UPLOAD.getStatus(),
-                                    UploadStatus.UPLOADING.getStatus(),
-                                    UploadStatus.UPLOAD_FAILED.getStatus()),
-                            3, System.currentTimeMillis(), new IObserver<List<SysRecording>>() {
-                                @Override
-                                public void onNext(@NotNull @NonNull List<SysRecording> list) {
-                                    if (ArrayUtils.isNotEmpty(list)) {
-                                        XLog.d("数据库中需要上传的任务：" + GsonUtils.toJson(list));
-
-                                        UploadManager.getInstance().addRecordingList2Task(list);
-                                    } else {
-                                        XLog.d("数据库中没有需要上传的任务：");
-                                    }
-                                }
-                            });
-                }
+            CallLogManager.getInstance().queryCallLogAndRecording(aBoolean -> {
+                Log.d(TAG, "onNext: ----------1");
+                SysRecordingRepo.queryByStatus(
+                        ArrayUtils.createList(
+                                UploadStatus.WAIT_UPLOAD.getStatus(),
+                                UploadStatus.UPLOADING.getStatus(),
+                                UploadStatus.UPLOAD_FAILED.getStatus()),
+                        3, System.currentTimeMillis(), list -> {
+                            Log.d(TAG, "onNext: ----------2" + GsonUtils.toJson(list));
+                            if (ArrayUtils.isNotEmpty(list)) {
+                                XLog.d("数据库中需要上传的任务：\n");
+                                XLog.json(GsonUtils.toJson(list) + "\n");
+                                UploadManager.getInstance().addRecordingList2Task(list);
+                            } else {
+                                XLog.d("数据库中没有需要上传的任务：");
+                            }
+                        });
             });
         }
     };

@@ -5,7 +5,6 @@ import com.ipusoft.utils.FileUtilsKt;
 import java.io.File;
 import java.util.Map;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -23,11 +22,11 @@ public class FileRepository {
             return;
         }
         Observable.create((ObservableOnSubscribe<Boolean>) emitter -> {
-            for (Map.Entry<File, File> entry : map.entrySet()) {
-                FileUtilsKt.copy(entry.getKey(), entry.getValue());
-            }
-        }).observeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                    for (Map.Entry<File, File> entry : map.entrySet()) {
+                        FileUtilsKt.copy(entry.getKey(), entry.getValue());
+                    }
+                }).observeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .subscribe();
     }
 }

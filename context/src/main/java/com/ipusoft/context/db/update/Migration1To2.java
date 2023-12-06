@@ -23,6 +23,6 @@ public class Migration1To2 extends Migration {
 
     @Override
     public void migrate(@NonNull SupportSQLiteDatabase database) {
-        database.execSQL("ALTER TABLE sys_recording " + " ADD COLUMN caller TEXT ");
+        database.execSQL("ALTER TABLE sys_recording " + " ADD COLUMN  caller TEXT ");
     }
 }

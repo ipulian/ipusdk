@@ -10,7 +10,8 @@ import com.ipusoft.context.AppContext;
 import com.ipusoft.context.component.ToastUtils;
 import com.ipusoft.context.component.base.BaseDialogFragment;
 import com.ipusoft.context.databinding.ContextPermissionDialogOverlayPermissionBinding;
-import com.ipusoft.context.manager.PlatformManager;
+import com.ipusoft.permission.RxPermissionUtils;
+import com.ipusoft.utils.SysRecordingUtils;
 import com.ipusoft.context.platform.OPPO;
 import com.ipusoft.context.viewmodel.BaseViewModel;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
@@ -51,6 +52,18 @@ public class OverLayPermissionDialog extends BaseDialogFragment<ContextPermissio
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (RxPermissionUtils.hasOverLayPermission(mActivity)) {
+            try {
+                dismissAllowingStateLoss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public void show() {
         if (!CommonDataRepo.getNeverAnswerPermission()) {
             super.show();
@@ -66,7 +79,7 @@ public class OverLayPermissionDialog extends BaseDialogFragment<ContextPermissio
         super.onClick(v);
         if (v.getId() == binding.llAgree.getId()) {
             try {
-                if (PlatformManager.isOPPO()) {
+                if (SysRecordingUtils.isOPPO()) {
                     OPPO.settingOverlayPermission(mActivity);
                     dismiss();
                 } else {
@@ -78,7 +91,10 @@ public class OverLayPermissionDialog extends BaseDialogFragment<ContextPermissio
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                ToastUtils.showMessage("请手动打开");
+                ToastUtils.showMessage("请手动打开悬浮窗权限");
+                if (layPermissionListener != null) {
+                    layPermissionListener.invoke(1);
+                }
             }
             dismissAllowingStateLoss();
         } else if (v.getId() == binding.tvNotToUse.getId()) {

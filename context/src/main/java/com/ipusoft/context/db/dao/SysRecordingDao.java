@@ -23,13 +23,16 @@ import io.reactivex.rxjava3.core.Observable;
 @Dao
 public interface SysRecordingDao {
 
-    @Query("SELECT * FROM sys_recording WHERE upload_status in (:uploadStatus) ORDER BY call_time ")
-    Observable<List<SysRecording>> queryAll(List<Integer> uploadStatus);
+    @Query("SELECT * FROM sys_recording WHERE call_id in (:callId) LIMIT 1")
+    SysRecording queryByCallId(long callId);
 
-    @Query("SELECT * FROM sys_recording WHERE upload_status in (:uploadStatus) AND duration != 0 ORDER BY call_time DESC LIMIT :limit")
+    @Query("SELECT * FROM sys_recording WHERE upload_status in (:uploadStatus) ORDER BY call_time ")
+    List<SysRecording> queryAll(List<Integer> uploadStatus);
+
+    @Query("SELECT * FROM sys_recording WHERE upload_status in (:uploadStatus) ORDER BY call_time DESC LIMIT :limit")
     Observable<List<SysRecording>> queryLimitRecordingByStatus(List<Integer> uploadStatus, int limit);
 
-    @Query("SELECT count(*) as count FROM sys_recording WHERE upload_status in (:uploadStatus) AND duration != 0")
+    @Query("SELECT count(*) as count FROM sys_recording WHERE upload_status in (:uploadStatus)")
     Observable<Integer> queryCountByStatus(List<Integer> uploadStatus);
 
     @Delete
@@ -50,6 +53,12 @@ public interface SysRecordingDao {
     Observable<List<SysRecording>> queryLimitRecordingByStatus(List<Integer> uploadStatus, int retryCount,
                                                                long currentTime, int limit);
 
+    @Query("SELECT * FROM sys_recording WHERE upload_status in (:uploadStatus) "
+            + "AND retry_count <= :retryCount AND :currentTime - last_retry_time > 10*60*1000 "
+            + "ORDER BY id DESC LIMIT :limit")
+    List<SysRecording> queryLimitRecordingByStatus2(List<Integer> uploadStatus, int retryCount,
+                                                    long currentTime, int limit);
+
     @Update
     void updateRecording(SysRecording recording);
 
@@ -59,7 +68,7 @@ public interface SysRecordingDao {
     @Query("DELETE FROM sys_recording WHERE file_generate_time < :timestamp AND upload_status IN (:status)")
     void deleteOldRecording(long timestamp, List<Integer> status);
 
-    @Query("UPDATE sys_recording SET upload_status= :status WHERE call_time = :callTime")
-    void updateStatusByKey(Long callTime, int status);
+    @Query("UPDATE sys_recording SET upload_status= :newStatus WHERE call_id = :callId AND upload_status = :oldStatus")
+    void updateStatusByKey(Long callId, int newStatus, int oldStatus);
 
 }

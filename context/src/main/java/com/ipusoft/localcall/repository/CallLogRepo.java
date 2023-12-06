@@ -14,14 +14,16 @@ import androidx.core.app.ActivityCompat;
 
 import com.elvishew.xlog.XLog;
 import com.ipusoft.context.AppContext;
-import com.ipusoft.context.manager.PlatformManager;
+import com.ipusoft.context.constant.DateTimePattern;
+import com.ipusoft.mmkv.datastore.CommonDataRepo;
+import com.ipusoft.utils.DateTimeUtils;
+import com.ipusoft.utils.SysRecordingUtils;
 import com.ipusoft.localcall.bean.SIMCallOutBean;
 import com.ipusoft.localcall.bean.SysCallLog;
 import com.ipusoft.localcall.bean.UploadSysRecordingBean;
 import com.ipusoft.localcall.constant.CallLogCallsType;
 import com.ipusoft.localcall.constant.CallLogType;
 import com.ipusoft.localcall.datastore.SimDataRepo;
-import com.elvishew.xlog.XLog;
 import com.ipusoft.utils.ArrayUtils;
 import com.ipusoft.utils.ExceptionUtils;
 import com.ipusoft.utils.GsonUtils;
@@ -69,9 +71,11 @@ public class CallLogRepo {
      */
     public static int queryTotalCount() {
         int count = 0;
+        String selectionClause = CallLog.Calls.DATE + " > ? ";
+        String[] selectionArgs = {(System.currentTimeMillis() - 3 * 24 * 60 * 60 * 1000) + ""};
         Cursor cursor = AppContext.getAppContext()
                 .getContentResolver()
-                .query(CallLog.Calls.CONTENT_URI, null, null, null,
+                .query(CallLog.Calls.CONTENT_URI, null, selectionClause, selectionArgs,
                         null);
         if (cursor.moveToLast()) {
             count = cursor.getPosition();
@@ -86,10 +90,12 @@ public class CallLogRepo {
     public static List<SysCallLog> querySysCallLog(int page) {
         Log.d(TAG, "querySysCallLog: ------" + page);
         String paging = "date DESC";
+        String selectionClause = CallLog.Calls.DATE + " > ? ";
+        String[] selectionArgs = {(System.currentTimeMillis() - 3 * 24 * 60 * 60 * 1000) + ""};
         Cursor cursor = AppContext.getAppContext()
                 .getContentResolver()
 //                .query(CallLog.Calls.CONTENT_URI, null, null, null, CallLog.Calls.DEFAULT_SORT_ORDER);
-                .query(CallLog.Calls.CONTENT_URI, null, null, null, paging);
+                .query(CallLog.Calls.CONTENT_URI, null, selectionClause, selectionArgs, paging);
         return getDataFormCursor(cursor);
     }
 
@@ -106,8 +112,11 @@ public class CallLogRepo {
                 null, selectionClause, selectionArgs, CallLog.Calls.DEFAULT_SORT_ORDER);
         List<SysCallLog> sysCallLogs = getDataFormCursor(cursor);
         if (ArrayUtils.isNotEmpty(sysCallLogs)) {
-            XLog.d(TAG + "->querySysCallLog1：" + GsonUtils.toJson(sysCallLogs));
+            XLog.d(TAG + "->querySysCallLog1：\n");
+            XLog.json(GsonUtils.toJson(sysCallLogs) + "\n");
             List<SIMCallOutBean> simCallOutBeanList = SimDataRepo.getSIMCallOutBean();
+            XLog.d(TAG + "->simCallOutBeanList-------：\n");
+            XLog.json(GsonUtils.toJson(simCallOutBeanList) + "\n");
             long beginTime;
             for (SysCallLog callLog : sysCallLogs) {
                 beginTime = callLog.getBeginTime();
@@ -123,15 +132,15 @@ public class CallLogRepo {
 
                         for (int i = simCallOutBeanList.size() - 1; i >= 0; i--) {
                             bean = simCallOutBeanList.get(i);
-                            int timeOffset = 5 * 1000;
-                            if (PlatformManager.isHUAWEI()) {
+                            int timeOffset = 8 * 1000;
+                            if (SysRecordingUtils.isHUAWEI()) {
                                 if (callLog.getDuration() != 0) {
                                     timeOffset = 65 * 1000;
                                 }
                             }
-                            XLog.d(TAG, "timeOffset---------->" + timeOffset);
+                            //XLog.d(TAG + "timeOffset---------->" + timeOffset);
                             /**
-                             * 当有两通间隔时间非常短，但被叫相同的时候，会有bug,尤其在华为手机上，
+                             * 当有两通间隔时间非常短，但被叫相同的电话的时候，会有bug,尤其在华为手机上，
                              * 所以这里取 timeOffset 最接近的一个。
                              */
                             if (StringUtils.equals(callLog.getPhoneNumber(), bean.getPhone()) &&
@@ -150,6 +159,13 @@ public class CallLogRepo {
                                     if (remove) {
                                         callLog.setCallId(target.getTimestamp());
                                         callLog.setCallTime(target.getCallTime());
+                                        try {
+                                            if (StringUtils.isNotEmpty(target.getReleaseTime())) {
+                                                callLog.setEndTime(DateTimeUtils.string2Millis(target.getReleaseTime(), DateTimePattern.getDateTimeWithSecondFormat()));
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                         list.add(callLog);
                                     }
                                 }
@@ -169,7 +185,8 @@ public class CallLogRepo {
         } else {
             XLog.d(TAG + "->querySysCallLog1：sysCallLogs 不存在");
         }
-        XLog.d(TAG + "->callLogList：" + GsonUtils.toJson(list));
+        XLog.d(TAG + "->callLogList：\n");
+        XLog.json(GsonUtils.toJson(list) + "\n");
         return list;
     }
 
@@ -192,6 +209,7 @@ public class CallLogRepo {
                     if (cursor.getColumnIndex(CallLog.Calls.NUMBER) != -1) {
                         number = cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER));
                     }
+
                     //外呼开始时间
                     long beginTime = 0;
                     if (cursor.getColumnIndex(CallLog.Calls.DATE) != -1) {
@@ -199,6 +217,15 @@ public class CallLogRepo {
                     } else {
                         Log.d(TAG, "getDataFormCursor: :---------------------->");
                     }
+
+                    //外呼结束时间
+//                    long endTime = 0;
+//                    if (cursor.getColumnIndex(CallLog.Calls.DATE) != -1) {
+//                        endTime = cursor.getLong(cursor.getColumnIndex(CallLog.Calls.));
+//                    } else {
+//                        Log.d(TAG, "getDataFormCursor: :---------------------->");
+//                    }
+
                     //通话时长
                     int duration = 0;
                     if (cursor.getColumnIndex(CallLog.Calls.DURATION) != -1) {
@@ -219,9 +246,10 @@ public class CallLogRepo {
                             hostNumber = cursor.getString(cursor.getColumnIndex("phone_account_address"));
                         }
                         if (StringUtils.isEmpty(hostNumber)) {
-                            /*
-                             * TODO
-                             * */
+                            String phoneNumber = CommonDataRepo.getDevicePhoneNumber();
+                            if (StringUtils.isNotEmpty(phoneNumber)) {
+                                hostNumber = phoneNumber;
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -269,6 +297,27 @@ public class CallLogRepo {
             XLog.e(TAG + "---->" + ExceptionUtils.getErrorInfo(e));
         }
         return list;
+    }
+
+    /**
+     * 查询系统中最后一通成功的通话
+     *
+     * @return
+     */
+    public static SysCallLog getLastSuccessCall() {
+        SysCallLog sysCallLog = null;
+        XLog.d(TAG + "->querySysCallLog：查询最后一通成功的通话记录");
+        String selectionClause = CallLog.Calls.DURATION + " > ?";
+        Cursor cursor = AppContext.getAppContext().getContentResolver().query(CallLog.Calls.CONTENT_URI,
+                null, selectionClause, new String[]{"0"}, "date DESC LIMIT 1");
+        List<SysCallLog> sysCallLogs = getDataFormCursor(cursor);
+        if (ArrayUtils.isNotEmpty(sysCallLogs)) {
+            XLog.d(TAG + "->querySysCallLog 查询最后一通成功的通话记录-----：" + GsonUtils.toJson(sysCallLogs));
+            sysCallLog = sysCallLogs.get(0);
+        } else {
+            XLog.d(TAG + "->querySysCallLog1：查询最后一通成功的通话记录----- 不存在");
+        }
+        return sysCallLog;
     }
 
     private static String getPhoneNumber(int callLogSimId) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -18,15 +19,16 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="125dp"
-            android:layout_height="80dp"
+        <com.ipusoft.context.view.roundview.RoundLinearLayout
+            android:layout_width="135dp"
+            android:layout_height="86dp"
             android:layout_gravity="center"
-            android:background="@drawable/context_bg_custom_loading"
+            android:background="@color/black65"
             android:gravity="center"
             android:minWidth="125dp"
             android:minHeight="80dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:rRadius="4dp">
 
             <com.ipusoft.context.component.LoadingView
                 android:id="@+id/loading"
@@ -44,6 +46,6 @@
                 android:text="正在加载"
                 android:textColor="@color/white" />
 
-        </LinearLayout>
+        </com.ipusoft.context.view.roundview.RoundLinearLayout>
     </LinearLayout>
 </layout>

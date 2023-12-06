@@ -31,7 +31,6 @@ public abstract class HttpObserver<T extends HttpResponse> extends IObserver<T> 
 
     @Override
     public void onNext(@NotNull T response) {
-        ToastUtils.dismiss();
         String httpStatus = response.getHttpStatus();
         if (StringUtils.equals(HttpStatus.SUCCESS, httpStatus)) {
             response.setMsg("");

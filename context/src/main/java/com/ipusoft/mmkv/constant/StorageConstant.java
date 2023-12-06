@@ -56,8 +56,51 @@ public class StorageConstant {
      * 是否展示挂机弹屏
      */
     public static final String SHOW_HUNG_UP_POP = "show_hung_up_pop";
+    public static final String SHOW_CALL_OUT_POP = "show_call_out_pop";
 
     public static final String SIP_SDK_SIGN_OUT = "sip_sdk_sign_out";
     public static final String NEVER_ANSWER_PERMISSION = "never_answer_permission";
+
+    public static final String USER_INFO = "user_info";
+
+    /**
+     * 重新刷脸才能进入
+     */
+    public static final String RE_AUTH_2_LOGIN_TIME_STAMP = "re_auth_2_login_timestamp";
+
+    /**
+     * 登陆数据
+     */
+    public static final String LOGIN = "login";
+
+    public static final String DEVICE_PHONE_NUMBER = "device_phone_number";
+
+    public static final String POP_WINDOW_FIELD = "popWindowField";
+    /**
+     * 指纹认证
+     */
+    public static final String FINGERPRINT_AUTH = "fingerprint_auth";
+
+    /**
+     * 外呼任务呼叫模式
+     */
+    public static final String CALL_TASK_MODEL = "call_task_model";
+    public static final String CALL_TASK_MODEL_REMIND = "call_task_model_remind";
+
+    /**
+     * 外呼任务呼叫间隔
+     */
+    public static final String CALL_TASK_INTERVAL = "call_task_interval";
+
+    //账号消息提醒
+    public static final String NOTIFICATION_MESSAGE = "notification_message";
+
+    //web端批量任务Id
+    public static final String WEB_CALL_TASK_ID = "web_call_task_id";
+
+    //保留仅一天的上传记录
+    public static final String UPLOAD_RECORD_ID = "upload_record_id";
+
+    public static final String NO_SHOW_OPEN_RECORDING_DIALOG = "NO_SHOW_OPEN_RECORDING_DIALOG";
 
 }

@@ -586,6 +586,11 @@ public class DateTimeUtils {
         return simpleDateFormat.format(new Date(dateTime));
     }
 
+    public static String formatDateTime2(long dateTime) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return simpleDateFormat.format(new Date(dateTime));
+    }
+
     public static boolean isToday(final String time) {
         return isToday(string2Millis(time, DateTimePattern.getDateTimeWithSecondFormat()));
     }

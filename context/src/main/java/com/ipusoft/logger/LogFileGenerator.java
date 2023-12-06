@@ -32,6 +32,6 @@ public class LogFileGenerator implements FileNameGenerator {
     public String generateFileName(int logLevel, long timestamp) {
         SimpleDateFormat sdf = DateTimePattern.getDateFormat();
         sdf.setTimeZone(TimeZone.getDefault());
-        return sdf.format(new Date(timestamp));
+        return sdf.format(new Date(timestamp)) + ".txt";
     }
 }

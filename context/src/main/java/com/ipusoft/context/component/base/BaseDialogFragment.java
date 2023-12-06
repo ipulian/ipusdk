@@ -21,13 +21,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.elvishew.xlog.XLog;
 import com.gyf.immersionbar.BarHide;
 import com.gyf.immersionbar.ImmersionBar;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.BaseFragmentViewModelFactory;
 import com.ipusoft.context.R;
 import com.ipusoft.context.viewmodel.BaseViewModel;
-import com.elvishew.xlog.XLog;
 import com.ipusoft.utils.ExceptionUtils;
 import com.ipusoft.utils.ThreadUtils;
 
@@ -60,11 +60,15 @@ public abstract class BaseDialogFragment<VB extends ViewDataBinding, VM extends 
     protected boolean isShowing = false;
 
     public void show() {
-        show(System.currentTimeMillis() + "");
+        mActivity = AppContext.getActivityContext();
+        show(mActivity, System.currentTimeMillis() + "");
     }
 
-    protected void show(String tag) {
-        mActivity = AppContext.getActivityContext();
+    public void show(AppCompatActivity mActivity) {
+        show(mActivity, System.currentTimeMillis() + "");
+    }
+
+    protected void show(AppCompatActivity mActivity, String tag) {
         if (mActivity != null) {
             ThreadUtils.runOnUiThread(() -> {
                 try {

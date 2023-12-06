@@ -16,6 +16,7 @@ import com.ipusoft.context.constant.PhoneState;
 import com.ipusoft.utils.ArrayUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -37,13 +38,15 @@ public class IPhoneStateListener extends android.telephony.PhoneStateListener {
     /**
      * 开启通话状态监听
      */
-    public void registerPhoneListener(Application context, OnPhoneStateChangedListener listener) {
+    public void registerPhoneListener(Application context, OnPhoneStateChangedListener... list) {
         telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         telephonyManager.listen(this, IPhoneStateListener.LISTEN_CALL_STATE);
         if (listeners == null) {
             listeners = new ArrayList<>();
         }
-        listeners.add(listener);
+        if (ArrayUtils.isNotEmpty(list)) {
+            listeners.addAll(Arrays.asList(list));
+        }
     }
 
     /**
@@ -55,8 +58,6 @@ public class IPhoneStateListener extends android.telephony.PhoneStateListener {
             telephonyManager = null;
         }
     }
-
-
 
 
     @Override

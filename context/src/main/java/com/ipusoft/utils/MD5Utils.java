@@ -1,6 +1,8 @@
 package com.ipusoft.utils;
 
 import java.security.MessageDigest;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * author : GWFan
@@ -9,12 +11,12 @@ import java.security.MessageDigest;
  */
 
 public class MD5Utils {
+
     public static String getMD5(String inStr) {
         MessageDigest md5;
         try {
             md5 = MessageDigest.getInstance("MD5");
         } catch (Exception e) {
-            System.out.println(e.toString());
             e.printStackTrace();
             return "";
         }
@@ -34,26 +36,6 @@ public class MD5Utils {
         return hexValue.toString();
     }
 
-
-    /**
-     * 使用md5的算法进行加密
-     */
-//    public static String md5(String plainText) {
-//        byte[] secretBytes = null;
-//        try {
-//            secretBytes = MessageDigest.getInstance("md5").digest(
-//                    plainText.getBytes());
-//        } catch (NoSuchAlgorithmException e) {
-//            throw new RuntimeException("没有md5这个算法！");
-//        }
-//        String md5code = new BigInteger(1, secretBytes).toString(16);// 16进制数字
-//        // 如果生成数字未满32位，需要前面补0
-//        for (int i = 0; i < 32 - md5code.length(); i++) {
-//            md5code = "0" + md5code;
-//        }
-//        return md5code;
-//    }
-
     /**
      * 可逆的的加密解密方法；两次是解密，一次是加密
      *
@@ -67,6 +49,19 @@ public class MD5Utils {
         }
         String s = new String(a);
         return s;
+    }
 
+    /**
+     * 接口签名样例
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("ts", 1687948090L);
+        map.put("phone", "18317893005");
+        String json = GsonUtils.toJson(map);
+        String sign = MD5Utils.getMD5(json + "336ce5f4b07e8b656c62d53dba16f1d3");
+        System.out.println("---->" + sign);
     }
 }

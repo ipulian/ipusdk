@@ -24,7 +24,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
                     android:gravity="center"
-                    android:text="提示"
+                    android:text="提 示"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_16"
                     android:textStyle="bold" />
@@ -41,7 +41,7 @@
 
                 <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10">
 
                     <LinearLayout

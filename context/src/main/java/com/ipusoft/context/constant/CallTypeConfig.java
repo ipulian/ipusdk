@@ -12,10 +12,10 @@ import java.util.List;
 
 public enum CallTypeConfig {
 
-    SIM("SIM", "SIM主卡"),
+    SIM("SIM", "SIM卡"),
     SIP("SIP", "SIP线路"),
     X("X", "小号"),
-    TYC("TYC", "双向呼");
+    TYC("TYC", "双呼");
 
     private final String type;
     private final String val;

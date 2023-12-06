@@ -19,4 +19,6 @@ public enum CallBeanType {
      * 陌生
      */
     UNKNOWN,
+
+    BATCH,
 }

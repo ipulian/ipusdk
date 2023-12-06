@@ -3,7 +3,7 @@
     <!-- 按压状态 -->
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <corners android:radius="10dp" />
+            <corners android:radius="6dp" />
             <solid android:color="@color/themeColorPress" />
         </shape>
     </item>
@@ -11,7 +11,7 @@
     <!-- 焦点状态 -->
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <corners android:radius="10dp" />
+            <corners android:radius="6dp" />
             <solid android:color="@color/themeColorPress" />
         </shape>
     </item>
@@ -19,7 +19,7 @@
     <!-- 默认状态 -->
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="10dp" />
+            <corners android:radius="6dp" />
             <solid android:color="@color/themeColor" />
         </shape>
     </item>

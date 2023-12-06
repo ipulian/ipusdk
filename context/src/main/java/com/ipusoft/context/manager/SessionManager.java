@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.IActivityLifecycle;
 import com.ipusoft.context.IpuSoftSDK;
-import com.ipusoft.context.view.dialog.ExpiredDialog;
+import com.ipusoft.context.view.dialog.IDialog;
 import com.ipusoft.mmkv.AccountMMKV;
 import com.ipusoft.utils.ArrayUtils;
 import com.ipusoft.utils.ExceptionUtils;
@@ -34,8 +34,10 @@ public class SessionManager {
         IpuSoftSDK.unInitIModule();
         AccountMMKV.clearAll();
 
-        ExpiredDialog.getInstance()
-                .setOnOkClickListener((v) -> {
+        IDialog.getInstance()
+                .setMsg("登录信息已过期，请重新登录")
+                .setShowCancelBtn(false)
+                .setOnConfirmClickListener(() -> {
                     List<Activity> activityList = IActivityLifecycle.getActivityStack();
                     if (ArrayUtils.isNotEmpty(activityList)) {
                         for (Activity activity : activityList) {

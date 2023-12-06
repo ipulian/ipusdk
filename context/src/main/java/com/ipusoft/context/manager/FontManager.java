@@ -15,6 +15,7 @@ public class FontManager {
     private static final String TAG = "FontManager";
     public static final String RZZYT = "锐字真言体.ttf";
     public static final String MY_ICON_FONT = "MyIconFont.ttf";
+    public static final String ALI_FONT = "fonts/DingTalk_JinBuTi_Regular.ttf";
 
     /**
      * <enum name="system" value="0" /><!--系统默认-->

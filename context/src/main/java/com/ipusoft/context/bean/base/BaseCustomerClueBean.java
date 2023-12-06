@@ -50,6 +50,8 @@ public class BaseCustomerClueBean implements Serializable {
     private String lastCallTime;
     //上次呼叫类型(外呼，呼入)
     private String lastCallDirect;
+    //上次跟进记录
+    private String lastCallFollow;
 
     public String getProvince() {
         return province;
@@ -177,5 +179,13 @@ public class BaseCustomerClueBean implements Serializable {
 
     public void setLastCallDirect(String lastCallDirect) {
         this.lastCallDirect = lastCallDirect;
+    }
+
+    public String getLastCallFollow() {
+        return lastCallFollow;
+    }
+
+    public void setLastCallFollow(String lastCallFollow) {
+        this.lastCallFollow = lastCallFollow;
     }
 }

@@ -28,6 +28,7 @@ public class DateTimePattern {
     public static final String TIME = "HH:mm";
 
     public static final String DATE_TIME = "yyyy-MM-dd HH:mm";
+    public static final String DATE_TIME2 = "MM-dd HH:mm";
 
     public static final String DATE_TIME_WITH_SECOND = "yyyy-MM-dd HH:mm:ss";
 
@@ -124,6 +125,17 @@ public class DateTimePattern {
         if (simpleDateFormat == null) {
             simpleDateFormat = new SimpleDateFormat(DATE_TIME);
             sdfMap.put(DATE_TIME, simpleDateFormat);
+        }
+        return simpleDateFormat;
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public static SimpleDateFormat getDateTimeFormat2() {
+        Map<String, SimpleDateFormat> sdfMap = SDF_THREAD_LOCAL.get();
+        SimpleDateFormat simpleDateFormat = sdfMap.get(DATE_TIME2);
+        if (simpleDateFormat == null) {
+            simpleDateFormat = new SimpleDateFormat(DATE_TIME2);
+            sdfMap.put(DATE_TIME2, simpleDateFormat);
         }
         return simpleDateFormat;
     }

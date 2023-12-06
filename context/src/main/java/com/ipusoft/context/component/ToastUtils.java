@@ -2,6 +2,7 @@ package com.ipusoft.context.component;
 
 import android.app.Application;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,10 +35,12 @@ public class ToastUtils {
      * 显示LoadingDialog
      */
     public static synchronized void showLoading() {
+        Log.d(TAG, "ToastUtils: -------------showLoading1");
         showLoading("正在加载");
     }
 
     public static synchronized void showLoading(String msg) {
+        Log.d(TAG, "ToastUtils: -------------showLoading2");
         if (StringUtils.isNotEmpty(msg)) {
             try {
                 AppCompatActivity activityContext = AppContext.getActivityContext();
@@ -57,10 +60,12 @@ public class ToastUtils {
     }
 
     public static synchronized void showLoading(boolean statusBarDarkFont) {
+        Log.d(TAG, "ToastUtils: -------------showLoading3");
         showLoading("正在加载", statusBarDarkFont);
     }
 
     public static synchronized void showLoading(String msg, boolean statusBarDarkFont) {
+        Log.d(TAG, "ToastUtils: -------------showLoading4");
         if (StringUtils.isNotEmpty(msg)) {
             try {
                 AppCompatActivity activityContext = AppContext.getActivityContext();
@@ -114,6 +119,7 @@ public class ToastUtils {
     }
 
     public static synchronized void dismiss() {
+        Log.d(TAG, "ToastUtils: -------------dismiss");
         try {
             if (dialogWeakReference != null) {
                 LoadingDialog dialog = dialogWeakReference.get();

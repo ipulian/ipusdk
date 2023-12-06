@@ -1,6 +1,7 @@
 package com.ipusoft.permission;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
@@ -11,6 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.elvishew.xlog.XLog;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.view.dialog.OverLayPermissionDialog;
+import com.ipusoft.utils.ExceptionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -93,57 +95,201 @@ public class RxPermissionUtils {
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Environment.isExternalStorageManager();
     }
 
-    /**
-     * 检查小米手机自动录音功能是否开启，true已开启  false未开启
-     *
-     * @return
-     */
-    public static boolean checkXiaomiRecord() {
+    public static int checkXiaomiRecord2() {
         try {
             int key = Settings.System.getInt(AppContext.getAppContext().getContentResolver(), "button_auto_record_call");
-            XLog.d(TAG, "Xiaomi key:" + key);
             //0是未开启,1是开启
-            return key != 0;
+            XLog.d(TAG + "Xiaomi System key：" + key);
+            return key;
         } catch (Settings.SettingNotFoundException e) {
             e.printStackTrace();
+            XLog.d(TAG + "Xiaomi System key:exception：" + ExceptionUtils.getErrorInfo(e));
+
+            try {
+                int key = Settings.Secure.getInt(AppContext.getAppContext().getContentResolver(), "button_auto_record_call");
+                //0是未开启,1是开启
+                XLog.d(TAG + "Xiaomi Secure key：" + key);
+                return key;
+            } catch (Settings.SettingNotFoundException e1) {
+                e.printStackTrace();
+                XLog.d(TAG + "Xiaomi Secure key:exception：" + ExceptionUtils.getErrorInfo(e1));
+
+
+                try {
+                    int key = Settings.Global.getInt(AppContext.getAppContext().getContentResolver(), "button_auto_record_call");
+                    //0是未开启,1是开启
+                    XLog.d(TAG + "Xiaomi Global key：" + key);
+                    return key;
+                } catch (Settings.SettingNotFoundException e2) {
+                    e.printStackTrace();
+                    XLog.d(TAG + "Xiaomi Global key:exception：" + ExceptionUtils.getErrorInfo(e2));
+
+                }
+
+            }
         }
-        return true;
+        XLog.d(TAG + "Xiaomi key：-1");
+
+        return -1;
     }
 
 
-    /**
-     * 检查华为手机自动录音功能是否开启，true已开启  false未开启
-     *
-     * @return
-     */
-    public static boolean checkHuaweiRecord() {
+    public static int checkHuaweiRecord2() {
         try {
             int key = Settings.Secure.getInt(AppContext.getAppContext().getContentResolver(), "enable_record_auto_key");
             //0代表华为自动录音未开启,1代表华为自动录音已开启
-            return key != 0;
+            XLog.d(TAG + "Huawei Secure key：" + key);
+            return key;
         } catch (Settings.SettingNotFoundException e) {
             e.printStackTrace();
+            XLog.d(TAG + "Huawei Secure key:exception：" + ExceptionUtils.getErrorInfo(e));
+            try {
+                int key = Settings.System.getInt(AppContext.getAppContext().getContentResolver(), "enable_record_auto_key");
+                //0代表华为自动录音未开启,1代表华为自动录音已开启
+                XLog.d(TAG + "Huawei System key：" + key);
+                return key;
+            } catch (Settings.SettingNotFoundException e1) {
+                e.printStackTrace();
+                XLog.d(TAG + "Huawei System key:exception：" + ExceptionUtils.getErrorInfo(e1));
+
+                try {
+                    int key = Settings.Global.getInt(AppContext.getAppContext().getContentResolver(), "enable_record_auto_key");
+                    //0代表华为自动录音未开启,1代表华为自动录音已开启
+                    XLog.d(TAG + "Huawei Global key：" + key);
+                    return key;
+                } catch (Settings.SettingNotFoundException e2) {
+                    e.printStackTrace();
+                    XLog.d(TAG + "Huawei Global key:exception：" + ExceptionUtils.getErrorInfo(e2));
+                }
+            }
         }
-        return true;
+        XLog.d(TAG + "Huawei key：-1");
+
+        return -1;
     }
 
 
-    /**
-     * 检查OPPO手机自动录音功能是否开启，true已开启  false未开启
-     *
-     * @return
-     */
-    public static boolean checkOppoRecord() {
+    public static int checkOppoRecord2() {
         try {
-            int key = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 ?
-                    Settings.Global.getInt(AppContext.getAppContext().getContentResolver(), "oppo_all_call_audio_record") : 0;
-            XLog.d(TAG, "Oppo key:" + key);
+            int key = Settings.Global.getInt(AppContext.getAppContext().getContentResolver(), "oppo_all_call_audio_record");
+            XLog.d(TAG + "Oppo Global key：" + key);
             //0代表OPPO自动录音未开启,1代表OPPO自动录音已开启
-            return key != 0;
+            return key;
         } catch (Settings.SettingNotFoundException e) {
             e.printStackTrace();
+            XLog.d(TAG + "Oppo Global key:exception：" + ExceptionUtils.getErrorInfo(e));
+
+            try {
+                int key = Settings.System.getInt(AppContext.getAppContext().getContentResolver(), "oppo_all_call_audio_record");
+                XLog.d(TAG + "Oppo System key：" + key);
+                //0代表OPPO自动录音未开启,1代表OPPO自动录音已开启
+                return key;
+            } catch (Settings.SettingNotFoundException e1) {
+                e.printStackTrace();
+                XLog.d(TAG + "Oppo System key:exception：" + ExceptionUtils.getErrorInfo(e1));
+
+                try {
+                    int key = Settings.Secure.getInt(AppContext.getAppContext().getContentResolver(), "oppo_all_call_audio_record");
+                    XLog.d(TAG + "Oppo Secure key：" + key);
+                    //0代表OPPO自动录音未开启,1代表OPPO自动录音已开启
+                    return key;
+                } catch (Settings.SettingNotFoundException e2) {
+                    e.printStackTrace();
+                    XLog.d(TAG + "Oppo Secure key:exception：" + ExceptionUtils.getErrorInfo(e2));
+                }
+
+            }
+
         }
-        return true;
+        XLog.d(TAG + "Oppo key：-1");
+
+        try {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                try (Cursor cursor = AppContext.getAppContext().getContentResolver().query(Settings.Secure.CONTENT_URI, null, null, null)) {
+                    String[] columnNames = cursor.getColumnNames();
+                    StringBuilder builder = new StringBuilder();
+                    while (cursor.moveToNext()) {
+                        for (String columnName : columnNames) {
+                            String string = cursor.getString(cursor.getColumnIndex(columnName));
+                            builder.append(columnName).append(":").append(string).append("\n");
+                        }
+                    }
+
+                    XLog.d("Settings.Secure.CONTENT_URI----------------->" + builder.toString());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                try (Cursor cursor2 = AppContext.getAppContext().getContentResolver().query(Settings.System.CONTENT_URI, null, null, null)) {
+                    String[] columnNames2 = cursor2.getColumnNames();
+                    StringBuilder builder2 = new StringBuilder();
+                    while (cursor2.moveToNext()) {
+                        for (String columnName : columnNames2) {
+                            String string = cursor2.getString(cursor2.getColumnIndex(columnName));
+                            builder2.append(columnName).append(":").append(string).append("\n");
+                            // Log.d(TAG, "startTestActivity2: ------>" + columnName + "---->" + string);
+                        }
+                    }
+                    XLog.d("Settings.System.CONTENT_URI----------------->" + builder2.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                try (Cursor cursor3 = AppContext.getAppContext().getContentResolver().query(Settings.Global.CONTENT_URI, null, null, null)) {
+                    String[] columnNames3 = cursor3.getColumnNames();
+                    StringBuilder builder3 = new StringBuilder();
+                    while (cursor3.moveToNext()) {
+                        for (String columnName : columnNames3) {
+                            String string = cursor3.getString(cursor3.getColumnIndex(columnName));
+                            builder3.append(columnName).append(":").append(string).append("\n");
+                            //   Log.d(TAG, "startTestActivity3: ------>" + columnName + "---->" + string);
+                        }
+                    }
+                    XLog.d("Settings.Global.CONTENT_URI----------------->" + builder3.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1;
     }
 
+
+    public static int checkViVoRecord2() {
+        try {
+            int key = Settings.Global.getInt(AppContext.getAppContext().getContentResolver(), "call_record_state_global");
+            XLog.d(TAG + "Vivo Global key：" + key);
+            return key;
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+            XLog.d(TAG + "Vivo Global key:exception：" + ExceptionUtils.getErrorInfo(e));
+            try {
+                int key = Settings.System.getInt(AppContext.getAppContext().getContentResolver(), "call_record_state_global");
+                XLog.d(TAG + "Vivo System key：" + key);
+                return key;
+            } catch (Settings.SettingNotFoundException e1) {
+                e.printStackTrace();
+                XLog.d(TAG + "Vivo System key:exception：" + ExceptionUtils.getErrorInfo(e1));
+                try {
+                    int key = Settings.Secure.getInt(AppContext.getAppContext().getContentResolver(), "call_record_state_global");
+                    XLog.d(TAG + "Vivo Secure key：" + key);
+                    return key;
+                } catch (Settings.SettingNotFoundException e2) {
+                    e.printStackTrace();
+                    XLog.d(TAG + "Vivo Secure key:exception：" + ExceptionUtils.getErrorInfo(e2));
+                }
+            }
+        }
+        XLog.d(TAG + "Vivo key：-1");
+        return -1;
+    }
 }

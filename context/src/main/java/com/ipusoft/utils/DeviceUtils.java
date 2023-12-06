@@ -3,6 +3,7 @@ package com.ipusoft.utils;
 import android.content.Context;
 import android.os.Build;
 import android.os.Vibrator;
+import android.provider.Settings;
 
 import com.ipusoft.context.AppContext;
 
@@ -102,5 +103,9 @@ public class DeviceUtils {
         Vibrator vibrator = getVibrator();
         if (vibrator == null) return;
         vibrator.vibrate(milliseconds);
+    }
+
+    public static String getSerialNumber() {
+        return Settings.Secure.getString(AppContext.getAppContext().getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 }

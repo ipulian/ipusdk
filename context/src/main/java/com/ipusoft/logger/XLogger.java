@@ -86,7 +86,7 @@ public class XLogger {
             String appVersionName = AppUtils.getAppVersionName();
             XLog.d("系统语言：%s\n系统版本：%s\n手机型号：%s\n设备名称：%s\n手机厂商：%s\n手机厂商名称：%s\n版本名称：%s\n应用包名：%s\n应用版本号：%s\n",
                     systemLanguage, systemVersion, systemModel, systemDevice,
-                    deviceBrand, deviceManufacturer, appVersionName, appName, pkgName
+                    deviceBrand, deviceManufacturer, appVersionName, pkgName, appName
             );
         }
     }

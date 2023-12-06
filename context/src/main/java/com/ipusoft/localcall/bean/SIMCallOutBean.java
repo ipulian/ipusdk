@@ -13,7 +13,8 @@ public class SIMCallOutBean implements Serializable {
     private String phone;
     private Long timestamp;
 
-    private String callTime;
+    private String releaseTime;//挂断时间
+    private String callTime;//外呼时间
 
     public SIMCallOutBean(String phone, String callTime) {
         this.phone = phone;
@@ -48,6 +49,14 @@ public class SIMCallOutBean implements Serializable {
 
     public void setCallTime(String callTime) {
         this.callTime = callTime;
+    }
+
+    public String getReleaseTime() {
+        return releaseTime;
+    }
+
+    public void setReleaseTime(String releaseTime) {
+        this.releaseTime = releaseTime;
     }
 
     @Override

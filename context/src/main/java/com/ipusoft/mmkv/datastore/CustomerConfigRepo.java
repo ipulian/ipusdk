@@ -104,14 +104,21 @@ public class CustomerConfigRepo {
     public static List<String> getConnectList() {
         CustomerConfig customerConfig = getCustomerConfig();
         List<String> list = new ArrayList<>();
-        if (customerConfig != null) {
-            List<CustomerConfig.ConfigItem> connect = customerConfig.getConnect();
-            if (connect != null) {
-                for (CustomerConfig.ConfigItem item : connect) {
-                    list.add(item.getItemName());
-                }
+        //  if (customerConfig != null) {
+        List<CustomerConfig.ConfigItem> connect = customerConfig.getConnect();
+        Log.d(TAG, "getConnectList: ----------->" + GsonUtils.toJson(connect));
+        if (ArrayUtils.isNotEmpty(connect)) {
+            for (CustomerConfig.ConfigItem item : connect) {
+                list.add(item.getItemName());
             }
         }
+//        if (connect != null) {
+//            list.add("未联系");
+//            list.add("已联系");
+//            list.add("呼入未接通");
+//            list.add("呼出未接通");
+//        }
+        //  }
         return list;
     }
 

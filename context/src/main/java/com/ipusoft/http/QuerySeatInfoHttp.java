@@ -54,7 +54,7 @@ public class QuerySeatInfoHttp {
                             if (list.contains(CallTypeConfig.SIM.getType())
                                     && list.contains(CallTypeConfig.SIP.getType())) {
                                 if (StringUtils.isEmpty(localCallType)) {
-                                    localCallType = CallTypeConfig.SIP.getType();
+                                    localCallType = CallTypeConfig.SIM.getType();
                                 } else {
                                     if (StringUtils.equals(localCallType, CallTypeConfig.SIM.getType())) {
                                         localCallType = CallTypeConfig.SIM.getType();
@@ -65,7 +65,7 @@ public class QuerySeatInfoHttp {
                             } else if (list.contains(CallTypeConfig.SIM.getType())
                                     && list.contains(CallTypeConfig.X.getType())) {
                                 if (StringUtils.isEmpty(localCallType)) {
-                                    localCallType = CallTypeConfig.X.getType();
+                                    localCallType = CallTypeConfig.SIM.getType();
                                 } else {
                                     if (StringUtils.equals(localCallType, CallTypeConfig.SIM.getType())) {
                                         localCallType = CallTypeConfig.SIM.getType();
@@ -123,7 +123,7 @@ public class QuerySeatInfoHttp {
                                     && list.contains(CallTypeConfig.X.getType())
                                     && list.contains(CallTypeConfig.SIP.getType())) {
                                 if (StringUtils.isEmpty(localCallType)) {
-                                    localCallType = CallTypeConfig.X.getType();
+                                    localCallType = CallTypeConfig.SIM.getType();
                                 } else {
                                     if (StringUtils.equals(localCallType, CallTypeConfig.X.getType())) {
                                         localCallType = CallTypeConfig.X.getType();
@@ -171,7 +171,7 @@ public class QuerySeatInfoHttp {
                                     && list.contains(CallTypeConfig.X.getType())
                                     && list.contains(CallTypeConfig.TYC.getType())) {
                                 if (StringUtils.isEmpty(localCallType)) {
-                                    localCallType = CallTypeConfig.X.getType();
+                                    localCallType = CallTypeConfig.SIM.getType();
                                 } else {
                                     if (StringUtils.equals(localCallType, CallTypeConfig.X.getType())) {
                                         localCallType = CallTypeConfig.X.getType();
@@ -186,7 +186,7 @@ public class QuerySeatInfoHttp {
                             }
                         } else if (list.size() == 4) {
                             if (StringUtils.isEmpty(localCallType)) {
-                                localCallType = CallTypeConfig.X.getType();
+                                localCallType = CallTypeConfig.SIM.getType();
                             } else {
                                 if (StringUtils.equals(localCallType, CallTypeConfig.X.getType())) {
                                     localCallType = CallTypeConfig.X.getType();
@@ -202,6 +202,19 @@ public class QuerySeatInfoHttp {
                             }
                         }
 
+                        CommonDataRepo.setLocalCallType(localCallType);
+
+                        LiveDataBus.get().with(LiveDataConstant.REFRESH_CALL_TYPE_CONFIG, String.class)
+                                .postValue(localCallType);
+
+                        updateCallType(localCallType);
+
+                        if (listener != null) {
+                            listener.onQuerySeatInfo(seatInfo, localCallType);
+                        }
+                    } else {
+
+                        localCallType = CallTypeConfig.SIM.getType();
                         CommonDataRepo.setLocalCallType(localCallType);
 
                         LiveDataBus.get().with(LiveDataConstant.REFRESH_CALL_TYPE_CONFIG, String.class)

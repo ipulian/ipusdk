@@ -61,7 +61,7 @@ public class LoadingDialog extends BaseDialogFragment<ContextLayoutCustomLoading
             if (iCountDownTimer != null) {
                 iCountDownTimer.onFinish();
             }
-            iCountDownTimer = new ICountDownTimer(6 * 1000, 1000);
+            iCountDownTimer = new ICountDownTimer(9 * 1000, 1000);
             iCountDownTimer.start();
         } catch (Exception exception) {
             exception.printStackTrace();

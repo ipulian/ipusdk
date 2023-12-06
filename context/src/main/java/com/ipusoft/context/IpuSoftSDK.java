@@ -189,7 +189,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
      *
      * @param listener
      */
-    public static void registerPhoneStatusChangedListener(OnPhoneStateChangedListener listener) {
+    public static void registerPhoneStatusChangedListener(OnPhoneStateChangedListener... listener) {
         if (mApp != null) {
             IPhoneStateListener.getInstance().registerPhoneListener(mApp, listener);
         } else {

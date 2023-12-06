@@ -53,7 +53,8 @@ public class PhoneNumberUtils {
             return null;
         }
         StringBuilder bf = new StringBuilder();
-        Pattern pattern = Pattern.compile("((1[3-9])\\d{9})|((0[1-9])\\d{7,9})|((0[1-9][0-9]-)\\d{7,9})|((0[1-9][0-9][0-9]-)\\d{7,9})");
+        Pattern pattern = Pattern.compile("((1[3-9])\\d{9})|((0[1-9])\\d{7,11})|((0[1-9][0-9]-)\\d{7,9})|((0[1-9][0-9][0-9]-)" +
+                "\\d{7,9})");
         Matcher matcher = pattern.matcher(num);
         while (matcher.find()) {
             bf.append(matcher.group()).append(",");
@@ -69,4 +70,6 @@ public class PhoneNumberUtils {
         }
         return result;
     }
+
+
 }

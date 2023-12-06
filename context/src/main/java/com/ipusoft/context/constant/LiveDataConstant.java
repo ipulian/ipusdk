@@ -50,4 +50,9 @@ public class LiveDataConstant {
     public static final String REFRESH_SIP_WINDOW = "refresh_sip_window";
 
     public static final String SIP_LOGIN_STATUS = "sip_login_status";
+
+    public static final String REFRESH_FACE_AUTH_STATUS = "refresh_face_auth_status";
+
+    public static final String REFRESH_CALL_TASK_LIST = "refresh_call_task_list";
+    public static final String REFRESH_CALL_TASK_DETAILS = "refresh_call_task_details";
 }

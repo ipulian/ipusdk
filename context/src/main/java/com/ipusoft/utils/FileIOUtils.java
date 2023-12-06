@@ -1,5 +1,7 @@
 package com.ipusoft.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -101,6 +103,43 @@ public final class FileIOUtils {
 
     public static String readFile2String(final String filePath) {
         return readFile2String(new File(filePath), null);
+    }
+
+
+    public static void writeFileFromBitmap(Bitmap bitmap, File targetFile) {
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(targetFile));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void writeFileFromImageBase64(String base64, File targetFile) {
+        try {
+            Bitmap bitmap = base64ToBitmap(base64);
+            if (bitmap != null) {
+                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(targetFile));
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                bos.flush();
+                bos.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Bitmap base64ToBitmap(String string) {
+        Bitmap bitmap = null;
+        try {
+            byte[] bitmapArray = android.util.Base64.decode(string, android.util.Base64.DEFAULT);
+            bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 
     /**

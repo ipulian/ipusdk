@@ -53,7 +53,7 @@ public class SysRecording implements Serializable {
     //上次重试时间
     @ColumnInfo(name = "last_retry_time")
     private long lastRetryTime;
-    //通话结果
+    //通话结果 0成功，1未接 2黑名单
     @ColumnInfo(name = "call_result")
     private int callResult;
     //通话类型 1呼入2呼出3未接
@@ -70,6 +70,9 @@ public class SysRecording implements Serializable {
     @ColumnInfo(name = "caller")
     private String caller;
 
+    @ColumnInfo(name = "upload_result")
+    private String uploadResult;
+
     /**
      * 上传进度
      */
@@ -85,6 +88,9 @@ public class SysRecording implements Serializable {
     private String lastRetryTimeStr;
     @Ignore
     String fileGenerateTimeStr;
+    //电话挂断时间
+    @Ignore
+    private long releaseTime;
 
     public long getId() {
         return id;
@@ -268,6 +274,22 @@ public class SysRecording implements Serializable {
 
     public void setFileGenerateTimeStr(String fileGenerateTimeStr) {
         this.fileGenerateTimeStr = fileGenerateTimeStr;
+    }
+
+    public String getUploadResult() {
+        return uploadResult;
+    }
+
+    public void setUploadResult(String uploadResult) {
+        this.uploadResult = uploadResult;
+    }
+
+    public long getReleaseTime() {
+        return releaseTime;
+    }
+
+    public void setReleaseTime(long releaseTime) {
+        this.releaseTime = releaseTime;
     }
 
     @Override

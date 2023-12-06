@@ -1,12 +1,10 @@
 package com.ipusoft.context.view.dialog;
 
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.ipusoft.context.component.base.BaseDialogFragment;
 import com.ipusoft.context.databinding.ContextLayoutAlertDialogBinding;
 import com.ipusoft.context.viewmodel.BaseViewModel;
-import com.ipusoft.utils.SizeUtils;
 import com.ipusoft.utils.StringUtils;
 
 
@@ -18,13 +16,15 @@ import com.ipusoft.utils.StringUtils;
 
 public class IDialog extends BaseDialogFragment<ContextLayoutAlertDialogBinding, BaseViewModel> {
 
-    private String title, msg, confirmText, cancelText;
+    private String title, msg, middleBtnText, confirmText, cancelText;
 
     private OnConfirmClickListener confirmClickListener;
 
     private OnCancelClickListener cancelClickListener;
 
-    private boolean showCancelBtn = true;
+    private OnMiddleBtnClickListener middleBtnClickListener;
+
+    private boolean showCancelBtn = true, showMiddleBtn = false;
 
     public interface OnConfirmClickListener {
         void onConfirm();
@@ -32,6 +32,10 @@ public class IDialog extends BaseDialogFragment<ContextLayoutAlertDialogBinding,
 
     public interface OnCancelClickListener {
         void onCancel();
+    }
+
+    public interface OnMiddleBtnClickListener {
+        void onMiddleBtnClick();
     }
 
     public static IDialog getInstance() {
@@ -58,8 +62,23 @@ public class IDialog extends BaseDialogFragment<ContextLayoutAlertDialogBinding,
         return this;
     }
 
+    public IDialog setOnMiddleBtnClickListener(OnMiddleBtnClickListener listener) {
+        this.middleBtnClickListener = listener;
+        return this;
+    }
+
     public IDialog setShowCancelBtn(boolean showCancelBtn) {
         this.showCancelBtn = showCancelBtn;
+        return this;
+    }
+
+    public IDialog setShowMiddleBtn(boolean showMiddleBtn) {
+        this.showMiddleBtn = showMiddleBtn;
+        return this;
+    }
+
+    public IDialog setSetMiddleText(String middleText) {
+        this.middleBtnText = middleText;
         return this;
     }
 
@@ -84,14 +103,7 @@ public class IDialog extends BaseDialogFragment<ContextLayoutAlertDialogBinding,
         if (StringUtils.isNotEmpty(title)) {
             binding.tvTitle.setText(title);
         }
-        if (StringUtils.isEmpty(msg)) {
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) binding.llContent.getLayoutParams();
-            layoutParams.height = SizeUtils.dp2px(76);
-            binding.llContent.setLayoutParams(layoutParams);
-        } else {
-            binding.llMsg.setVisibility(View.VISIBLE);
-            binding.tvMsg.setText(msg);
-        }
+        binding.tvMsg.setText(msg);
         if (StringUtils.isNotEmpty(confirmText)) {
             binding.tvConfirm.setText(confirmText);
         }
@@ -103,8 +115,17 @@ public class IDialog extends BaseDialogFragment<ContextLayoutAlertDialogBinding,
         } else {
             binding.tvCancel.setVisibility(View.GONE);
         }
+        if (showMiddleBtn) {
+            binding.llMiddle.setVisibility(View.VISIBLE);
+        } else {
+            binding.llMiddle.setVisibility(View.GONE);
+        }
+        if (StringUtils.isNotEmpty(middleBtnText)) {
+            binding.tvMiddle.setText(middleBtnText);
+        }
         binding.tvCancel.setOnClickListener(this);
         binding.tvConfirm.setOnClickListener(this);
+        binding.llMiddle.setOnClickListener(this);
     }
 
     @Override
@@ -120,25 +141,11 @@ public class IDialog extends BaseDialogFragment<ContextLayoutAlertDialogBinding,
             if (confirmClickListener != null) {
                 confirmClickListener.onConfirm();
             }
-        }
-    }
-
-    public static class Builder {
-        private String title;
-        private String msg;
-        private String positiveText;
-        private String negativeText;
-        private boolean showCancelBtn;
-
-        /**
-         * 设置title
-         *
-         * @param title
-         * @return Builder
-         */
-        public Builder setTitle(String title) {
-            this.title = title;
-            return this;
+        } else if (v.getId() == binding.llMiddle.getId()) {
+            dismissAllowingStateLoss();
+            if (middleBtnClickListener != null) {
+                middleBtnClickListener.onMiddleBtnClick();
+            }
         }
     }
 }

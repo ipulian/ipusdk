@@ -31,4 +31,9 @@ public class StorageConstant {
     //本地话单上传记录，防止重复上传
     public static final String UPLOAD_RECORD = "upload_record";
 
+    //定位信息
+    public static final String LOCATION = "location";
+
+    public static final String UYOU_ALARM_TIME = "uyou_alarm_time";
+
 }

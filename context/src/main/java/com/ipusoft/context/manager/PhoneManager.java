@@ -5,12 +5,10 @@ import android.net.Uri;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.elvishew.xlog.XLog;
 import com.ipusoft.context.AppContext;
 import com.ipusoft.context.cache.AppCacheContext;
-import com.ipusoft.context.view.dialog.IDialog;
 import com.ipusoft.localcall.bean.SIMCallOutBean;
-import com.elvishew.xlog.XLog;
-import com.ipusoft.permission.RxPermissionUtils;
 
 /**
  * author : GWFan
@@ -36,6 +34,7 @@ public class PhoneManager {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         } catch (Exception e) {
             e.printStackTrace();
+            XLog.d("---->" + e.getMessage());
             Uri uri = Uri.parse("tel:" + phone);
             intent = new Intent(Intent.ACTION_DIAL, uri);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -67,45 +66,8 @@ public class PhoneManager {
      */
     public static void callPhoneBySim(String phone, String callTime) {
         XLog.d("主卡外呼->开始，phone：" + phone);
-        boolean hasSimRecordPermission = true;
-        try {
-            if (PlatformManager.isHUAWEI()) {
-                hasSimRecordPermission = RxPermissionUtils.checkHuaweiRecord();
-            } else if (PlatformManager.isMIUI()) {
-                hasSimRecordPermission = RxPermissionUtils.checkXiaomiRecord();
-            } else if (PlatformManager.isOPPO()) {
-                hasSimRecordPermission = RxPermissionUtils.checkOppoRecord();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        XLog.d("主卡外呼->开始，检查主卡通话录音权限：" + hasSimRecordPermission);
-        if (hasSimRecordPermission) {
-            AppCacheContext.setSIMCallOutBean(new SIMCallOutBean(phone, callTime));
-            callPhone(phone);
-        } else {
-            IDialog.getInstance()
-                    .setTitle("未打开通话录音功能")
-                    .setMsg("可能会影响通话录音")
-                    .setConfirmText("继续拨打")
-                    .setCancelText("去打开")
-                    .setOnCancelClickListener(() -> {
-                        if (PlatformManager.isHUAWEI()) {
-                            PlatformManager.startHuaweiRecord();
-                        } else if (PlatformManager.isMIUI()) {
-                            PlatformManager.startXiaomiRecord();
-                        } else if (PlatformManager.isOPPO()) {
-                            PlatformManager.startOppoRecord();
-                        } else {
-                            Intent intent = new Intent(Intent.ACTION_DIAL);
-                            AppContext.getActivityContext().startActivity(intent);
-                        }
-                    }).setOnConfirmClickListener(() -> {
-                        AppCacheContext.setSIMCallOutBean(new SIMCallOutBean(phone, callTime));
-                        callPhone(phone);
-                    })
-                    .show();
-        }
+        AppCacheContext.setSIMCallOutBean(new SIMCallOutBean(phone, callTime));
+        callPhone(phone);
     }
 
     /**

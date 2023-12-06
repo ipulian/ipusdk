@@ -33,7 +33,8 @@ public class ListResponse<T> extends HttpResponse {
             "datas",
             "tops",
             "result",
-            "storeList"//门店列表
+            "storeList",//门店列表
+            "asrResults"
     })
     private List<T> rows;
 

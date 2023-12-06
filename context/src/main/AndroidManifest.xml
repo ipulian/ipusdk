@@ -3,6 +3,7 @@
     package="com.ipusoft.context">
 
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <!--地图包、搜索包需要的基础权限-->

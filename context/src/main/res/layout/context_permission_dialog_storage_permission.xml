@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center">
 
-        <LinearLayout
+        <com.ipusoft.context.view.roundview.RoundLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="50dp"
-            android:background="@drawable/context_permission_bg_alert_dialog"
-            android:paddingVertical="25dp">
+            android:background="@color/white"
+            android:paddingVertical="25dp"
+            app:rRadius="10dp">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -80,6 +82,6 @@
 
                 </LinearLayout>
             </ScrollView>
-        </LinearLayout>
+        </com.ipusoft.context.view.roundview.RoundLinearLayout>
     </LinearLayout>
 </layout>

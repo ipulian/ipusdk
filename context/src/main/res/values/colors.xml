@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="themeColor">#267DE1</color>
+
+    <color name="themeColor">#1E64D6</color>
+    <color name="themeColor95">#F2257EE2</color>
+    <color name="themeColor90">#E6257EE2</color>
+    <color name="themeColor85">#D9257EE2</color>
+    <color name="themeColor80">#CC257EE2</color>
+    <color name="themeColor75">#B0257EE2</color>
+    <color name="themeColor70">#B3257EE2</color>
+    <color name="themeColor65">#A6257EE2</color>
+    <color name="themeColor60">#99257EE2</color>
+    <color name="themeColor55">#8C257EE2</color>
+    <color name="themeColor50">#80257EE2</color>
+    <color name="themeColor45">#73257EE2</color>
+    <color name="themeColor40">#66257EE2</color>
+    <color name="themeColor35">#59257EE2</color>
+    <color name="themeColor30">#4D257EE2</color>
+    <color name="themeColor25">#40257EE2</color>
+    <color name="themeColor20">#33257EE2</color>
+    <color name="themeColor15">#26257EE2</color>
+    <color name="themeColor10">#1A257EE2</color>
+    <color name="themeColor5">#0D257EE2</color>
+    <color name="themeColor1">#05257EE2</color>
+
     <color name="themeColorPress">#7EB1EE</color>
+    <color name="themeColor2">#0087FF</color>
+    <color name="themeColor3">#EFF9FF</color>
+    <color name="themeColor4">#507EB1EE</color>
 
     <color name="textColor8">#999999</color>
     <color name="black">#FF000000</color>
@@ -64,6 +89,33 @@
     <color name="successColor">#11C52C</color>
     <color name="tipColor">#FA6400</color>
 
+
+    <color name="textColor3">#D1D8E1</color>
+    <color name="textColor5">#CCCCCC</color>
+    <color name="textColor10">#B3B3B3</color>
+    <color name="textColor13">#AAAAAA</color>
+    <color name="textColor4">#808080</color>
+    <color name="textColor1">#666666</color>
+    <color name="textColor11">#464646</color>
+    <color name="textColor9">#424242</color>
+    <color name="textColor2">#333333</color>
+    <color name="textColor12">#1A1A1A</color>
+    <color name="textColor7">#121E2A</color>
+    <color name="dial_btn_text_color">#1A1A1A</color>
+    <color name="dial_input_color">#F3F4F6</color>
+    <color name="dial_input_text_color">#393939</color>
+    <color name="phone_owner_color">#777777</color>
+    <color name="time_color">#A2A2A2</color>
+
+
     <color name="navigationBarColor">#F3F4F6</color>
+
+    <color name="dialogInfoBackgroundColor">#2866BF</color>
+    <color name="dialogSuccessBackgroundColor">#00b576</color>
+    <color name="dialogProgressBackgroundColor">#2866BF</color>
+    <color name="dialogErrorBackgroundColor">#C1272D</color>
+    <color name="dialogWarningBackgroundColor">#f2c304</color>
+    <color name="dialogNoticeBackgroundColor">#737373</color>
+    <color name="colorPrimary">#2866BF</color>
 
 </resources>

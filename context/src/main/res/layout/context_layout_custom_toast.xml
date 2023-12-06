@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ipusoft.context.view.roundview.RoundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/context_bg_custom_toast"
+    android:background="@color/black70"
     android:gravity="center"
-    android:minWidth="150dp"
-    android:minHeight="55dp">
+    android:minWidth="160dp"
+    android:minHeight="57dp"
+    app:rRadius="26dp">
 
     <TextView
         android:id="@+id/tv_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/dp_8"
         android:gravity="center"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="@dimen/sp_14" />
 
-</LinearLayout>
+</com.ipusoft.context.view.roundview.RoundLinearLayout>

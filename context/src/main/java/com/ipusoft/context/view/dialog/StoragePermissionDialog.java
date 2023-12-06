@@ -1,6 +1,7 @@
 package com.ipusoft.context.view.dialog;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.view.View;
@@ -10,6 +11,7 @@ import com.ipusoft.context.component.ToastUtils;
 import com.ipusoft.context.component.base.BaseDialogFragment;
 import com.ipusoft.context.databinding.ContextPermissionDialogStoragePermissionBinding;
 import com.ipusoft.context.viewmodel.BaseViewModel;
+import com.ipusoft.utils.AppUtils;
 
 /**
  * author : GWFan
@@ -48,10 +50,18 @@ public class StoragePermissionDialog extends BaseDialogFragment<ContextPermissio
     public void onClick(View v) {
         super.onClick(v);
         if (v.getId() == binding.llAgree.getId()) {
-           try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                    AppContext.getActivityContext().startActivity(intent);
+            try {
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + AppUtils.getAppPackageName()));
+                        AppContext.getActivityContext().startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                        AppContext.getActivityContext().startActivity(intent);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

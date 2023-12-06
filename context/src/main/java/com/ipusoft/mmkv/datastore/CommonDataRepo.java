@@ -1,12 +1,16 @@
 package com.ipusoft.mmkv.datastore;
 
+import android.util.Log;
+
 import com.google.gson.reflect.TypeToken;
 import com.ipusoft.context.bean.AuthInfo;
 import com.ipusoft.context.bean.IAuthInfo;
+import com.ipusoft.context.bean.LocalMessage;
 import com.ipusoft.context.bean.LocalRecordPath;
 import com.ipusoft.context.bean.SeatInfo;
 import com.ipusoft.context.constant.CallTypeConfig;
 import com.ipusoft.context.constant.DateTimePattern;
+import com.ipusoft.localcall.bean.WebCallTask;
 import com.ipusoft.mmkv.AccountMMKV;
 import com.ipusoft.mmkv.AppMMKV;
 import com.ipusoft.mmkv.CommonMMKV;
@@ -17,6 +21,7 @@ import com.ipusoft.utils.GsonUtils;
 import com.ipusoft.utils.MapUtils;
 import com.ipusoft.utils.StringUtils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -114,10 +119,6 @@ public class CommonDataRepo {
         String localCallType = getLocalCallType();
         if (StringUtils.equals(CallTypeConfig.SIM.getType(), localCallType)) {
             isUpload = true;
-        } else if (StringUtils.equals(CallTypeConfig.SIP.getType(), localCallType)) {
-            isUpload = false;
-        } else if (StringUtils.equals(CallTypeConfig.X.getType(), localCallType)) {
-            isUpload = CommonMMKV.getBoolean(StorageConstant.UPLOAD_LOCAL_RECORD, false);
         }
         return isUpload;
     }
@@ -219,6 +220,28 @@ public class CommonDataRepo {
     }
 
     /**
+     * 返回连连员工数据
+     *
+     * @return
+     */
+    public static String getUserInfo() {
+        return AccountMMKV.getString(StorageConstant.USER_INFO);
+    }
+
+    /**
+     * 重新刷脸才能进入
+     *
+     * @param timestamp
+     */
+    public static void setReAuth2Login(Long timestamp) {
+        AccountMMKV.set(StorageConstant.RE_AUTH_2_LOGIN_TIME_STAMP, timestamp);
+    }
+
+    public static Long getReAuth2Login() {
+        return AccountMMKV.getLong(StorageConstant.RE_AUTH_2_LOGIN_TIME_STAMP, 0L);
+    }
+
+    /**
      * App是否第一次安装
      *
      * @param flag
@@ -240,6 +263,14 @@ public class CommonDataRepo {
         return CommonMMKV.getBoolean(StorageConstant.SHOW_HUNG_UP_POP, true);
     }
 
+    public static void setShowCallOutPop(boolean showHungUpPop) {
+        CommonMMKV.set(StorageConstant.SHOW_CALL_OUT_POP, showHungUpPop);
+    }
+
+    public static boolean getShowCallOutPop() {
+        return CommonMMKV.getBoolean(StorageConstant.SHOW_CALL_OUT_POP, false);
+    }
+
     public static void setSipSDKSignOut(boolean flag) {
         CommonMMKV.set(StorageConstant.SIP_SDK_SIGN_OUT, flag);
     }
@@ -254,6 +285,30 @@ public class CommonDataRepo {
 
     public static boolean getNeverAnswerPermission() {
         return CommonMMKV.getBoolean(StorageConstant.NEVER_ANSWER_PERMISSION, false);
+    }
+
+    /**
+     * Uyou卡注册的地理位置
+     *
+     * @param location
+     */
+    public static void setInitLocation(String location) {
+        CommonMMKV.set(com.ipusoft.localcall.constant.StorageConstant.LOCATION, location);
+    }
+
+    public static String getInitLocation() {
+        return CommonMMKV.getString(com.ipusoft.localcall.constant.StorageConstant.LOCATION);
+    }
+
+    /**
+     * Uyou卡位置异常，上次告警时间
+     */
+    public static void setPhoneAlarmTime(long time) {
+        CommonMMKV.set(com.ipusoft.localcall.constant.StorageConstant.UYOU_ALARM_TIME, time);
+    }
+
+    public static long getPhoneAlarmTime() {
+        return CommonMMKV.getLong(com.ipusoft.localcall.constant.StorageConstant.UYOU_ALARM_TIME);
     }
 
     //TODO
@@ -293,5 +348,278 @@ public class CommonDataRepo {
             e.printStackTrace();
         }
         return map;
+    }
+
+    /**
+     * 登录信息
+     */
+    public static void setLoginInfo(String json) {
+        AccountMMKV.set(StorageConstant.LOGIN, json);
+    }
+
+    /**
+     * 手机号码
+     *
+     * @param phoneNumber
+     */
+    public static void setDevicePhoneNumber(String phoneNumber) {
+        AppMMKV.set(StorageConstant.DEVICE_PHONE_NUMBER, phoneNumber);
+    }
+
+    public static String getDevicePhoneNumber() {
+        return AppMMKV.getString(StorageConstant.DEVICE_PHONE_NUMBER);
+    }
+
+    public static void setPopWindowField(String field) {
+        AppMMKV.set(StorageConstant.POP_WINDOW_FIELD, field);
+    }
+
+    public static String getPopWindowField() {
+        return AppMMKV.getString(StorageConstant.POP_WINDOW_FIELD);
+    }
+
+    public static void setFingerprintAuth(boolean fingerprintAuth) {
+        AppMMKV.set(StorageConstant.FINGERPRINT_AUTH, fingerprintAuth);
+    }
+
+    public static boolean getFingerprintAuth() {
+        return AppMMKV.getBoolean(StorageConstant.FINGERPRINT_AUTH, false);
+    }
+
+    public static void setCallTaskModel(int model) {
+        AppMMKV.set(StorageConstant.CALL_TASK_MODEL, model);
+    }
+
+    public static int getCallTaskModel() {
+        return AppMMKV.getInt(StorageConstant.CALL_TASK_MODEL);
+    }
+
+
+    public static void setCallTaskModelRemind(boolean remind) {
+        AppMMKV.set(StorageConstant.CALL_TASK_MODEL_REMIND, remind);
+    }
+
+    public static Boolean getCallTaskModelRemind() {
+        return AppMMKV.getBoolean(StorageConstant.CALL_TASK_MODEL_REMIND, false);
+    }
+
+    public static void setCallTaskInterval(int interval) {
+        AppMMKV.set(StorageConstant.CALL_TASK_INTERVAL, interval);
+    }
+
+    public static int getCallTaskInterval() {
+        return AppMMKV.getInt(StorageConstant.CALL_TASK_INTERVAL);
+    }
+
+    public static void addNotificationMessage(LocalMessage localMessage) {
+        List<LocalMessage> list = getNotificationMessage();
+        if (ArrayUtils.isEmpty(list)) {
+            list = new ArrayList<>();
+        } else {
+            Iterator<LocalMessage> iterator = list.iterator();
+            while (iterator.hasNext()) {
+                LocalMessage next = iterator.next();
+                if (next.getType() == localMessage.getType()) {
+                    iterator.remove();
+                }
+            }
+        }
+        list.add(localMessage);
+        AccountMMKV.set(StorageConstant.NOTIFICATION_MESSAGE, GsonUtils.toJson(list));
+    }
+
+    public static void removeNotificationMessage(long id) {
+        List<LocalMessage> list = getNotificationMessage();
+        if (ArrayUtils.isEmpty(list)) {
+            list = new ArrayList<>();
+        } else {
+            Iterator<LocalMessage> iterator = list.iterator();
+            while (iterator.hasNext()) {
+                LocalMessage next = iterator.next();
+                if (next.getId() == id) {
+                    iterator.remove();
+                }
+            }
+        }
+        AccountMMKV.set(StorageConstant.NOTIFICATION_MESSAGE, GsonUtils.toJson(list));
+    }
+
+    /**
+     * @param id
+     * @param read 0未读；1已读
+     */
+    public static void setLocalNotificationRead(long id, int read) {
+        List<LocalMessage> list = getNotificationMessage();
+        if (ArrayUtils.isEmpty(list)) {
+            list = new ArrayList<>();
+        } else {
+            for (LocalMessage next : list) {
+                if (next.getId() == id) {
+                    next.setRead(read);
+                }
+            }
+        }
+        AccountMMKV.set(StorageConstant.NOTIFICATION_MESSAGE, GsonUtils.toJson(list));
+    }
+
+    public static List<LocalMessage> getNotificationMessage() {
+        String json = AccountMMKV.getString(StorageConstant.NOTIFICATION_MESSAGE);
+        List<LocalMessage> localMessage = null;
+        if (StringUtils.isNotEmpty(json)) {
+            localMessage = GsonUtils.fromJson(json, GsonUtils.getListType(LocalMessage.class));
+        }
+        return localMessage;
+    }
+
+    public static Map<String, WebCallTask> getWebCallTaskId() {
+        String json = AppMMKV.getString(StorageConstant.WEB_CALL_TASK_ID);
+        Map<String, WebCallTask> map = new HashMap<>();
+        if (StringUtils.isNotEmpty(json)) {
+            map = GsonUtils.fromJson(json, GsonUtils.getMapType(String.class, WebCallTask.class));
+        }
+        return map;
+    }
+
+    public static void removeWebCallTaskId(String phone) {
+        try {
+            Map<String, WebCallTask> taskMap = getWebCallTaskId();
+            taskMap.remove(phone);
+            AppMMKV.set(StorageConstant.WEB_CALL_TASK_ID, GsonUtils.toJson(taskMap));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setWebCallTaskId(String phone, WebCallTask webCallTask) {
+        try {
+            Map<String, WebCallTask> map = getWebCallTaskId();
+            if (map == null) {
+                map = new HashMap<>();
+            }
+            map.put(phone, webCallTask);
+            Iterator<Map.Entry<String, WebCallTask>> iterator = map.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, WebCallTask> entry = iterator.next();
+                WebCallTask value = entry.getValue();
+                if (System.currentTimeMillis() - value.getCallTime() > 90 * 60 * 1000) {
+                    iterator.remove();
+                }
+            }
+            AppMMKV.set(StorageConstant.WEB_CALL_TASK_ID, GsonUtils.toJson(map));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setUploadRecordId(String callId) {
+        Map<String, List<String>> map = null;
+        List<String> callIdList = new ArrayList<>();
+        String today = DateTimeUtils.getCurrentTime(DateTimePattern.getDateFormat());
+
+        String json = AppMMKV.getString(StorageConstant.UPLOAD_RECORD_ID);
+        if (StringUtils.isNotEmpty(json)) {
+            map = GsonUtils.fromJson(json, GsonUtils.getMapType(String.class, List.class));
+            if (map == null) {
+                map = new HashMap<>();
+            }
+            if (map.containsKey(today)) {
+                callIdList = map.get(today);
+                if (callIdList == null) {
+                    callIdList = new ArrayList<>();
+                }
+            } else {
+                map = new HashMap<>();
+            }
+        } else {
+            map = new HashMap<>();
+        }
+        callIdList.add(callId);
+        map.put(today, callIdList);
+        AppMMKV.set(StorageConstant.UPLOAD_RECORD_ID, GsonUtils.toJson(map));
+    }
+
+
+    public static boolean checkUploadRecordIdExist(String callId) {
+        String json = AppMMKV.getString(StorageConstant.UPLOAD_RECORD_ID);
+        if (StringUtils.isNotEmpty(json)) {
+            Map<String, List<String>> map = GsonUtils.fromJson(json, GsonUtils.getMapType(String.class, List.class));
+            Log.d(TAG, "checkUploadRecordIdExist: ------>" + GsonUtils.toJson(map));
+            if (map == null) {
+                return false;
+            }
+            String today = DateTimeUtils.getCurrentTime(DateTimePattern.getDateFormat());
+            if (map.containsKey(today)) {
+                List<String> callIdList = map.get(today);
+                if (callIdList == null) {
+                    return false;
+                }
+                return callIdList.contains(callId);
+            } else {
+                return false;
+            }
+        }
+        Log.d(TAG, "checkUploadRecordIdExist: ------>没数据");
+        return false;
+    }
+
+//    public static void setUploadRecordId(long callId) {
+//        Map<String, List<Long>> map = null;
+//        List<Long> callIdList = new ArrayList<>();
+//        String today = DateTimeUtils.getCurrentTime(DateTimePattern.getDateFormat());
+//
+//        String json = AppMMKV.getString(StorageConstant.UPLOAD_RECORD_ID);
+//        if (StringUtils.isNotEmpty(json)) {
+//            map = GsonUtils.fromJson(json, GsonUtils.getMapType(String.class, List.class));
+//            if (map == null) {
+//                map = new HashMap<>();
+//            }
+//            if (map.containsKey(today)) {
+//                callIdList = map.get(today);
+//                if (callIdList == null) {
+//                    callIdList = new ArrayList<>();
+//                }
+//            }
+//        } else {
+//            map = new HashMap<>();
+//        }
+//        callIdList.add(callId);
+//        map.put(today, callIdList);
+//        AppMMKV.set(StorageConstant.UPLOAD_RECORD_ID, GsonUtils.toJson(map));
+//    }
+
+
+    public static void setRemindFlag(boolean remind) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("time", DateTimeUtils.getCurrentTime(DateTimePattern.getDateFormat()));
+        map.put("value", remind);
+        AppMMKV.set(StorageConstant.NO_SHOW_OPEN_RECORDING_DIALOG, GsonUtils.toJson(map));
+    }
+
+    public static boolean getRemindFlag() {
+        String json = AppMMKV.getString(StorageConstant.NO_SHOW_OPEN_RECORDING_DIALOG);
+        boolean result = false;
+        if (StringUtils.isEmpty(json)) {
+            return result;
+        }
+        try {
+            Map<String, Object> map = GsonUtils.fromJson(json, GsonUtils.getMapType(String.class, Object.class));
+            if (map != null && map.size() != 0) {
+                String time = (String) map.get("time");
+                boolean value = false;
+                Object value1 = map.get("value");
+                if (value1 != null) {
+                    value = (boolean) value1;
+                }
+                if (StringUtils.equals(DateTimeUtils.getCurrentTime(DateTimePattern.getDateFormat()), time)) {
+                    return value;
+                } else {
+                    return result;
+                }
+            }
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

@@ -2,8 +2,8 @@ plugins { id 'com.android.library' }
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.github.team.github@51lianlian.com'
+//apply plugin: 'com.github.dcendents.android-maven'
+//group = 'com.github.team.github@51lianlian.com'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -94,7 +94,7 @@ dependencies {
 //    api 'com.github.tbruyelle:rxpermissions:0.12'
 
     //搜索功能
-    implementation 'com.amap.api:location:5.4.0'
+    implementation 'com.amap.api:location:6.3.0'
 
     /**
      * Room
@@ -129,4 +129,10 @@ dependencies {
      * https://github.com/aliyun/aliyun-oss-android-sdk?spm=a2c4g.11186623.2.10.502e4de3lAPo50
      */
     compile 'com.aliyun.dpa:oss-android-sdk:2.9.5'
+
+    /**
+     * BaseRecyclerViewAdapterHelper
+     * https://github.com/CymChad/BaseRecyclerViewAdapterHelper
+     */
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
 }
