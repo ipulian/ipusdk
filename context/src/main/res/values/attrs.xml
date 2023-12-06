@@ -22,6 +22,19 @@
         <attr name="android:background" />
     </declare-styleable>
 
+    <attr name="rRadius" format="dimension" />
+    <attr name="rLeftRadius" format="dimension" />
+    <attr name="rRightRadius" format="dimension" />
+    <attr name="rTopRadius" format="dimension" />
+    <attr name="rBottomRadius" format="dimension" />
+    <attr name="rTopLeftRadius" format="dimension" />
+    <attr name="rTopRightRadius" format="dimension" />
+    <attr name="rBottomLeftRadius" format="dimension" />
+    <attr name="rBottomRightRadius" format="dimension" />
+    <attr name="rStrokeWidth" format="dimension" />
+    <attr name="rStrokeColor" format="reference|color" />
+    <attr name="rNewLayer" format="boolean" />
+
     <declare-styleable name="RoundCorner">
         <attr name="rRadius" />
         <attr name="rLeftRadius" />
