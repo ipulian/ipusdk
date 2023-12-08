@@ -8,7 +8,7 @@ import com.ipusoft.context.bean.base.HttpResponse;
  * desc   :
  */
 
-public abstract class SimRiskControlBean extends HttpResponse {
+public class SimRiskControlBean extends HttpResponse {
     /*
      * 0直接外呼  1无法外呼提示msg  2提示msg，提供继续外呼和取消外呼
      */
