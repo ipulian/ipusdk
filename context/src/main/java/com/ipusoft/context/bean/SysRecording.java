@@ -65,13 +65,16 @@ public class SysRecording implements Serializable {
     //callID
     @ColumnInfo(name = "call_id")
     private long callId;
-
     //员工手机号码
     @ColumnInfo(name = "caller")
     private String caller;
-
+    //上传结果
     @ColumnInfo(name = "upload_result")
     private String uploadResult;
+
+    //扩展字段
+    @ColumnInfo(name = "call_info")
+    private String callInfo;
 
     /**
      * 上传进度
@@ -282,6 +285,14 @@ public class SysRecording implements Serializable {
 
     public void setUploadResult(String uploadResult) {
         this.uploadResult = uploadResult;
+    }
+
+    public String getCallInfo() {
+        return callInfo;
+    }
+
+    public void setCallInfo(String callInfo) {
+        this.callInfo = callInfo;
     }
 
     public long getReleaseTime() {

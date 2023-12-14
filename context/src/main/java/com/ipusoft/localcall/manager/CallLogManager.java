@@ -191,6 +191,9 @@ public class CallLogManager {
                                             recording.setCallType(callLog.getCallType());
                                             recording.setCallResult(callResult);
                                             recording.setCallTimeServer(callLog.getCallTime());
+
+                                            Log.d(TAG, "onNext: .d0-0-0-0-0-0-----" + callLog.getCallInfo());
+                                            recording.setCallInfo(callLog.getCallInfo());
                                             if (callLog.getCallId() != 0) {
                                                 recording.setCallId(callLog.getCallId());
                                             } else {
@@ -237,6 +240,7 @@ public class CallLogManager {
                                         /*
                                          * 入库
                                          */
+                                        Log.d(TAG, "onNext: .------------>" + GsonUtils.toJson(list));
                                         SysRecordingRepo.insert(list);
                                         /*
                                          * 加入任务队列
@@ -277,6 +281,7 @@ public class CallLogManager {
                                             recording.setUploadStatus(UploadStatus.WAIT_UPLOAD.getStatus());
                                             recording.setCallResult(callLog.getCallResult());
                                             recording.setCallType(callLog.getCallType());
+                                            recording.setCallInfo(callLog.getCallInfo());
 
                                             if (callLog.getCallId() != 0) {
                                                 recording.setCallId(callLog.getCallId());

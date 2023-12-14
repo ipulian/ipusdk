@@ -12,6 +12,7 @@ import java.util.Objects;
 public class SIMCallOutBean implements Serializable {
     private String phone;
     private Long timestamp;
+    private String callInfo;//扩展信息
 
     private String releaseTime;//挂断时间
     private String callTime;//外呼时间
@@ -21,9 +22,22 @@ public class SIMCallOutBean implements Serializable {
         this.callTime = callTime;
     }
 
+    public SIMCallOutBean(String phone, String callTime, String callInfo) {
+        this.phone = phone;
+        this.callTime = callTime;
+        this.callInfo = callInfo;
+    }
+
     public SIMCallOutBean(String phone, String callTime, Long timestamp) {
         this.phone = phone;
         this.callTime = callTime;
+        this.timestamp = timestamp;
+    }
+
+    public SIMCallOutBean(String phone, String callTime, String callInfo, Long timestamp) {
+        this.phone = phone;
+        this.callTime = callTime;
+        this.callInfo = callInfo;
         this.timestamp = timestamp;
     }
 
@@ -57,6 +71,14 @@ public class SIMCallOutBean implements Serializable {
 
     public void setReleaseTime(String releaseTime) {
         this.releaseTime = releaseTime;
+    }
+
+    public String getCallInfo() {
+        return callInfo;
+    }
+
+    public void setCallInfo(String callInfo) {
+        this.callInfo = callInfo;
     }
 
     @Override

@@ -15,7 +15,7 @@ import com.ipusoft.context.db.dao.SysRecordingDao
  * desc   :
  */
 
-@Database(entities = [SysRecording::class, CallTask::class, CallTaskDetails::class], version = 6)
+@Database(entities = [SysRecording::class, CallTask::class, CallTaskDetails::class], version = 7)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun sysRecordingDao(): SysRecordingDao

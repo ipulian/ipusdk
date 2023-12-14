@@ -70,6 +70,12 @@ public class PhoneManager {
         callPhone(phone);
     }
 
+    public static void callPhoneBySim(String phone, String callTime, String callInfo) {
+        XLog.d("主卡外呼->开始，phone：" + phone);
+        AppCacheContext.setSIMCallOutBean(new SIMCallOutBean(phone, callTime, callInfo));
+        callPhone(phone);
+    }
+
     /**
      * 发送短息
      *

@@ -138,6 +138,7 @@ public class UploadRecordMultipartBuilder {
                 XLog.d("未获取到定位信息");
             }
             builder.addFormDataPart("callTime", StringUtils.null2Empty(recording.getCallTimeServer()));
+            builder.addFormDataPart("callInfo", StringUtils.null2Empty(recording.getCallInfo()));
             if (!CommonDataRepo.getAppIsFirstInstall()) {
                 //已经同意隐私政策的情况下才会去获取ip地址
                 builder.addFormDataPart("callIP", StringUtils.null2Empty(NetWorkUtils.getIPAddress()));

@@ -135,7 +135,7 @@ dependencies {
      * 阿里云OSS
      * https://github.com/aliyun/aliyun-oss-android-sdk?spm=a2c4g.11186623.2.10.502e4de3lAPo50
      */
-    compile 'com.aliyun.dpa:oss-android-sdk:2.9.5'
+    implementation 'com.aliyun.dpa:oss-android-sdk:2.9.5'
 
     /**
      * BaseRecyclerViewAdapterHelper

@@ -26,6 +26,8 @@ public class SysCallLog implements Serializable {
     //主机号码
     private String hostNumber = "";
 
+    private String callInfo;
+
     public String getName() {
         return name;
     }
@@ -104,5 +106,13 @@ public class SysCallLog implements Serializable {
 
     public void setHostNumber(String hostNumber) {
         this.hostNumber = hostNumber;
+    }
+
+    public String getCallInfo() {
+        return callInfo;
+    }
+
+    public void setCallInfo(String callInfo) {
+        this.callInfo = callInfo;
     }
 }

@@ -157,8 +157,10 @@ public class CallLogRepo {
                                 if (target != null) {
                                     boolean remove = listCopy.remove(target);
                                     if (remove) {
+                                        //Log.d(TAG, "querySysCallLog: .getCallInfo------------>" + target.getCallInfo());
                                         callLog.setCallId(target.getTimestamp());
                                         callLog.setCallTime(target.getCallTime());
+                                        callLog.setCallInfo(target.getCallInfo());
                                         try {
                                             if (StringUtils.isNotEmpty(target.getReleaseTime())) {
                                                 callLog.setEndTime(DateTimeUtils.string2Millis(target.getReleaseTime(), DateTimePattern.getDateTimeWithSecondFormat()));

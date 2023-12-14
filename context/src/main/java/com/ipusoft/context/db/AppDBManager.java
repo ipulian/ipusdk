@@ -23,7 +23,7 @@ public class AppDBManager {
         appDB = Room.databaseBuilder(AppContext.getAppContext(), AppDatabase.class,
                         "ipusdk.db")
                 .fallbackToDestructiveMigration()
-                .addMigrations(new Migration1To2(1, 2), new Migration4To5(4, 5))
+                .addMigrations(new Migration1To2(1, 2), new Migration4To5(4, 5), new Migration4To5(5, 6))
                 .build();
     }
 
