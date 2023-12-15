@@ -103,4 +103,7 @@ public class StorageConstant {
 
     public static final String NO_SHOW_OPEN_RECORDING_DIALOG = "NO_SHOW_OPEN_RECORDING_DIALOG";
 
+    //记录上次外呼的卡
+    public static final String LAST_CALL_SIM = "last_call_sim";
+
 }

@@ -622,4 +622,14 @@ public class CommonDataRepo {
         }
         return result;
     }
+
+    //记录上次外呼的卡
+    public static void setLastCallSim(int simIndex) {
+        AppMMKV.set(StorageConstant.LAST_CALL_SIM, simIndex);
+    }
+
+    public static int getLastCallSim() {
+        return AppMMKV.getInt(StorageConstant.LAST_CALL_SIM);
+    }
+
 }
