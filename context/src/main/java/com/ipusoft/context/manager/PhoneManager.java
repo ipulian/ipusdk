@@ -92,15 +92,16 @@ public class PhoneManager {
                 && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        String caller = tm.getLine1Number();
+       // String caller = tm.getLine1Number();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 Log.d("callPhone", "缺少 READ_PHONE_STATE 权限");
                 return;
             }
+            int index = (simIndex == 2 ? 1 : 0);
             List<PhoneAccountHandle> phoneAccountHandleList = telecomManager.getCallCapablePhoneAccounts();
-            if (phoneAccountHandleList != null && phoneAccountHandleList.size() > 0 && simIndex < phoneAccountHandleList.size()) {
-                intent.putExtra(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandleList.get(simIndex == 2 ? 1 : 0));
+            if (phoneAccountHandleList != null && phoneAccountHandleList.size() > 0 && index < phoneAccountHandleList.size()) {
+                intent.putExtra(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandleList.get(index));
             }
         }
         mContext.startActivity(intent);
