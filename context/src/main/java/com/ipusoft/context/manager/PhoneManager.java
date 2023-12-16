@@ -63,7 +63,7 @@ public class PhoneManager {
      *
      * @param phone
      */
-    public static void callPhone(String phone, int simIndex) {
+    public static void callPhone(Context mContext, String phone, int simIndex) {
         Intent intent = null;
         try {
             intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
@@ -85,9 +85,8 @@ public class PhoneManager {
                 CommonDataRepo.setLastCallSim(1);
             }
         }
-        TelecomManager telecomManager = (TelecomManager) AppContext.getActivityContext().getSystemService(Context.TELECOM_SERVICE);
-        TelephonyManager tm = (TelephonyManager) AppContext.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
-        AppCompatActivity mContext = AppContext.getActivityContext();
+        TelecomManager telecomManager = (TelecomManager) mContext.getSystemService(Context.TELECOM_SERVICE);
+        TelephonyManager tm = (TelephonyManager) mContext.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
@@ -104,7 +103,7 @@ public class PhoneManager {
                 intent.putExtra(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandleList.get(simIndex == 2 ? 1 : 0));
             }
         }
-        AppContext.getAppContext().startActivity(intent);
+        mContext.startActivity(intent);
     }
 
     public static void callPhoneBySIP() {
@@ -153,10 +152,10 @@ public class PhoneManager {
      * @param callInfo
      * @param simIndex 0：卡1卡2轮换（首次使用卡1）；1：卡1外呼；2：卡2外呼
      */
-    public static void callPhoneBySim(String phone, String callTime, String callInfo, int simIndex) {
+    public static void callPhoneBySim(Context context, String phone, String callTime, String callInfo, int simIndex) {
         XLog.d("主卡外呼->开始，phone：" + phone);
         AppCacheContext.setSIMCallOutBean(new SIMCallOutBean(phone, callTime, callInfo));
-        callPhone(phone, simIndex);
+        callPhone(context, phone, simIndex);
     }
 
     /**
