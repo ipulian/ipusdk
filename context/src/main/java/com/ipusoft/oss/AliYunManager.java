@@ -57,6 +57,11 @@ public class AliYunManager {
         return AliYunManagerHolder.INSTANCE;
     }
 
+    public static AliYunManager getInstanceAndInit() {
+        initAliOSS2();
+        return AliYunManagerHolder.INSTANCE;
+    }
+
     public AliYunManager setObjectName(String objectName) {
         this.objectName = objectName;
         return this;
@@ -82,6 +87,13 @@ public class AliYunManager {
         return this;
     }
 
+    public static void initAliOSS2() {
+        if (mOSS == null) {
+            OSSCredentialProvider credentialProvider = new OSSPlainTextAKSKCredentialProvider(MD5Utils.convertMD5(OSS_ACCESS_KEY_ID), MD5Utils.convertMD5(OSS_ACCESS_KEY_SECRET));
+            mOSS = new OSSClient(AppContext.getAppContext(), "http://" + AliYunManager.OSS_END_POINT + ".aliyuncs.com",
+                    credentialProvider);
+        }
+    }
 
     /**
      * 获取文件元信息

@@ -77,10 +77,10 @@ public class CallLogRepo {
                 .getContentResolver()
                 .query(CallLog.Calls.CONTENT_URI, null, selectionClause, selectionArgs,
                         null);
-        if (cursor.moveToLast()) {
-            count = cursor.getPosition();
-        }
-        cursor.close();
+//        if (cursor.moveToLast()) {
+//            count = cursor.getPosition();
+//        }
+        count = cursor.getCount();
         return count;
     }
 
@@ -89,14 +89,36 @@ public class CallLogRepo {
      */
     public static List<SysCallLog> querySysCallLog(int page) {
         Log.d(TAG, "querySysCallLog: ------" + page);
-        String paging = "date DESC";
+        String paging = "date DESC ";
         String selectionClause = CallLog.Calls.DATE + " > ? ";
         String[] selectionArgs = {(System.currentTimeMillis() - 3 * 24 * 60 * 60 * 1000) + ""};
         Cursor cursor = AppContext.getAppContext()
                 .getContentResolver()
 //                .query(CallLog.Calls.CONTENT_URI, null, null, null, CallLog.Calls.DEFAULT_SORT_ORDER);
                 .query(CallLog.Calls.CONTENT_URI, null, selectionClause, selectionArgs, paging);
-        return getDataFormCursor(cursor);
+        return getDataFormCursor(cursor, -1);
+    }
+
+    public static List<SysCallLog> querySysCallLog(int page, int pageSize) {
+        Log.d(TAG, "page: ------" + page);
+        String paging = CallLog.Calls.DATE + " DESC";
+        String selectionClause = CallLog.Calls.DATE + " > ? ";
+        String[] selectionArgs = {(System.currentTimeMillis() - 3 * 24 * 60 * 60 * 1000) + ""};
+        Cursor cursor = AppContext.getAppContext()
+                .getContentResolver()
+                .query(CallLog.Calls.CONTENT_URI, null, selectionClause, selectionArgs, paging);
+
+        if (cursor != null) {
+            int startIndex = page * pageSize;
+            //int endIndex = startIndex + pageSize - 1;
+            if (startIndex < cursor.getCount()) {
+                cursor.move(startIndex);
+            } else {
+                return new ArrayList<>();
+            }
+        }
+
+        return getDataFormCursor(cursor, pageSize);
     }
 
     public List<SysCallLog> querySysCallLog() {
@@ -110,7 +132,7 @@ public class CallLogRepo {
         XLog.d(TAG + "->查询条件：CallLog.Calls.DATE > " + Math.max(maxTime, System.currentTimeMillis() - 5 * 24 * 60 * 60 * 1000) + "");
         Cursor cursor = AppContext.getAppContext().getContentResolver().query(CallLog.Calls.CONTENT_URI,
                 null, selectionClause, selectionArgs, CallLog.Calls.DEFAULT_SORT_ORDER);
-        List<SysCallLog> sysCallLogs = getDataFormCursor(cursor);
+        List<SysCallLog> sysCallLogs = getDataFormCursor(cursor, -1);
         if (ArrayUtils.isNotEmpty(sysCallLogs)) {
             XLog.d(TAG + "->querySysCallLog1：\n");
             XLog.json(GsonUtils.toJson(sysCallLogs) + "\n");
@@ -192,7 +214,7 @@ public class CallLogRepo {
         return list;
     }
 
-    public static List<SysCallLog> getDataFormCursor(Cursor cursor) {
+    public static List<SysCallLog> getDataFormCursor(Cursor cursor, int pageSize) {
         List<SysCallLog> list = new ArrayList<>();
         try {
             SysCallLog sysCallLog;
@@ -201,6 +223,9 @@ public class CallLogRepo {
                  * 根据机型和Android版本不同，cursor.getColumnIndex(xxx)有可能返回-1
                  */
                 while (cursor.moveToNext()) {
+                    if (list.size() >= pageSize) {
+                        break;
+                    }
                     //联系人姓名
                     String name = "";
                     if (cursor.getColumnIndex(CallLog.Calls.CACHED_NAME) != -1) {
@@ -312,7 +337,7 @@ public class CallLogRepo {
         String selectionClause = CallLog.Calls.DURATION + " > ?";
         Cursor cursor = AppContext.getAppContext().getContentResolver().query(CallLog.Calls.CONTENT_URI,
                 null, selectionClause, new String[]{"0"}, "date DESC LIMIT 1");
-        List<SysCallLog> sysCallLogs = getDataFormCursor(cursor);
+        List<SysCallLog> sysCallLogs = getDataFormCursor(cursor, -1);
         if (ArrayUtils.isNotEmpty(sysCallLogs)) {
             XLog.d(TAG + "->querySysCallLog 查询最后一通成功的通话记录-----：" + GsonUtils.toJson(sysCallLogs));
             sysCallLog = sysCallLogs.get(0);
