@@ -223,7 +223,7 @@ public class CallLogRepo {
                  * 根据机型和Android版本不同，cursor.getColumnIndex(xxx)有可能返回-1
                  */
                 while (cursor.moveToNext()) {
-                    if (list.size() >= pageSize) {
+                    if (pageSize != -1 && list.size() >= pageSize) {
                         break;
                     }
                     //联系人姓名
