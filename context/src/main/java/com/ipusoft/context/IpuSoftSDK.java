@@ -17,6 +17,7 @@ import com.ipusoft.context.listener.OnPhoneStateChangedListener;
 import com.ipusoft.context.registers.ModuleRegister;
 import com.ipusoft.http.QuerySeatInfoHttp;
 import com.ipusoft.logger.XLogger;
+import com.ipusoft.mmkv.AccountMMKV;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
 import com.ipusoft.utils.ArrayUtils;
 import com.ipusoft.utils.GsonUtils;
@@ -270,6 +271,8 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
 
         AppDBManager.clearAllTables();
         CommonDataRepo.clearAllData();
+
+        AccountMMKV.clearAll();
 
         for (String module : ModuleRegister.modules) {
             try {

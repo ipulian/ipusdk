@@ -172,11 +172,16 @@ public class CallLogManager {
                                                  * 号码匹配，时间也对应
                                                  */
                                                 if (StringUtils.equals(s[0], phoneNumber)) {
-                                                    long timeDiff = entry.getValue().lastModified() - (beginTime + duration);
-                                                    if (timeDiff >= 0 && timeDiff <= minDiff) {
-                                                        minDiff = timeDiff;
-                                                        file = entry.getValue();
-                                                    }
+
+                                                    //1702089502000
+                                                    //beginTime 1702089502827
+                                                    XLog.d("entry.getValue().lastModified()--------------" + entry.getValue().lastModified());
+                                                    XLog.d("beginTime--------duration------" + beginTime + "===" + duration + "====>" + (beginTime + duration));
+//                                                    long timeDiff = entry.getValue().lastModified() - (beginTime + duration);
+//                                                    if (timeDiff >= 0 && timeDiff <= minDiff) {
+//                                                        minDiff = timeDiff;
+                                                    file = entry.getValue();
+                                                    //    }
                                                 }
 
                                             }

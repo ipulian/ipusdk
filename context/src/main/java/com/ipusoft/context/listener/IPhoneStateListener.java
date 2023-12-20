@@ -41,9 +41,9 @@ public class IPhoneStateListener extends android.telephony.PhoneStateListener {
     public void registerPhoneListener(Application context, OnPhoneStateChangedListener... list) {
         telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         telephonyManager.listen(this, IPhoneStateListener.LISTEN_CALL_STATE);
-        if (listeners == null) {
-            listeners = new ArrayList<>();
-        }
+        //if (listeners == null) {
+        listeners = new ArrayList<>();
+        //}
         if (ArrayUtils.isNotEmpty(list)) {
             listeners.addAll(Arrays.asList(list));
         }
