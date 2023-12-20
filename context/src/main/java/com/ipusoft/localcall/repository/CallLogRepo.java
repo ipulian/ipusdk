@@ -224,6 +224,7 @@ public class CallLogRepo {
                  */
                 while (cursor.moveToNext()) {
                     if (pageSize != -1 && list.size() >= pageSize) {
+                        Log.d("121200----------->", "2121212121");
                         break;
                     }
                     //联系人姓名
