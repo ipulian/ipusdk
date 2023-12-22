@@ -61,6 +61,7 @@ public class UploadManager {
             SysRecording item = list.get(i);
             if (SimAppCache.addFile2UploadTask(item)) {
                 item.setUploadStatus(UploadStatus.WAIT_UPLOAD.getStatus());
+                item.setRetryCount(item.getRetryCount() + 1);
                 temp.add(item);
             } else {
                 XLog.d(TAG, "addRecordingList2Task: ------------->上传队列中已经存在");
@@ -93,64 +94,6 @@ public class UploadManager {
             }
 
         });
-
-//        SysRecordingRepo.updateRecordingList(list, aBoolean -> {
-//
-//        });
-    }
-//}
-
-//class UploadWorker implements Runnable {
-//    private static final String TAG = "UploadWorker";
-//    private SysRecording sysRecording;
-//
-//    private UploadWorker() {
-//    }
-//
-//    public UploadWorker(SysRecording sysRecording) {
-//        this.sysRecording = sysRecording;
-//    }
-//
-//    @Override
-//    public void run() {
-//        executeUploadHttpTask(sysRecording);
-//    }
-//
-
-    /**
-     * 上传成功
-     */
-    private void setUploadSucceed(SysRecording recording) {
-//        if (StringUtils.equals("1", "0")) {
-//            SysRecordingRepo.deleteRecording(recording);
-//        } else {
-        SysRecordingRepo.updateRecordingStatusByKey(recording,
-                UploadStatus.UPLOAD_SUCCEED.getStatus(),
-                new IObserver<SysRecording>() {
-                    @Override
-                    public void onNext(@NotNull @NonNull SysRecording sysRecording) {
-                        SimAppCache.removeTaskFromQueue(sysRecording);
-                    }
-                });
-        //  }
-    }
-
-    /**
-     * 上传失败
-     *
-     * @param recording
-     */
-    private void setUploadFailure(SysRecording recording, Throwable e) {
-        recording.setRetryCount(recording.getRetryCount() + 1);
-        recording.setLastRetryTime(System.currentTimeMillis());
-        recording.setUploadStatus(UploadStatus.UPLOAD_FAILED.getStatus());
-        recording.setUploadResult(e.getMessage());
-        SysRecordingRepo.updateRecording(recording, new IObserver<Boolean>() {
-            @Override
-            public void onNext(@NotNull @NonNull Boolean aBoolean) {
-                SimAppCache.removeTaskFromQueue(recording);
-            }
-        });
     }
 
     private void uploadRecordingFileByOSS(SysRecording recording) {
@@ -161,93 +104,84 @@ public class UploadManager {
         if (StringUtils.isNotEmpty(timeMD5) && timeMD5.length() >= 6) {
             timeMD5 = timeMD5.substring(0, 5);
         }
-        //Log.d(TAG, "uploadRecordingFileByOSS: -------------->" + Thread.currentThread().getName());
 
         String ossFile = "sim_recording/" + currentTime + "/" + timeMD5 + "/" + StringUtils.trim(recording.getFileName());
         if (StringUtils.isNotEmpty(recording.getAbsolutePath())) {//存在录音文件
             boolean fileExist = instance.checkFileExist(ossFile);
             Log.d(TAG, "uploadRecordingFileByOSS: .------>" + ossFile);
             if (!fileExist) {
-                AliYunUploadManager.uploadFile(ossFile, recording.getAbsolutePath(),
-                        new AliYunUploadManager.OnUploadProgressListener() {
-                            @Override
-                            public void onProgress(long currentSize, long totalSize) {
-                                int progress = (int) (currentSize * 100 / totalSize);
-                                LiveDataBus.get().with(LiveDataConstant.UPLOAD_PROGRESS, UploadProgress.class).postValue(new UploadProgress(recording, progress));
-                            }
+                AliYunUploadManager.uploadFile(ossFile, recording.getAbsolutePath(), new AliYunUploadManager.OnUploadProgressListener() {
+                    @Override
+                    public void onProgress(long currentSize, long totalSize) {
+                        int progress = (int) (currentSize * 100 / totalSize);
+                        LiveDataBus.get().with(LiveDataConstant.UPLOAD_PROGRESS, UploadProgress.class).postValue(new UploadProgress(recording, progress));
+                    }
 
-                            @Override
-                            public void onSuccess() {
-                                XLog.d(TAG + "---onUploadSuccess：OSS----\n");
-                                XLog.json(GsonUtils.toJson(recording) + "\n");
-                            }
+                    @Override
+                    public void onSuccess() {
+                        XLog.d(TAG + "---onUploadSuccess：OSS----\n");
+                        XLog.json(GsonUtils.toJson(recording) + "\n");
+                    }
 
-                            @Override
-                            public void onFailure() {
-                                XLog.e(TAG + "---onUploadFail：OSS----\n");
-                                XLog.json(GsonUtils.toJson(recording) + "\n");
-                            }
-                        });
-//        } else {
-//            setUploadSucceed(recording);
+                    @Override
+                    public void onFailure() {
+                        XLog.e(TAG + "---onUploadFail：OSS----\n");
+                        XLog.json(GsonUtils.toJson(recording) + "\n");
+                    }
+                });
             }
         }
-        UploadFileObserve<UploadResponse> uploadFileObserve = new UploadFileObserve<UploadResponse>() {
-            @Override
-            public void onUploadSuccess(UploadResponse responseBody) {
-                if (StringUtils.equals("1", responseBody.getType())) {//不是我的客户，或者是回电不记录 或者是 话单已上传 或者是 小号话单跳过
-                    int status = UploadStatus.UPLOAD_FAILED.getStatus();
-                    if (StringUtils.isNotEmpty(responseBody.getMsg()) && responseBody.getMsg().contains("话单已上传")) {
-                        status = UploadStatus.UPLOAD_IGNORE.getStatus();
-                    }
-                    SysRecordingRepo.updateRecordingStatusByKey(recording, status, GsonUtils.toJson(responseBody),
-                            new IObserver<SysRecording>() {
-                                @Override
-                                public void onNext(@NotNull @NonNull SysRecording sysRecording) {
-                                    SimAppCache.removeTaskFromQueue(sysRecording);
-                                }
-                            });
-                } else {
-                    setUploadSucceed(recording);
-                }
-                XLog.d(TAG + "---onUploadSuccess：record----\n");
-                XLog.json(GsonUtils.toJson(recording) + "\n");
-                XLog.json(GsonUtils.toJson(responseBody) + "\n");
-            }
-
-            @Override
-            public void onUploadFail(Throwable e) {
-                setUploadFailure(recording, e);
-                XLog.e(TAG + "---onUploadFail：record----\n错误原因："
-                        + ExceptionUtils.getErrorInfo(e));
-                XLog.json(GsonUtils.toJson(recording) + "\n");
-            }
-
-            @Override
-            public void onProgress(int progress) {
-            }
-        };
-
-//        SysRecordingRepo.queryByCallId(recording.getCallId(), sysRecording -> {
-//            if (sysRecording != null) {
-//                Log.d(TAG, "SysRecordingRepo.queryByCallId: ------------->" + GsonUtils.toJson(sysRecording));
-//                if (sysRecording.getUploadStatus() == UploadStatus.UPLOAD_IGNORE.getStatus()
-//                        || sysRecording.getUploadStatus() == UploadStatus.UPLOAD_SUCCEED.getStatus()
-//                        || sysRecording.getUploadStatus() == UploadStatus.UPLOADING.getStatus()) {
-//                    XLog.d("正在上传，忽略掉该任务");
-//                    Log.d(TAG, "SysRecordingRepo.queryByCallId: ------------->1");
-//                    return;
-//                }
-
         if (!CommonDataRepo.checkUploadRecordIdExist(recording.getCallId() + "")) {
             Log.d(TAG, "checkUploadRecordIdExist: ------>" + recording.getCallId() + "不存在");
             CommonDataRepo.setUploadRecordId(recording.getCallId() + "");
+            UploadFileObserve<UploadResponse> uploadFileObserve = new UploadFileObserve<UploadResponse>() {
+                @Override
+                public void onUploadSuccess(UploadResponse responseBody) {
+                    int status = UploadStatus.WAIT_UPLOAD.getStatus();
+                    if (StringUtils.equals("1", responseBody.getType())) {//不是我的客户，或者是回电不记录 或者是 话单已上传 或者是 小号话单跳过
+                        status = UploadStatus.UPLOAD_FAILED.getStatus();
+                        if (StringUtils.isNotEmpty(responseBody.getMsg()) && responseBody.getMsg().contains("话单已上传")) {
+                            status = UploadStatus.UPLOAD_IGNORE.getStatus();
+                        }
+                    } else {
+                        status = UploadStatus.UPLOAD_SUCCEED.getStatus();
+                    }
+                    recording.setUploadStatus(status);
+                    recording.setUploadResult(GsonUtils.toJson(responseBody));
+                    SysRecordingRepo.updateRecording(recording, new IObserver<Boolean>() {
+                        @Override
+                        public void onNext(@NotNull @NonNull Boolean aBoolean) {
+                            SimAppCache.removeTaskFromQueue(recording);
+                        }
+                    });
+                    XLog.d(TAG + "---onUploadSuccess：record----\n");
+                    XLog.json(GsonUtils.toJson(recording) + "\n");
+                    XLog.json(GsonUtils.toJson(responseBody) + "\n");
+                }
+
+                @Override
+                public void onUploadFail(Throwable e) {
+                    recording.setLastRetryTime(System.currentTimeMillis());
+                    recording.setUploadStatus(UploadStatus.UPLOAD_FAILED.getStatus());
+                    recording.setUploadResult(e.getMessage());
+                    SysRecordingRepo.updateRecording(recording, new IObserver<Boolean>() {
+                        @Override
+                        public void onNext(@NotNull @NonNull Boolean aBoolean) {
+                            SimAppCache.removeTaskFromQueue(recording);
+                        }
+                    });
+                    XLog.e(TAG + "---onUploadFail：record----\n错误原因："
+                            + ExceptionUtils.getErrorInfo(e));
+                    XLog.json(GsonUtils.toJson(recording) + "\n");
+                }
+
+                @Override
+                public void onProgress(int progress) {
+                }
+            };
             UploadService.Companion.uploadRecordingFile(recording, uploadFileObserve, ossFile);
         } else {
             Log.d(TAG, "checkUploadRecordIdExist: ------>" + recording.getCallId() + "已经存在了");
         }
-        //      }
-        //    });
-
     }
 }

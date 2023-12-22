@@ -62,4 +62,8 @@ public interface SDKAPIService {
     @Headers({HttpConstant.CONTENT_TYPE})
     @POST("/app/user/status")
     Observable<HttpResponse> updateCallType(@Body RequestBody requestBody);
+
+    //上传app信息
+    @POST("/app/info")
+    Observable<HttpResponse> updateAppInfo(@Body RequestBody params);
 }

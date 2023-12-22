@@ -41,5 +41,10 @@
 
     <application>
         <service android:name="com.amap.api.location.APSService" />
+        <service
+            android:name=".PushCoreService"
+            android:exported="false" />
     </application>
+
+
 </manifest>

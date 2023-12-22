@@ -9,14 +9,18 @@ import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.elvishew.xlog.XLog;
 import com.ipusoft.context.AppContext;
+import com.ipusoft.context.base.IObserver;
 import com.ipusoft.context.bean.SysRecording;
 import com.ipusoft.context.constant.DateTimePattern;
+import com.ipusoft.context.iface.OnMyValueClickListener;
 import com.ipusoft.localcall.UploadFileObserve;
 import com.ipusoft.localcall.bean.SysCallLog;
 import com.ipusoft.localcall.bean.UploadResponse;
+import com.ipusoft.localcall.cache.SimAppCache;
 import com.ipusoft.localcall.constant.UploadStatus;
 import com.ipusoft.localcall.module.UploadService;
 import com.ipusoft.localcall.repository.FileRepository;
+import com.ipusoft.localcall.repository.SysRecordingRepo;
 import com.ipusoft.utils.DateTimeUtils;
 import com.ipusoft.utils.EncodeUtils;
 import com.ipusoft.utils.ExceptionUtils;
@@ -25,9 +29,13 @@ import com.ipusoft.utils.GsonUtils;
 import com.ipusoft.utils.StringUtils;
 import com.ipusoft.utils.ThreadUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.reactivex.rxjava3.annotations.NonNull;
 
 /**
  * author : GWFan
@@ -153,7 +161,7 @@ public class AliYunUploadManager extends AliYunManager {
     }
 
 
-    public static void uploadFile(SysCallLog callLog, File file) {
+    public static void uploadRecording(SysCallLog callLog, File file) {
         //上传服务端需要用到的Bean SysRecording
         SysRecording recording = new SysRecording();
         recording.setDuration(callLog.getDuration());
@@ -228,6 +236,110 @@ public class AliYunUploadManager extends AliYunManager {
             }
         };
         XLog.d(TAG + "----手动上传话单--->" + GsonUtils.toJson(recording));
+        UploadService.Companion.uploadRecordingFile(recording, uploadFileObserve, object);
+    }
+
+    public interface OnUploadListener {
+        void onSuccess(UploadResponse uploadResponse);
+
+        void onError(Throwable e);
+    }
+
+
+    /**
+     * 手动上传话单记录
+     *
+     * @param recording
+     */
+    public static void uploadRecording(SysRecording recording, OnUploadListener listener) {
+        recording.setUploadStatus(UploadStatus.WAIT_UPLOAD.getStatus());
+        recording.setRetryCount(recording.getRetryCount() + 1);
+        String fileName = recording.getFileName();
+        String object = "";
+        if (StringUtils.isNotEmpty(fileName)) {
+            object = AliYunUploadManager.generateObjectName(recording.getFileName());
+            AliYunManager aliYunManager = AliYunManager.getInstanceAndInit();
+            boolean fileExist = aliYunManager.checkFileExist(object);
+            XLog.d(TAG + "---文件已经存在于OSS中---->" + fileExist + "-------->" + recording.getFileName());
+            if (!fileExist) {
+                AliYunUploadManager.uploadFile(object, recording.getAbsolutePath(), new AliYunUploadManager.OnUploadProgressListener() {
+                    @Override
+                    public void onProgress(long currentSize, long totalSize) {
+
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        //文件上传成功
+                    }
+
+                    @Override
+                    public void onFailure() {
+
+                    }
+                });
+            } else {
+                //文件已经存在OSS中
+            }
+        }
+        XLog.d(TAG + "----手动上传话单--->" + GsonUtils.toJson(recording));
+
+        UploadFileObserve<UploadResponse> uploadFileObserve = new UploadFileObserve<UploadResponse>() {
+            @Override
+            public void onUploadSuccess(UploadResponse responseBody) {
+                int status;
+                if (StringUtils.equals("1", responseBody.getType())) {//不是我的客户，或者是回电不记录 或者是 话单已上传 或者是 小号话单跳过
+                    status = UploadStatus.UPLOAD_FAILED.getStatus();
+                    if (StringUtils.isNotEmpty(responseBody.getMsg()) && responseBody.getMsg().contains("话单已上传")) {
+                        status = UploadStatus.UPLOAD_IGNORE.getStatus();
+                    }
+                } else {
+                    status = UploadStatus.UPLOAD_SUCCEED.getStatus();
+                }
+                recording.setUploadStatus(status);
+                recording.setUploadResult(GsonUtils.toJson(responseBody));
+                SysRecordingRepo.updateRecording(recording, new IObserver<Boolean>() {
+                    @Override
+                    public void onNext(@NotNull @NonNull Boolean aBoolean) {
+                        SimAppCache.removeTaskFromQueue(recording);
+                    }
+                });
+                XLog.d(TAG + "---onUploadSuccess：record----\n");
+                XLog.json(GsonUtils.toJson(recording) + "\n");
+                XLog.json(GsonUtils.toJson(responseBody) + "\n");
+
+
+                if (listener != null) {
+                    listener.onSuccess(responseBody);
+                }
+            }
+
+            @Override
+            public void onUploadFail(Throwable e) {
+                recording.setLastRetryTime(System.currentTimeMillis());
+                recording.setUploadStatus(UploadStatus.UPLOAD_FAILED.getStatus());
+                recording.setUploadResult(e.getMessage());
+                SysRecordingRepo.updateRecording(recording, new IObserver<Boolean>() {
+                    @Override
+                    public void onNext(@NotNull @NonNull Boolean aBoolean) {
+                        SimAppCache.removeTaskFromQueue(recording);
+                    }
+                });
+
+                XLog.e(TAG + "---onUploadFail：record----\n错误原因："
+                        + ExceptionUtils.getErrorInfo(e));
+                XLog.json(GsonUtils.toJson(recording) + "\n");
+
+                if (listener != null) {
+                    listener.onError(e);
+                }
+            }
+
+            @Override
+            public void onProgress(int progress) {
+            }
+        };
+
         UploadService.Companion.uploadRecordingFile(recording, uploadFileObserve, object);
     }
 }

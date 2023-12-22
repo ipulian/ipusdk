@@ -95,7 +95,7 @@ public class RxPermissionUtils {
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Environment.isExternalStorageManager();
     }
 
-    public static int checkXiaomiRecord2() {
+    public static int checkXiaomiRecord() {
         try {
             int key = Settings.System.getInt(AppContext.getAppContext().getContentResolver(), "button_auto_record_call");
             //0是未开启,1是开启
@@ -134,7 +134,7 @@ public class RxPermissionUtils {
     }
 
 
-    public static int checkHuaweiRecord2() {
+    public static int checkHuaweiRecord() {
         try {
             int key = Settings.Secure.getInt(AppContext.getAppContext().getContentResolver(), "enable_record_auto_key");
             //0代表华为自动录音未开启,1代表华为自动录音已开启
@@ -169,7 +169,7 @@ public class RxPermissionUtils {
     }
 
 
-    public static int checkOppoRecord2() {
+    public static int checkOppoRecord() {
         try {
             int key = Settings.Global.getInt(AppContext.getAppContext().getContentResolver(), "oppo_all_call_audio_record");
             XLog.d(TAG + "Oppo Global key：" + key);
@@ -264,7 +264,7 @@ public class RxPermissionUtils {
     }
 
 
-    public static int checkViVoRecord2() {
+    public static int checkViVoRecord() {
         try {
             int key = Settings.Global.getInt(AppContext.getAppContext().getContentResolver(), "call_record_state_global");
             XLog.d(TAG + "Vivo Global key：" + key);

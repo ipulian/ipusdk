@@ -137,6 +137,16 @@ public class SysRecordingRepo {
                 .subscribe(observer);
     }
 
+    public static void queryByStatusForListPage(List<Integer> uploadStatus,
+                                                int page, int pageSize,
+                                                IObserver<List<SysRecording>> observer) {
+        int offset = page * pageSize;
+        AppDBManager.getSysRecordingDao().queryLimitRecordingByStatus(uploadStatus, offset, pageSize)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
     //    public static void queryByStatus(List<Integer> uploadStatus, int retryCount,
 //                                     long currentTime,
 //                                     IObserver<List<SysRecording>> observe) {

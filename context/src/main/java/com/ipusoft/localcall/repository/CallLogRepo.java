@@ -1,10 +1,14 @@
 package com.ipusoft.localcall.repository;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.Build;
 import android.provider.CallLog;
+import android.telecom.TelecomManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
@@ -273,14 +277,37 @@ public class CallLogRepo {
                         if (cursor.getColumnIndex("phone_account_address") != -1) {
                             hostNumber = cursor.getString(cursor.getColumnIndex("phone_account_address"));
                         }
-                        if (StringUtils.isEmpty(hostNumber)) {
-                            String phoneNumber = CommonDataRepo.getDevicePhoneNumber();
-                            if (StringUtils.isNotEmpty(phoneNumber)) {
-                                hostNumber = phoneNumber;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    //TODO 可能可以获取卡槽1的手机号，但是无法获取卡槽2的手机号，目前没有任何解决方案。
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            // 当前设备的SDK版本是Android 10（API级别29）或更高
+                            if (ActivityCompat.checkSelfPermission(AppContext.getActivityContext(), Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
+                                int subscriptionIdIndex = cursor.getColumnIndex(CallLog.Calls.PHONE_ACCOUNT_ID);
+                                String subscriptionId = cursor.getString(subscriptionIdIndex);
+                                XLog.d("这条话单是使用卡" + (Integer.parseInt(subscriptionId) + 1) + "进行外呼的");
+                                // 使用subscriptionId来判断是哪个SIM卡
+                                if (Integer.parseInt(subscriptionId) == 0) {
+                                    hostNumber = getLine1Number();
+                                }
+                            } else {
+                                XLog.d("PHONE_ACCOUNT_ID------->没有READ_CALL_LOG权限");
                             }
+                        } else {
+                            // 当前设备的SDK版本低于Android 10（API级别29）
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+
+                    if (StringUtils.isEmpty(hostNumber)) {
+                        String phoneNumber = CommonDataRepo.getDevicePhoneNumber();
+                        if (StringUtils.isNotEmpty(phoneNumber)) {
+                            hostNumber = phoneNumber;
+                        }
                     }
 
                     sysCallLog = new SysCallLog();
@@ -348,41 +375,17 @@ public class CallLogRepo {
         return sysCallLog;
     }
 
-    private static String getPhoneNumber(int callLogSimId) {
-        SubscriptionManager sManager = null;
-        String userPhone = "";
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
-            TelephonyManager tm = (TelephonyManager) AppContext.getActivityContext().getSystemService(Context.TELEPHONY_SERVICE);
 
-            sManager = (SubscriptionManager) AppContext.getAppContext().getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
-            if (ActivityCompat.checkSelfPermission(AppContext.getActivityContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                //没有授权
-                return userPhone;
-            }
-            Log.d(TAG, "getPhoneNumber: -------1=------------>" + tm.getLine1Number());
-
-            List<SubscriptionInfo> mList = sManager.getActiveSubscriptionInfoList();//获取当前插入卡槽的卡信息
-            try {
-                for (SubscriptionInfo info : mList) {
-                    Log.d(TAG, "getPhoneNumber: .p-0-0-0-00--------->" + GsonUtils.toJson(info));
-                    int simId = info.getSubscriptionId();//获取simid 与通话记录表的simId一致
-                    if (simId == callLogSimId) {
-                        int slot_id = info.getSimSlotIndex();//获取卡槽位置
-                        if (slot_id == 0) {
-                            userPhone = tm.getLine1Number();
-                        } else {
-                            userPhone = tm.getLine1Number();
-                        }
-                        break;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                XLog.e("getPhoneNumber-------->", e);
-            }
+    @SuppressLint("HardwareIds")
+    private static String getLine1Number() {
+        Application mContext = AppContext.getAppContext();
+        TelecomManager telecomManager = (TelecomManager) mContext.getSystemService(Context.TELECOM_SERVICE);
+        TelephonyManager tm = (TelephonyManager) mContext.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return "";
         }
-        return userPhone;
+        return tm.getLine1Number();
     }
-
-
 }

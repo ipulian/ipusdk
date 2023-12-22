@@ -24,10 +24,10 @@ class SDKService {
          */
         fun getAuthCode(auth: String, observer: Observer<IAuthCode>) {
             RetrofitManager.getInstance().retrofit.create(SDKAPIService::class.java)
-                    .getAuthCode(auth)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer)
+                .getAuthCode(auth)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer)
         }
 
         /**
@@ -35,10 +35,10 @@ class SDKService {
          */
         fun getAuthCodeInfo(params: Map<String, Any>, observer: Observer<IToken>) {
             RetrofitManager.getInstance().retrofit.create(SDKAPIService::class.java)
-                    .getAuthCodeInfo(params)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer)
+                .getAuthCodeInfo(params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer)
         }
 
         /**
@@ -46,10 +46,10 @@ class SDKService {
          */
         fun querySeatInfo(params: Map<String, Any>, observer: Observer<SeatInfo>) {
             RetrofitManager.getInstance().retrofit.create(SDKAPIService::class.java)
-                    .querySeatInfo(RetrofitManager.getInstance().getRequestBody(params))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer)
+                .querySeatInfo(RetrofitManager.getInstance().getRequestBody(params))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer)
         }
 
         /**
@@ -57,10 +57,19 @@ class SDKService {
          */
         fun updateCallType(params: MutableMap<String, Any>, observer: Observer<HttpResponse>) {
             RetrofitManager.getInstance().retrofit.create(SDKAPIService::class.java)
-                    .updateCallType(RetrofitManager.getInstance().getRequestBody(params))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer)
+                .updateCallType(RetrofitManager.getInstance().getRequestBody(params))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer)
+        }
+
+        //上传app信息
+        fun updateAppInfo(params: Map<String, Any>, observer: Observer<HttpResponse>) {
+            RetrofitManager.getInstance().retrofit.create(SDKAPIService::class.java)
+                .updateAppInfo(RetrofitManager.getInstance().getRequestBody(params))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer)
         }
     }
 }

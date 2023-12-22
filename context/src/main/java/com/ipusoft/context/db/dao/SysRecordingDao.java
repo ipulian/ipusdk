@@ -32,6 +32,9 @@ public interface SysRecordingDao {
     @Query("SELECT * FROM sys_recording WHERE upload_status in (:uploadStatus) ORDER BY call_time DESC LIMIT :limit")
     Observable<List<SysRecording>> queryLimitRecordingByStatus(List<Integer> uploadStatus, int limit);
 
+    @Query("SELECT * FROM sys_recording WHERE upload_status in (:uploadStatus) ORDER BY call_time DESC LIMIT :offset, :pageSize")
+    Observable<List<SysRecording>> queryLimitRecordingByStatus(List<Integer> uploadStatus, int offset, int pageSize);
+
     @Query("SELECT count(*) as count FROM sys_recording WHERE upload_status in (:uploadStatus)")
     Observable<Integer> queryCountByStatus(List<Integer> uploadStatus);
 

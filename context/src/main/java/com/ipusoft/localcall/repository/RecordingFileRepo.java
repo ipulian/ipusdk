@@ -212,8 +212,8 @@ public class RecordingFileRepo {
                     }
                 }
             }
+            XLog.d(TAG + "------------>根据系统路径查找到的----->\n" + GsonUtils.toJson(list));
         }
-        XLog.d(TAG + "------------>根据系统路径查找到的----->\n" + GsonUtils.toJson(list));
         if (ArrayUtils.isEmpty(list)) {
             Stack<Dir> stack = new Stack<>();
             Dir root = new Dir(Environment.getExternalStorageDirectory());
@@ -256,19 +256,9 @@ public class RecordingFileRepo {
                 }
             }
             XLog.d("最后一种查找录音的方式，全局遍历---->end");
+            XLog.d("最后一种查找录音的方式，全局遍历----查找结果>\n" + GsonUtils.toJson(list));
         }
-        if (ArrayUtils.isNotEmpty(list)) {
-            try {
-                XLog.d("最后一种查找录音的方式，全局遍历----查找结果>\n" + GsonUtils.toJson(list));
-//                for (File file : list) {
-                //  XLog.d(TAG + "->queryRecordingFile->" + file.getAbsolutePath() );
-                //     }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            XLog.d(TAG + "->queryRecordingFile->null1");
-
+        if (ArrayUtils.isEmpty(list)) {
             XLog.d(TAG + "->queryRecordingFile->全局遍历，仍然没有找到录音，尝试扩大匹配范围，再次查找");
             Stack<Dir> stack = new Stack<>();
             Dir root = new Dir(Environment.getExternalStorageDirectory());
@@ -310,6 +300,8 @@ public class RecordingFileRepo {
                     }
                 }
             }
+            XLog.d("最后一种查找录音的方式，扩大范围全局遍历---->end");
+            XLog.d("最后一种查找录音的方式，扩大范围全局遍历----查找结果>\n" + GsonUtils.toJson(list));
         }
         return list;
     }

@@ -4,9 +4,13 @@ import android.app.Application;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.elvishew.xlog.XLog;
 import com.ipusoft.context.bean.AuthInfo;
+import com.ipusoft.context.bean.HttpObserver;
 import com.ipusoft.context.bean.SeatInfo;
+import com.ipusoft.context.bean.base.HttpResponse;
 import com.ipusoft.context.cache.AppCacheContext;
 import com.ipusoft.context.constant.CallTypeConfig;
 import com.ipusoft.context.db.AppDBManager;
@@ -14,14 +18,23 @@ import com.ipusoft.context.iface.BaseSipStatusChangedListener;
 import com.ipusoft.context.init.SDKCommonInit;
 import com.ipusoft.context.listener.IPhoneStateListener;
 import com.ipusoft.context.listener.OnPhoneStateChangedListener;
+import com.ipusoft.context.manager.ThreadPoolManager;
 import com.ipusoft.context.registers.ModuleRegister;
 import com.ipusoft.http.QuerySeatInfoHttp;
+import com.ipusoft.http.RequestMap;
+import com.ipusoft.http.api.SDKAPIService;
+import com.ipusoft.http.module.SDKService;
+import com.ipusoft.ipush.IPushLifecycle;
+import com.ipusoft.ipush.IPushListener;
 import com.ipusoft.logger.XLogger;
 import com.ipusoft.mmkv.AccountMMKV;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
+import com.ipusoft.utils.AppUtils;
 import com.ipusoft.utils.ArrayUtils;
+import com.ipusoft.utils.DeviceUtils;
 import com.ipusoft.utils.GsonUtils;
 import com.ipusoft.utils.StringUtils;
+import com.ipusoft.utils.ThreadUtils;
 import com.tencent.mmkv.MMKV;
 
 import java.lang.reflect.InvocationTargetException;
@@ -74,6 +87,10 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
          * 初始化组件
          */
         initIModule();
+
+        IPushLifecycle.initPush(AppContext.getAppContext(), new IPushListener(AppContext.getAppContext()));
+
+        ServiceManager.startPushCoreService();
     }
 
     /**
@@ -85,7 +102,59 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
      */
     public static void init(Application mApp, String env, AuthInfo authInfo) throws RuntimeException {
         init(mApp, env);
+
+        AuthInfo oldAuthInfo = AppContext.getAuthInfo();
+
+        Log.d(TAG, "oldAuthInfo: ---------->" + GsonUtils.toJson(oldAuthInfo));
+        Log.d(TAG, "authInfo: ---------->" + GsonUtils.toJson(authInfo));
+        Log.d(TAG, "equals---------->" + (authInfo.equals(oldAuthInfo)));
+        if (oldAuthInfo != null && !authInfo.equals(oldAuthInfo)) {
+            /*
+             * 认证信息和上次不一样，清空上一个认证信息的相关数据
+             * 重新初始化
+             */
+            XLog.d(TAG + "认证信息和上次不一样，清空上一个认证信息的相关数据:重新初始化 -------->" + oldAuthInfo + "-------->" + GsonUtils.toJson(authInfo));
+            unInitIModule();
+            init(mApp, env);
+        } else {
+            XLog.d(TAG + "认证信息和上次一样 -------->" + GsonUtils.toJson(authInfo));
+        }
+
+        AppContext.setAuthInfo(authInfo);
+
         updateAuthInfo(authInfo);
+
+        ThreadPoolManager.newInstance().addExecuteTask(() -> {
+            try {
+                Thread.sleep(5000);
+                updateAppInfo();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+
+    private static void updateAppInfo() {
+        String systemVersion = DeviceUtils.getSystemVersion();
+        String systemModel = DeviceUtils.getSystemModel();
+        String deviceManufacturer = DeviceUtils.getDeviceManufacturer();
+        String serialNumber = DeviceUtils.getSerialNumber();
+        RequestMap requestMap = RequestMap.getRequestMap();
+        requestMap.put("imei", serialNumber);
+        requestMap.put("mfr", deviceManufacturer);
+        requestMap.put("dModel", systemModel);
+        requestMap.put("sVersion", systemVersion);
+        requestMap.put("appVersion", AppUtils.getAppVersionName());
+        requestMap.put("extend", "SDK");
+
+        SDKService.Companion.updateAppInfo(requestMap, new HttpObserver<HttpResponse>() {
+            @Override
+            public void onNext(@NonNull HttpResponse response) {
+                super.onNext(response);
+                XLog.d("上传SDK渠道版本信息-----" + GsonUtils.toJson(response));
+            }
+        });
     }
 
     /**
@@ -102,17 +171,24 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
      */
     public static void updateAuthInfo(AuthInfo authInfo) {
         if (authInfo != null) {
-            AuthInfo oldAuthInfo = AppContext.getAuthInfo();
-            if (oldAuthInfo != null && !authInfo.equals(oldAuthInfo)) {
-                /*
-                 * 认证信息和上次不一样，清空上一个认证信息的相关数据
-                 * 重新初始化
-                 */
-                unInitIModule();
-                AppContext.setAuthInfo(authInfo);
-                init(mApp, env);
-            }
-            XLog.d(TAG, "updateAuthInfo: -------->" + GsonUtils.toJson(authInfo));
+//            AuthInfo oldAuthInfo = AppContext.getAuthInfo();
+//
+//            Log.d(TAG, "oldAuthInfo: ---------->" + GsonUtils.toJson(oldAuthInfo));
+//            Log.d(TAG, "authInfo: ---------->" + GsonUtils.toJson(authInfo));
+//            Log.d(TAG, "---------->" + (authInfo.equals(oldAuthInfo)));
+//            if (oldAuthInfo != null && !authInfo.equals(oldAuthInfo)) {
+//                /*
+//                 * 认证信息和上次不一样，清空上一个认证信息的相关数据
+//                 * 重新初始化
+//                 */
+//                XLog.d(TAG + "认证信息和上次不一样，清空上一个认证信息的相关数据:重新初始化 -------->" + oldAuthInfo + "-------->" + GsonUtils.toJson(authInfo));
+//                unInitIModule();
+//                init(mApp, env);
+//            } else {
+//                XLog.d(TAG + "认证信息和上次一样 -------->" + GsonUtils.toJson(authInfo));
+//            }
+//
+//            AppContext.setAuthInfo(authInfo);
 
             String password = authInfo.getPassword();
             if (StringUtils.isNotEmpty(password)) {//SIP SDK的单独拿出来处理

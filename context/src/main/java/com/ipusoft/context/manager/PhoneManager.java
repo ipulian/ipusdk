@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
 import android.telephony.TelephonyManager;
@@ -19,6 +21,9 @@ import com.ipusoft.context.AppContext;
 import com.ipusoft.context.cache.AppCacheContext;
 import com.ipusoft.localcall.bean.SIMCallOutBean;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
+import com.ipusoft.permission.RxPermissionUtils;
+import com.ipusoft.utils.AppUtils;
+import com.ipusoft.utils.SysRecordingUtils;
 
 import java.util.List;
 
@@ -92,19 +97,20 @@ public class PhoneManager {
                 && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-       // String caller = tm.getLine1Number();
+        int index = 0;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 Log.d("callPhone", "缺少 READ_PHONE_STATE 权限");
                 return;
             }
-            int index = (simIndex == 2 ? 1 : 0);
+            index = (simIndex == 2 ? 1 : 0);
             List<PhoneAccountHandle> phoneAccountHandleList = telecomManager.getCallCapablePhoneAccounts();
             if (phoneAccountHandleList != null && phoneAccountHandleList.size() > 0 && index < phoneAccountHandleList.size()) {
                 intent.putExtra(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandleList.get(index));
             }
         }
         mContext.startActivity(intent);
+
     }
 
     public static void callPhoneBySIP() {
@@ -155,6 +161,40 @@ public class PhoneManager {
      */
     public static void callPhoneBySim(Context context, String phone, String callTime, String callInfo, int simIndex) {
         XLog.d("主卡外呼->开始，phone：" + phone);
+
+        try {
+            //是否打开通话录音的开关
+            int hasSimRecordPermission = -1;//默认：未知状态（不知道是否打开）
+            if (SysRecordingUtils.isHUAWEI()) {//华为，荣耀
+                hasSimRecordPermission = RxPermissionUtils.checkHuaweiRecord();
+            } else if (SysRecordingUtils.isMIUI()) {//小米，红米
+                hasSimRecordPermission = RxPermissionUtils.checkXiaomiRecord();
+            } else if (SysRecordingUtils.isOPPO()) {//OPPO
+                hasSimRecordPermission = RxPermissionUtils.checkOppoRecord();
+            } else if (SysRecordingUtils.isVIVO()) {//VIVO
+                hasSimRecordPermission = RxPermissionUtils.checkViVoRecord();
+            } else {
+                //TODO 其他机型暂未找到解决方案
+            }
+            XLog.d("---hasSimRecordPermission---->" + hasSimRecordPermission);
+
+            if (hasSimRecordPermission == -1) {//未知状态
+
+            } else if (hasSimRecordPermission == 0) {//可能未开启状态
+
+            } else if (hasSimRecordPermission == 1) {//电话录音已经开启
+
+            }
+
+            boolean b = RxPermissionUtils.checkManageStoragePermission();
+            if (!b) {
+                //TODO 未获取文件访问权限，这里可以请提醒客户，务必打开权限，否则无法获取录音
+                XLog.d("---checkManageStoragePermission---->" + b);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         AppCacheContext.setSIMCallOutBean(new SIMCallOutBean(phone, callTime, callInfo));
         callPhone(context, phone, simIndex);
     }

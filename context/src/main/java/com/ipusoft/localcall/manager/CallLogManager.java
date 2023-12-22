@@ -76,9 +76,9 @@ public class CallLogManager {
             public void onNext(@NonNull Map<String, String> namePhoneMap) {
                 Log.d(TAG, "onDisConnectedListener: ---------------------------2");
                 if (MapUtils.isNotEmpty(namePhoneMap)) {
-                    XLog.d("namePhoneMap-------->" + namePhoneMap.size());
+                    XLog.d("通讯录中姓名和手机号的map-------->" + namePhoneMap.size());
                 } else {
-                    XLog.d("namePhoneMap-------->0");
+                    XLog.d("通讯录中姓名和手机号的map-------->0");
                 }
 
                 ThreadPoolManager.newInstance().addExecuteTask(() -> {
@@ -177,11 +177,11 @@ public class CallLogManager {
                                                     //beginTime 1702089502827
                                                     XLog.d("entry.getValue().lastModified()--------------" + entry.getValue().lastModified());
                                                     XLog.d("beginTime--------duration------" + beginTime + "===" + duration + "====>" + (beginTime + duration));
-//                                                    long timeDiff = entry.getValue().lastModified() - (beginTime + duration);
-//                                                    if (timeDiff >= 0 && timeDiff <= minDiff) {
-//                                                        minDiff = timeDiff;
-                                                    file = entry.getValue();
-                                                    //    }
+                                                    long timeDiff = entry.getValue().lastModified() - (beginTime + duration);
+                                                    if (timeDiff >= 0 && timeDiff <= minDiff) {
+                                                        minDiff = timeDiff;
+                                                        file = entry.getValue();
+                                                    }
                                                 }
 
                                             }
