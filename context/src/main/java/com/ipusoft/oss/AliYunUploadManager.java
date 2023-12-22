@@ -289,10 +289,10 @@ public class AliYunUploadManager extends AliYunManager {
             public void onUploadSuccess(UploadResponse responseBody) {
                 int status;
                 if (StringUtils.equals("1", responseBody.getType())) {//不是我的客户，或者是回电不记录 或者是 话单已上传 或者是 小号话单跳过
-                    status = UploadStatus.UPLOAD_FAILED.getStatus();
-                    if (StringUtils.isNotEmpty(responseBody.getMsg()) && responseBody.getMsg().contains("话单已上传")) {
-                        status = UploadStatus.UPLOAD_IGNORE.getStatus();
-                    }
+//                    status = UploadStatus.UPLOAD_FAILED.getStatus();
+//                    if (StringUtils.isNotEmpty(responseBody.getMsg()) && responseBody.getMsg().contains("话单已上传")) {
+                    status = UploadStatus.UPLOAD_IGNORE.getStatus();
+                    //  }
                 } else {
                     status = UploadStatus.UPLOAD_SUCCEED.getStatus();
                 }

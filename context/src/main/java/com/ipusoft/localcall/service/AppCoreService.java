@@ -136,14 +136,12 @@ public class AppCoreService extends BaseLifeCycleService {
         public void run() {
             XLog.d("run: ------------>AppCoreService---->检查数据库待处理数据");
             CallLogManager.getInstance().queryCallLogAndRecording(aBoolean -> {
-                Log.d(TAG, "onNext: ----------1");
                 SysRecordingRepo.queryByStatus(
                         ArrayUtils.createList(
                                 UploadStatus.WAIT_UPLOAD.getStatus(),
                                 UploadStatus.UPLOADING.getStatus(),
                                 UploadStatus.UPLOAD_FAILED.getStatus()),
                         3, System.currentTimeMillis(), list -> {
-                            Log.d(TAG, "onNext: ----------2" + GsonUtils.toJson(list));
                             if (ArrayUtils.isNotEmpty(list)) {
                                 XLog.d("数据库中需要上传的任务：\n");
                                 XLog.json(GsonUtils.toJson(list) + "\n");
