@@ -73,7 +73,8 @@ public class StorageConstant {
      */
     public static final String LOGIN = "login";
 
-    public static final String DEVICE_PHONE_NUMBER = "device_phone_number";
+    public static final String LINE1_NUMBER = "line1_number";
+    public static final String LINE2_NUMBER = "line2_number";
 
     public static final String POP_WINDOW_FIELD = "popWindowField";
     /**

@@ -282,13 +282,14 @@ public class CallLogRepo {
                     }
 
                     //TODO 可能可以获取卡槽1的手机号，但是无法获取卡槽2的手机号，目前没有任何解决方案。
+                    int simIndex = 0;
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             // 当前设备的SDK版本是Android 10（API级别29）或更高
                             if (ActivityCompat.checkSelfPermission(AppContext.getActivityContext(), Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED) {
                                 int subscriptionIdIndex = cursor.getColumnIndex(CallLog.Calls.PHONE_ACCOUNT_ID);
                                 String subscriptionId = cursor.getString(subscriptionIdIndex);
-                                XLog.d("这条话单是使用卡" + (Integer.parseInt(subscriptionId) + 1) + "进行外呼的");
+                                simIndex = Integer.parseInt(subscriptionId);
                                 // 使用subscriptionId来判断是哪个SIM卡
                                 if (Integer.parseInt(subscriptionId) == 0) {
                                     hostNumber = getLine1Number();
@@ -302,9 +303,13 @@ public class CallLogRepo {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
+                    XLog.d("这通电话是使用卡" + (simIndex + 1) + "进行外呼的");
+                    XLog.d("用户设置的SIM卡号码----->SIM1--->" + CommonDataRepo.getLine1Number() + "---SIM2--->" + CommonDataRepo.getLine2Number());
                     if (StringUtils.isEmpty(hostNumber)) {
-                        String phoneNumber = CommonDataRepo.getDevicePhoneNumber();
+                        String phoneNumber = CommonDataRepo.getLine1Number();
+                        if (simIndex == 1) {
+                            phoneNumber = CommonDataRepo.getLine2Number();
+                        }
                         if (StringUtils.isNotEmpty(phoneNumber)) {
                             hostNumber = phoneNumber;
                         }

@@ -362,12 +362,20 @@ public class CommonDataRepo {
      *
      * @param phoneNumber
      */
-    public static void setDevicePhoneNumber(String phoneNumber) {
-        AppMMKV.set(StorageConstant.DEVICE_PHONE_NUMBER, phoneNumber);
+    public static void setLine1Number(String phoneNumber) {
+        AppMMKV.set(StorageConstant.LINE1_NUMBER, phoneNumber);
     }
 
-    public static String getDevicePhoneNumber() {
-        return AppMMKV.getString(StorageConstant.DEVICE_PHONE_NUMBER);
+    public static String getLine1Number() {
+        return AppMMKV.getString(StorageConstant.LINE1_NUMBER);
+    }
+
+    public static void setLine2Number(String phoneNumber) {
+        AppMMKV.set(StorageConstant.LINE2_NUMBER, phoneNumber);
+    }
+
+    public static String getLine2Number() {
+        return AppMMKV.getString(StorageConstant.LINE2_NUMBER);
     }
 
     public static void setPopWindowField(String field) {
