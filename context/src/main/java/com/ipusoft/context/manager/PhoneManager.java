@@ -91,22 +91,16 @@ public class PhoneManager {
             }
         }
         TelecomManager telecomManager = (TelecomManager) mContext.getSystemService(Context.TELECOM_SERVICE);
-        TelephonyManager tm = (TelephonyManager) mContext.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
         int index = 0;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                Log.d("callPhone", "缺少 READ_PHONE_STATE 权限");
-                return;
-            }
-            index = (simIndex == 2 ? 1 : 0);
-            List<PhoneAccountHandle> phoneAccountHandleList = telecomManager.getCallCapablePhoneAccounts();
-            if (phoneAccountHandleList != null && phoneAccountHandleList.size() > 0 && index < phoneAccountHandleList.size()) {
-                intent.putExtra(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandleList.get(index));
+            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                index = (simIndex == 2 ? 1 : 0);
+                List<PhoneAccountHandle> phoneAccountHandleList = telecomManager.getCallCapablePhoneAccounts();
+                if (phoneAccountHandleList != null && phoneAccountHandleList.size() > 0 && index < phoneAccountHandleList.size()) {
+                    intent.putExtra(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandleList.get(index));
+                }
+            } else {
+                XLog.d("callPhone---------->缺少 READ_PHONE_STATE 权限");
             }
         }
         mContext.startActivity(intent);
