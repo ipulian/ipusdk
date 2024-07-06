@@ -156,29 +156,22 @@ public class CallLogRepo {
 
                         List<SIMCallOutBean> listCopy = GsonUtils.fromJson(GsonUtils.toJson(simCallOutBeanList), GsonUtils.getListType(SIMCallOutBean.class));
 
+                        SIMCallOutBean target = null;
+                        long minOffset = Long.MAX_VALUE;
                         for (int i = simCallOutBeanList.size() - 1; i >= 0; i--) {
                             bean = simCallOutBeanList.get(i);
-                            int timeOffset = 8 * 1000;
-                            if (SysRecordingUtils.isHUAWEI()) {
-                                if (callLog.getDuration() != 0) {
-                                    timeOffset = 65 * 1000;
-                                }
-                            }
                             //XLog.d(TAG + "timeOffset---------->" + timeOffset);
                             /**
                              * 当有两通间隔时间非常短，但被叫相同的电话的时候，会有bug,尤其在华为手机上，
                              * 所以这里取 timeOffset 最接近的一个。
                              */
-                            if (StringUtils.equals(callLog.getPhoneNumber(), bean.getPhone()) &&
-                                    Math.abs(beginTime - bean.getTimestamp()) <= timeOffset) {
-                                long minOffset = Long.MAX_VALUE;
-                                SIMCallOutBean target = null;
-                                for (SIMCallOutBean temp : simCallOutBeanList) {
-                                    long t = Math.abs(beginTime - temp.getTimestamp());
-                                    if (t < minOffset) {
-                                        minOffset = Math.abs(beginTime - temp.getTimestamp());
-                                        target = temp;
-                                    }
+                            if (StringUtils.equals(callLog.getPhoneNumber(), bean.getPhone())) {
+                                long t = Math.abs(beginTime - bean.getTimestamp());
+                                if (t < minOffset) {
+                                    minOffset = Math.abs(beginTime - bean.getTimestamp());
+                                    target = bean;
+                                }
+                            }
                                 }
                                 if (target != null) {
                                     boolean remove = listCopy.remove(target);
@@ -195,8 +188,6 @@ public class CallLogRepo {
                                             e.printStackTrace();
                                         }
                                         list.add(callLog);
-                                    }
-                                }
                             }
                         }
                         //XLog.d(TAG + "->simCallOutBeanList2：" + GsonUtils.toJson(listCopy));
@@ -273,13 +264,13 @@ public class CallLogRepo {
                     //TODO
                     //本机号码可能获取不到（华为、oppo获取不到）
                     String hostNumber = "";
-                    try {
-                        if (cursor.getColumnIndex("phone_account_address") != -1) {
-                            hostNumber = cursor.getString(cursor.getColumnIndex("phone_account_address"));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        if (cursor.getColumnIndex("phone_account_address") != -1) {
+//                            hostNumber = cursor.getString(cursor.getColumnIndex("phone_account_address"));
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
 
                     //TODO 可能可以获取卡槽1的手机号，但是无法获取卡槽2的手机号，目前没有任何解决方案。
                     int simIndex = 0;
