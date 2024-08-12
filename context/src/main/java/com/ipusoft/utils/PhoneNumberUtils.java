@@ -1,6 +1,8 @@
 package com.ipusoft.utils;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,27 +50,39 @@ public class PhoneNumberUtils {
      * @param num
      * @return
      */
-    public static String[] getPhoneFormString(String num) {
+    public static List<String> getPhoneFormString(String num) {
         if (StringUtils.isEmpty(num)) {
             return null;
         }
-        StringBuilder bf = new StringBuilder();
-        Pattern pattern = Pattern.compile("((1[3-9])\\d{9})|((0[1-9])\\d{7,11})|((0[1-9][0-9]-)\\d{7,9})|((0[1-9][0-9][0-9]-)" +
-                "\\d{7,9})");
-        Matcher matcher = pattern.matcher(num);
-        while (matcher.find()) {
-            bf.append(matcher.group()).append(",");
+        Pattern pattern1 = Pattern.compile("(1[3-9])\\d{9}");
+        Pattern pattern2 = Pattern.compile("(0[1][0])\\d{7}");
+        Pattern pattern3 = Pattern.compile("(0[1][0]-)\\d{7}");
+        Pattern pattern4 = Pattern.compile("(0[1][0])\\d{8}");
+        Pattern pattern5 = Pattern.compile("(0[1][0]-)\\d{8}");
+        Pattern pattern6 = Pattern.compile("(0[2][012345789])\\d{7}");
+        Pattern pattern7 = Pattern.compile("(0[2][012345789]-)\\d{7}");
+        Pattern pattern8 = Pattern.compile("(0[2][012345789])\\d{8}");
+        Pattern pattern9 = Pattern.compile("(0[2][012345789]-)\\d{8}");
+        Pattern pattern10 = Pattern.compile("(0[3456789][0-9][0-9])\\d{7}");
+        Pattern pattern11 = Pattern.compile("(0[3456789][0-9][0-9]-)\\d{7}");
+        Pattern pattern12 = Pattern.compile("(0[3456789][0-9][0-9])\\d{8}");
+        Pattern pattern13 = Pattern.compile("(0[3456789][0-9][0-9]-)\\d{8}");
+
+        List<Pattern> patterns = ArrayUtils.createList(pattern1, pattern2, pattern3, pattern4, pattern5,
+                pattern6, pattern7, pattern8, pattern9, pattern10, pattern11, pattern12, pattern13);
+
+        List<String> list = new ArrayList<>();
+
+        for (Pattern p : patterns) {
+            Matcher matcher = p.matcher(num);
+            while (matcher.find()) {
+                String phone = matcher.group();
+                if (!list.contains(phone)) {
+                    list.add(phone);
+                }
+            }
         }
-        int len = bf.length();
-        if (len > 0) {
-            bf.deleteCharAt(len - 1);
-        }
-        String s = bf.toString();
-        String[] result = null;
-        if (StringUtils.isNotEmpty(s)) {
-            result = s.split(",");
-        }
-        return result;
+        return list;
     }
 
 

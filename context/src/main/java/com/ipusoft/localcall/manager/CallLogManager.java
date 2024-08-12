@@ -122,12 +122,20 @@ public class CallLogManager {
                                         for (File file : files) {
                                             if (file != null) {
                                                 CommonDataRepo.setLocalRecordPath(file.getParent());
-                                                String fileName = StringUtils.trim(file.getName());
-                                                String[] phoneFormString = PhoneNumberUtils.getPhoneFormString(fileName);
+                                                String fileName = file.getName();
+                                                List<String> phoneFromStringList = PhoneNumberUtils.getPhoneFormString(fileName);
+                                                if (phoneFromStringList == null) {
+                                                    phoneFromStringList = new ArrayList<>();
+                                                }
+                                                fileName = StringUtils.trim(fileName);
+                                                List<String> tempList = PhoneNumberUtils.getPhoneFormString(fileName);
+                                                if (tempList != null) {
+                                                    phoneFromStringList.addAll(tempList);
+                                                }
 
-                                                Log.d(TAG, "onNext: ----------->" + GsonUtils.toJson(phoneFormString));
-                                                if (phoneFormString != null && phoneFormString.length != 0) {
-                                                    for (String str : phoneFormString) {
+                                                Log.d(TAG, "onNext: ----------->" + GsonUtils.toJson(phoneFromStringList));
+                                                if (phoneFromStringList.size() != 0) {
+                                                    for (String str : phoneFromStringList) {
                                                         if (phoneList.contains(str)) {
                                                             fileMap.put(str + "_" + file.lastModified(), file);
                                                         }
@@ -165,26 +173,42 @@ public class CallLogManager {
                                             duration = callLog.getDuration();//通话时长
                                             callResult = callLog.getCallResult();
                                             long minDiff = Long.MAX_VALUE;
-                                            for (Map.Entry<String, File> entry : fileMap.entrySet()) {
-                                                String phoneTime = entry.getKey();
-                                                String[] s = phoneTime.split("_");
-                                                /*
-                                                 * 号码匹配，时间也对应
-                                                 */
-                                                if (StringUtils.equals(s[0], phoneNumber)) {
-
-                                                    //1702089502000
-                                                    //beginTime 1702089502827
-                                                    XLog.d("entry.getValue().lastModified()--------------" + entry.getValue().lastModified());
-                                                    XLog.d("beginTime--------duration------" + beginTime + "===" + duration + "====>" + (beginTime + duration));
-                                                    long timeDiff = entry.getValue().lastModified() - (beginTime + duration);
-                                                    if (timeDiff >= 0 && timeDiff <= minDiff) {
-                                                        minDiff = timeDiff;
-                                                        file = entry.getValue();
+                                            if (duration > 0) {
+                                                for (Map.Entry<String, File> entry : fileMap.entrySet()) {
+                                                    String phoneTime = entry.getKey();
+                                                    String[] s = phoneTime.split("_");
+                                                    /*
+                                                     * 号码匹配，时间也对应
+                                                     */
+                                                    if (StringUtils.equals(s[0], phoneNumber)) {
+                                                        XLog.d("entry.getValue().lastModified()--------------" + entry.getValue().lastModified());
+                                                        XLog.d("beginTime--------duration------" + beginTime + "===" + duration + "====>" + (beginTime + duration * 1000L));
+                                                        long timeDiff = entry.getValue().lastModified() - (beginTime + duration * 1000L);
+                                                        XLog.d("timeDiff-----------" + timeDiff);
+                                                        if (Math.abs(timeDiff) < 3000 && timeDiff <= minDiff) {//这里的3000(毫秒)是容错值，兼容部分机型 存在 timeDiff <= 0的可能性
+                                                            minDiff = timeDiff;
+                                                            file = entry.getValue();
+                                                        }
                                                     }
                                                 }
-
+                                                if (file == null) {
+                                                    XLog.d("根据严格条件没匹配上-----再匹配一次");
+                                                    for (Map.Entry<String, File> entry : fileMap.entrySet()) {
+                                                        String phoneTime = entry.getKey();
+                                                        String[] s = phoneTime.split("_");
+                                                        /*
+                                                         * 号码匹配，时间也对应
+                                                         */
+                                                        if (StringUtils.equals(s[0], phoneNumber)) {
+                                                            file = entry.getValue();
+                                                        }
+                                                    }
+                                                    if (file != null) {
+                                                        XLog.d("根据宽松条件匹配上了-----" + file.getAbsolutePath());
+                                                    }
+                                                }
                                             }
+
                                             Log.d(TAG, "onNext: -----------------3");
                                             recording = new SysRecording();
                                             recording.setDuration(callLog.getDuration());
@@ -196,9 +220,6 @@ public class CallLogManager {
                                             recording.setCallType(callLog.getCallType());
                                             recording.setCallResult(callResult);
                                             recording.setCallTimeServer(callLog.getCallTime());
-
-                                            Log.d(TAG, "onNext: .d0-0-0-0-0-0-----" + callLog.getCallInfo());
-                                            recording.setCallInfo(callLog.getCallInfo());
                                             if (callLog.getCallId() != 0) {
                                                 recording.setCallId(callLog.getCallId());
                                             } else {
@@ -245,7 +266,6 @@ public class CallLogManager {
                                         /*
                                          * 入库
                                          */
-                                        Log.d(TAG, "onNext: .------------>" + GsonUtils.toJson(list));
                                         SysRecordingRepo.insert(list);
                                         /*
                                          * 加入任务队列
@@ -286,7 +306,6 @@ public class CallLogManager {
                                             recording.setUploadStatus(UploadStatus.WAIT_UPLOAD.getStatus());
                                             recording.setCallResult(callLog.getCallResult());
                                             recording.setCallType(callLog.getCallType());
-                                            recording.setCallInfo(callLog.getCallInfo());
 
                                             if (callLog.getCallId() != 0) {
                                                 recording.setCallId(callLog.getCallId());
