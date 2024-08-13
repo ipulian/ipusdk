@@ -206,6 +206,7 @@ public class CallLogManager {
                                             recording.setCallTimeServer(callLog.getCallTime());
 
                                             Log.d(TAG, "onNext: .d0-0-0-0-0-0-----" + callLog.getCallInfo());
+                                            Log.d(TAG, "onNext: .d0-0-0-0-0-0-----");
                                             recording.setCallInfo(callLog.getCallInfo());
                                             if (callLog.getCallId() != 0) {
                                                 recording.setCallId(callLog.getCallId());
