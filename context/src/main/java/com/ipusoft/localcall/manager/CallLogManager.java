@@ -87,7 +87,8 @@ public class CallLogManager {
                     List<SysRecording> list = new ArrayList<>();
                     UploadSysRecordingBean uploadSysCallLog = SimDataRepo.getUploadSysCallLog();
                     //上传通话记录和录音
-                    if (uploadSysCallLog.isFlag() && CommonDataRepo.getUploadLocalRecord()) {
+                    //SDK不校验 ——> CommonDataRepo.getUploadLocalRecord() 通过外呼方式判断话单是否上传
+                    if (uploadSysCallLog.isFlag()) {
                         XLog.d(TAG + "->5s后系统数据库中查数据");
                         CallLogRepo.getInstance().querySysCallLog(new IObserver<List<SysCallLog>>() {
                             @Override
