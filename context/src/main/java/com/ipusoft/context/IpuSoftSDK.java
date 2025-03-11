@@ -54,17 +54,17 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
 
     public static void init(Application mApp, String env) {
 
+        /*
+         * 初始化MMKV
+         */
+        MMKV.initialize(mApp);
+
         setAppContext(mApp);
 
         /*
          * 注册Activity生命周期
          */
         mApp.registerActivityLifecycleCallbacks(new IActivityLifecycle());
-
-        /*
-         * 初始化MMKV
-         */
-        MMKV.initialize(mApp);
         /*
          * 初始化日志系统
          */
