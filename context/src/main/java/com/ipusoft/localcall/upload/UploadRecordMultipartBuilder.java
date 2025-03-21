@@ -104,7 +104,13 @@ public class UploadRecordMultipartBuilder {
             builder.addFormDataPart("duration", recording.getDuration() + "");
             builder.addFormDataPart("callResult", recording.getCallResult() + "");
             builder.addFormDataPart("callType", callType == 1 ? "2" : callType == 2 ? "1" : callType + "");
-            builder.addFormDataPart("token", AppContext.getToken());
+
+            String token = AppContext.getToken();
+            if (token.isEmpty()) {
+                XLog.e(TAG + "->files2MultipartBody->Token is empty!");
+            }
+            builder.addFormDataPart("token", token);
+
             if (StringUtils.isNotEmpty(recording.getFileName())) {
                 builder.addFormDataPart("recordUrl", "https://" + AliYunManager.BUCKET_NAME + "." + AliYunManager.OSS_END_POINT + ".aliyuncs.com/"
                         + ossFile);

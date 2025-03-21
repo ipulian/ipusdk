@@ -1,10 +1,14 @@
 package com.ipusoft.http;
 
+import android.util.Log;
+
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.elvishew.xlog.XLog;
 import com.ipusoft.context.AppContext;
+import com.ipusoft.utils.ExceptionUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +34,11 @@ public class RequestMap extends HashMap<String, Object> {
      */
     public static RequestMap getRequestMap() {
         RequestMap map = new RequestMap();
-        map.put(TOKEN, AppContext.getToken());
+        String token = AppContext.getToken();
+        if (token.isEmpty()) {
+            XLog.e(TAG + "->getRequestMap->Token is empty!");
+        }
+        map.put(TOKEN, token);
         return map;
     }
 

@@ -1,5 +1,6 @@
 package com.ipusoft.context;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -16,6 +17,7 @@ import com.ipusoft.ipush.module.IPushService;
 import com.ipusoft.utils.ExceptionUtils;
 import com.ipusoft.utils.GsonUtils;
 import com.ipusoft.utils.StringUtils;
+import com.tencent.mmkv.MMKV;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -61,17 +63,17 @@ public class PushCoreService extends BaseLifeCycleService {
         }
     }
 
-    private static class GetPushMessageTask extends TimerTask {
+    private class GetPushMessageTask extends TimerTask {
         @Override
         public void run() {
             //String pushType = AccountRepo.getPushType();
             XLog.d("-----------------定时心跳-----------------");
             //if (StringUtils.isNotEmpty(pushType) && StringUtils.equals("1", pushType)) {
             String token = AppContext.getToken();
-            Log.d(TAG, "run: -------->" + token);
             if (StringUtils.isNotEmpty(token)) {
                 PushHttp.getPushMsg();
             } else {
+                XLog.e(TAG + "->GetPushMessageTask->Token is empty!");
                 XLog.d("--------------------------token不存在");
             }
 //            } else {

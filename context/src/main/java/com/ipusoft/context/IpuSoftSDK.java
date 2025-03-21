@@ -54,9 +54,7 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
 
     public static void init(Application mApp, String env) {
 
-        /*
-         * 初始化MMKV
-         */
+        // 初始化MMKV
         MMKV.initialize(mApp);
 
         setAppContext(mApp);
@@ -147,7 +145,6 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         requestMap.put("sVersion", systemVersion);
         requestMap.put("appVersion", AppUtils.getAppVersionName());
         requestMap.put("extend", "SDK");
-
         SDKService.Companion.updateAppInfo(requestMap, new HttpObserver<HttpResponse>() {
             @Override
             public void onNext(@NonNull HttpResponse response) {

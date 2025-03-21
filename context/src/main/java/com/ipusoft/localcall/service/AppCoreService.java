@@ -65,6 +65,9 @@ public class AppCoreService extends BaseLifeCycleService {
     @Override
     protected void onIStartCommand(Intent intent, int flags, int startId) {
         String token = AppContext.getToken();
+        if (token.isEmpty()) {
+            XLog.e(TAG + "->onIStartCommand->Token is empty!");
+        }
         if (StringUtils.isNotEmpty(token)) {
 
             checkMoreRecording();

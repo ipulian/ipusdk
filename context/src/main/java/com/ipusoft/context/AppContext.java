@@ -4,10 +4,13 @@ import android.app.Application;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.elvishew.xlog.XLog;
 import com.ipusoft.context.bean.AuthInfo;
 import com.ipusoft.context.bean.IAuthInfo;
 import com.ipusoft.context.init.SDKCommonInit;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
+import com.ipusoft.utils.ExceptionUtils;
+import com.tencent.mmkv.MMKV; // 添加MMKV的导入
 
 /**
  * author : GWFan
@@ -76,7 +79,14 @@ public class AppContext extends Application {
      */
     public static String getToken() {
         synchronized (object) {
-            return CommonDataRepo.getToken();
+            String token;
+            try {
+                token = CommonDataRepo.getToken();
+            } catch (Exception e) {
+                token = "";
+                XLog.e(TAG + "->getToken->" + ExceptionUtils.getErrorInfo(e));
+            }
+            return token;
         }
     }
 

@@ -85,6 +85,9 @@ public class PushHttp {
      */
     public static void getPushMsg() {
         String token = AppContext.getToken();
+        if (token.isEmpty()) {
+            XLog.e(TAG + "->getPushMsg->Token is empty!");
+        }
         if (StringUtils.isNotEmpty(token)) {
             Log.d(TAG, "onIStartCommand: ----------------5");
             IPushService.Companion.getPushMsg(RequestMap.getRequestMap(), new HttpObserver<PushMessage>() {
