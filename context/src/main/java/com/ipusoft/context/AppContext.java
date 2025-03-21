@@ -10,7 +10,6 @@ import com.ipusoft.context.bean.IAuthInfo;
 import com.ipusoft.context.init.SDKCommonInit;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
 import com.ipusoft.utils.ExceptionUtils;
-import com.tencent.mmkv.MMKV; // 添加MMKV的导入
 
 /**
  * author : GWFan

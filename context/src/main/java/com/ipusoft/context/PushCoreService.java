@@ -17,7 +17,6 @@ import com.ipusoft.ipush.module.IPushService;
 import com.ipusoft.utils.ExceptionUtils;
 import com.ipusoft.utils.GsonUtils;
 import com.ipusoft.utils.StringUtils;
-import com.tencent.mmkv.MMKV;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -63,7 +62,7 @@ public class PushCoreService extends BaseLifeCycleService {
         }
     }
 
-    private class GetPushMessageTask extends TimerTask {
+    private static class GetPushMessageTask extends TimerTask {
         @Override
         public void run() {
             //String pushType = AccountRepo.getPushType();
