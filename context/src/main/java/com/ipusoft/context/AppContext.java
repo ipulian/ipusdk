@@ -1,6 +1,7 @@
 package com.ipusoft.context;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +11,7 @@ import com.ipusoft.context.bean.IAuthInfo;
 import com.ipusoft.context.init.SDKCommonInit;
 import com.ipusoft.mmkv.datastore.CommonDataRepo;
 import com.ipusoft.utils.ExceptionUtils;
+import com.ipusoft.utils.StringUtils;
 
 /**
  * author : GWFan
@@ -78,14 +80,7 @@ public class AppContext extends Application {
      */
     public static String getToken() {
         synchronized (object) {
-            String token;
-            try {
-                token = CommonDataRepo.getToken();
-            } catch (Exception e) {
-                token = "";
-                XLog.e(TAG + "->getToken->" + ExceptionUtils.getErrorInfo(e));
-            }
-            return token;
+            return CommonDataRepo.getToken();
         }
     }
 

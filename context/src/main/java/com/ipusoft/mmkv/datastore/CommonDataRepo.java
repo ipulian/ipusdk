@@ -2,6 +2,7 @@ package com.ipusoft.mmkv.datastore;
 
 import android.util.Log;
 
+import com.elvishew.xlog.XLog;
 import com.google.gson.reflect.TypeToken;
 import com.ipusoft.context.bean.AuthInfo;
 import com.ipusoft.context.bean.IAuthInfo;
@@ -17,9 +18,11 @@ import com.ipusoft.mmkv.CommonMMKV;
 import com.ipusoft.mmkv.constant.StorageConstant;
 import com.ipusoft.utils.ArrayUtils;
 import com.ipusoft.utils.DateTimeUtils;
+import com.ipusoft.utils.ExceptionUtils;
 import com.ipusoft.utils.GsonUtils;
 import com.ipusoft.utils.MapUtils;
 import com.ipusoft.utils.StringUtils;
+import com.tencent.mmkv.MMKV;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -51,7 +54,15 @@ public class CommonDataRepo {
     }
 
     public static String getToken() {
-        return CommonMMKV.getString(StorageConstant.TOKEN);
+        String token;
+        try {
+            MMKV mmkv = MMKV.defaultMMKV();
+            token = CommonMMKV.getString(StorageConstant.TOKEN);
+        } catch (Exception e) {
+            token = "";
+            XLog.w(TAG + "->getToken123123->" + ExceptionUtils.getErrorInfo(e));
+        }
+        return token;
     }
 
     public static String getUid() {
