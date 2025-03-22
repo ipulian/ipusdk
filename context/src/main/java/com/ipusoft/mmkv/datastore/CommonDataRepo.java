@@ -60,7 +60,7 @@ public class CommonDataRepo {
             token = CommonMMKV.getString(StorageConstant.TOKEN);
         } catch (Exception e) {
             token = "";
-            XLog.w(TAG + "->getToken123123->" + ExceptionUtils.getErrorInfo(e));
+            XLog.e(TAG + "->getToken->" + ExceptionUtils.getErrorInfo(e));
         }
         return token;
     }

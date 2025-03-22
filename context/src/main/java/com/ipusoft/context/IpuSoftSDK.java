@@ -52,6 +52,11 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
     private static final String TAG = "IpuSoftSDK";
     private static List<BaseSipStatusChangedListener> sipStatusChangedListenerList;
 
+//    public static String initStatus = "INIT_FAIL";
+//    public static String getInitStatus() {
+//        return initStatus;
+//    }
+
     public static void init(Application mApp, String env) {
 
         /*
@@ -91,6 +96,9 @@ public abstract class IpuSoftSDK extends AppCacheContext implements IBaseApplica
         IPushLifecycle.initPush(AppContext.getAppContext(), new IPushListener(AppContext.getAppContext()));
 
         ServiceManager.startPushCoreService();
+//        initStatus = "INIT_SUCCESS";
+
+//        IBaseApplication baseApplication = (IBaseApplication) clazz.newInstance();
     }
 
     /**
